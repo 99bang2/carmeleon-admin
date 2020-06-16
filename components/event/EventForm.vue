@@ -198,6 +198,11 @@
 			},
 			postForm() {
 				console.log(this.sendData)
+				//-- 파일 전송을 위한 FormData 정의 --//
+				const formData = new FormData()
+				formData.append("bannerImg", this.sendData.bannerImg)
+				formData.append("mainImg", this.sendData.mainImg)
+				//---- 기타 파라미터 항목들 추가 ----//
 				this.$axios.$post(this.config.apiUrl + '/api/events', this.sendData,{
 					headers: {
 						'Content-Type' : 'multipart/form-data'
