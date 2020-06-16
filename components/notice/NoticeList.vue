@@ -117,16 +117,16 @@ export default {
 	},
 	created() {
 		let vm = this
-		this.$nuxt.$on('reset-example-list', () => {
+		this.$nuxt.$on('reset-notice-list', () => {
 			vm.resetSelection()
 		})
-		this.$nuxt.$on('fetch-example-list', (uid) => {
+		this.$nuxt.$on('fetch-notice-list', (uid) => {
 			vm.fetchData(uid)
 		})
 	},
 	beforeDestroy() {
-		this.$nuxt.$off('reset-example-list')
-		this.$nuxt.$off('fetch-example-list')
+		this.$nuxt.$off('reset-notice-list')
+		this.$nuxt.$off('fetch-notice-list')
 	},
 	async mounted() {
 		await this.fetchData()
@@ -134,33 +134,18 @@ export default {
 	methods: {
 		openNewForm() {
 			this.resetSelection()
-			this.$nuxt.$emit('open-example-form')
+			this.$nuxt.$emit('open-notice-form')
 		},
 		onRowClicked(props) {
-			this.$nuxt.$emit('open-example-form', props)
+			this.$nuxt.$emit('open-notice-form', props)
 			this.resetSelection()
 			props.node.detail = true
 			this.gridOptions.api.redrawRows()
 		},
 		async fetchData(selectUid) {
 			//API 연동
-			/*let res = await this.$axios.$get(this.config.apiUrl + '/api/examplees')
-			this.gridOptions.api.setRowData(res.data)*/
-			let fakeData = [
-				{
-					uid: 1,
-					title: '공지사항 1',
-					author: '홍길동',
-					createdAt: '2020-06-04 11:00:00'
-				},
-				{
-					uid: 2,
-					title: '공지사항 2',
-					author: '홍동길',
-					createdAt: '2020-06-04 10:00:00'
-				}
-			]
-			this.gridOptions.api.setRowData(fakeData)
+			let res = await this.$axios.$get(this.config.apiUrl + '/api/notices')
+			this.gridOptions.api.setRowData(res.data)
 			if(selectUid) {
 				this.gridOptions.api.forEachNode((node) => {
 					if(node.data.uid === selectUid) {
@@ -184,11 +169,11 @@ export default {
 			let seletedCnt = selectedUids.length
 			if (seletedCnt) {
 				UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-					this.$axios.$post(this.config.apiUrl + '/api/examplees/bulkDelete', {
+					this.$axios.$post(this.config.apiUrl + '/api/notices/bulkDelete', {
 						uids: selectedUids
 					}).then(res => {
 						this.callNotification('삭제하였습니다.')
-						this.$nuxt.$emit('close-example-form')
+						this.$nuxt.$emit('close-notice-form')
 						this.fetchData()
 					})
 				})

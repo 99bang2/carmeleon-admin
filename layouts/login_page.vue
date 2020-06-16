@@ -47,7 +47,7 @@ export default {
 				margin-bottom: 8px;
 			}
 			img {
-				width:100px;
+				width:80px;
 			}
 			p {
 				font-size: 20px;

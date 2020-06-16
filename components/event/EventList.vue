@@ -4,7 +4,7 @@
 			<ScCardHeader class="uk-flex uk-flex-middle sc-theme-bg-dark sc-light" separator>
 				<div class="uk-flex-1">
 					<ScCardTitle>
-						<slot><i class="mdi mdi-calendar-check"/> 이벤트 목록</slot>
+						<slot><i class="mdi mdi-calendar-check"/>이벤트 목록</slot>
 					</ScCardTitle>
 				</div>
 				<div class="uk-text-nowrap">
@@ -96,12 +96,18 @@
 					{
 						headerName: '배너이미지',
 						field: 'bannerImg',
-						width: 100
+						width: 100,
+						cellRenderer: (obj) => {
+							return obj.value ? '<i class="mdi mdi-checkbox-marked-circle-outline"></i>' : '<i class="mdi mdi-close-circle-outline"></i>'
+						}
 					},
 					{
 						headerName: '메인이미지',
 						field: 'mainImg',
-						width: 100
+						width: 100,
+						cellRenderer: (obj) => {
+							return obj.value ? '<i class="mdi mdi-checkbox-marked-circle-outline"></i>' : '<i class="mdi mdi-close-circle-outline"></i>'
+						}
 					},
 					{
 						headerName: '작성자',
@@ -129,16 +135,16 @@
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('reset-example-list', () => {
+			this.$nuxt.$on('reset-event-list', () => {
 				vm.resetSelection()
 			})
-			this.$nuxt.$on('fetch-example-list', (uid) => {
+			this.$nuxt.$on('fetch-event-list', (uid) => {
 				vm.fetchData(uid)
 			})
 		},
 		beforeDestroy() {
-			this.$nuxt.$off('reset-example-list')
-			this.$nuxt.$off('fetch-example-list')
+			this.$nuxt.$off('reset-event-list')
+			this.$nuxt.$off('fetch-event-list')
 		},
 		async mounted() {
 			await this.fetchData()
@@ -146,22 +152,22 @@
 		methods: {
 			openNewForm() {
 				this.resetSelection()
-				this.$nuxt.$emit('open-example-form')
+				this.$nuxt.$emit('open-event-form')
 			},
 			onRowClicked(props) {
-				this.$nuxt.$emit('open-example-form', props)
+				this.$nuxt.$emit('open-event-form', props)
 				this.resetSelection()
 				props.node.detail = true
 				this.gridOptions.api.redrawRows()
 			},
 			async fetchData(selectUid) {
 				//API 연동
-				/*let res = await this.$axios.$get(this.config.apiUrl + '/api/examplees')
+				/*let res = await this.$axios.$get(this.config.apiUrl + '/api/eventes')
 				this.gridOptions.api.setRowData(res.data)*/
 				let fakeData = [
 					{
 						uid: 1,
-						title:'벛꽃축제 주차할인',
+						title: '벛꽃축제 주차할인',
 						bannerImg: false,
 						mainImg: true,
 						author: '홍길동',
@@ -192,11 +198,11 @@
 				let seletedCnt = selectedUids.length
 				if (seletedCnt) {
 					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-						this.$axios.$post(this.config.apiUrl + '/api/examplees/bulkDelete', {
+						this.$axios.$post(this.config.apiUrl + '/api/eventes/bulkDelete', {
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')
-							this.$nuxt.$emit('close-example-form')
+							this.$nuxt.$emit('close-event-form')
 							this.fetchData()
 						})
 					})

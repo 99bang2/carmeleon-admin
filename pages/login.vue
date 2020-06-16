@@ -5,7 +5,7 @@
 				<ScCardBody>
 					<div class="sc-login-page-logo">
 						<img :src="appLogo" alt="">
-						<p>Admin</p>
+						<p>CarmeleOn Admin</p>
 					</div>
 					<div id="sc-login-form" class="sc-toggle-login-register sc-toggle-login-password">
 						<div class="sc-login-page-inner">
@@ -73,5 +73,11 @@ export default {
 			}
 		}
 	},
+	head() {
+		return {
+			'title' : 'CarmeleOn Admin Login Page'
+		}
+	}
+
 }
 </script>
