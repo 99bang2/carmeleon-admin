@@ -36,17 +36,17 @@
 							</div>
 							<div class="uk-width-1-1@s">
 							</div>
-							<!--	bannerImg 이미지 1-->
+							<!--	bannerImage 이미지 1-->
 							<div class="uk-width-1-2">
 								<div data-uk-form-custom="target: true">
-									<input type="file" accept="image/*" ref="bannerImg" @change="onChangeFile">
+									<input type="file" accept="image/*" ref="bannerImage" @change="onChangeFile">
 									<input class="uk-visible@s uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
 								</div>
 							</div>
-							<!--	mainImg	이미지 2-->
+							<!--	mainImage	이미지 2-->
 							<div class="uk-width-1-2">
 								<div data-uk-form-custom="target: true">
-									<input type="file" accept="image/*" ref="mainImg" @change="onChangeFile">
+									<input type="file" accept="image/*" ref="mainImage" @change="onChangeFile">
 									<input class="uk-visible@s uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
 								</div>
 							</div>
@@ -83,6 +83,10 @@
 						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
 								@click="submitForm">
 							{{ sendData.uid ? '수정': '등록' }}
+						</button>
+						<button v-if="sendData.uid" class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
+								@click="deleteForm">
+							삭제
 						</button>
 					</div>
 				</ScCardBody>
@@ -122,8 +126,8 @@
 				defaultForm: {
 					uid: null,
 					title:'',
-					bannerImg: '',
-					mainImg: '',
+					bannerImage: '',
+					mainImage: '',
 					startDate:'',
 					endDate: '',
 					eventType:0,
@@ -156,9 +160,8 @@
 		},
 		methods: {
 			onChangeFile() {
-				console.log(this.$refs);
-				this.sendData.bannerImg = this.$refs.bannerImg.files[0];
-				this.sendData.mainImg = this.$refs.mainImg.files[0];
+				this.sendData.bannerImage = this.$refs.bannerImage.files[0];
+				this.sendData.mainImage = this.$refs.mainImage.files[0];
 			},
 
 
@@ -178,8 +181,16 @@
 				this.cardFormClosed = true
 				this.$nuxt.$emit('reset-event-list')
 			},
+			deleteForm(){
+				this.$axios.$delete(this.config.apiUrl + '/api/events/' + this.sendData.uid,this.sendData).then(async res => {
+					this.callNotification('삭제하였습니다.')
+					this.$nuxt.$emit('fetch-event-list',res.data.uid)
+				}).finally(() => {
+					this.deleteStatus = 'OK'
+					this.cardFormClosed=true
+				})
+			},
 			submitForm(e) {
-
 				e.preventDefault()
 				this.$v.$touch()
 
@@ -197,13 +208,23 @@
 				}
 			},
 			postForm() {
-				console.log(this.sendData)
 				//-- 파일 전송을 위한 FormData 정의 --//
 				const formData = new FormData()
-				formData.append("bannerImg", this.sendData.bannerImg)
-				formData.append("mainImg", this.sendData.mainImg)
+				formData.append("bannerImage", this.sendData.bannerImage)
+				formData.append("mainImage", this.sendData.mainImage)
+
 				//---- 기타 파라미터 항목들 추가 ----//
-				this.$axios.$post(this.config.apiUrl + '/api/events', this.sendData,{
+				formData.append("title", this.sendData.title)
+				formData.append("startDate", this.sendData.startDate)
+				formData.append("endDate", this.sendData.endDate)
+				formData.append("eventType", this.sendData.eventType)
+				formData.append("isOpen", this.sendData.isOpen)
+
+				for(let key of formData.entries()){
+					console.log(`${key}`);
+				}
+
+				this.$axios.$post(this.config.apiUrl + '/api/events', formData,{
 					headers: {
 						'Content-Type' : 'multipart/form-data'
 					}

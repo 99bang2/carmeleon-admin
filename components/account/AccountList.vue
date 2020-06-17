@@ -4,19 +4,46 @@
 			<ScCardHeader class="uk-flex uk-flex-middle sc-theme-bg-dark sc-light" separator>
 				<div class="uk-flex-1">
 					<ScCardTitle>
-						<slot><i class="mdi mdi-calendar-check"/>이벤트 목록</slot>
+						<slot><i class="mdi mdi-account-search"/> 계정목록</slot>
 					</ScCardTitle>
 				</div>
 				<div class="uk-text-nowrap">
-					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-plus" style="display: inline-block"
-					   @click.prevent="openNewForm" data-uk-tooltip="추가"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-account-plus"
+					   style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="계정생성"/>
 					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline"
-					   style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="삭제"/>
+					   style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="계정삭제"/>
 				</div>
 			</ScCardHeader>
 			<ScCardBody>
 				<div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
 					<div class="uk-width-2-5@s">
+						<div class="uk-grid-small uk-grid" data-uk-grid>
+							<div class="uk-width-1-3@s">
+								<label>
+									<select v-model="searchGrade" class="uk-select">
+										<option value="">
+											모든 등급
+										</option>
+										<option v-for="grade in gradeOptions" :key="grade.id" :value="grade.id">
+											{{ grade.text }}
+										</option>
+									</select>
+								</label>
+							</div>
+							<div class="uk-width-1-3@s">
+								<label>
+									<select v-model="searchActive" class="uk-select">
+										<option value="">
+											활성상태
+										</option>
+										<option value="true">
+											활성
+										</option>
+										<option value="false">비활성</option>
+									</select>
+								</label>
+							</div>
+						</div>
 					</div>
 					<div class="uk-width-1-5@s">
 					</div>
@@ -46,11 +73,12 @@
 
 <script>
 	import ScInput from '~/components/Input'
-	import {agGridMixin} from "~/plugins/ag-grid.mixin"
+	import {agGridMixin} from "@/plugins/ag-grid.mixin";
+
 
 	export default {
 		components: {
-			ScInput,
+			ScInput
 		},
 		mixins: [
 			agGridMixin
@@ -67,11 +95,21 @@
 					rowHeight: 45,
 					getRowStyle: this.getRowStyle
 				},
-				searchType: '',
 				searchKeyword: '',
+				searchActive: '',
+				searchGrade: ''
 			}
 		},
 		computed: {
+			gradeOptions() {
+				let opts = [{
+					"grade": {
+						"0": "최고관리자",
+						"1": "일반관리자"
+					},
+				}]
+				return opts
+			},
 			columnDefs() {
 				return [
 					{
@@ -89,35 +127,35 @@
 						}
 					},
 					{
-						headerName: '제목',
-						field: 'title',
+						headerName: '아이디',
+						field: 'id',
 						suppressSizeToFit: false,
 					},
 					{
-						headerName: '배너이미지',
-						field: 'bannerImage',
+						headerName: '등급',
+						field: 'grade',
 						width: 100,
 						cellRenderer: (obj) => {
-							return obj.value ? '<i class="mdi mdi-checkbox-marked-circle-outline"></i>' : '<i class="mdi mdi-close-circle-outline"></i>'
+							return obj.data.gradeName
 						}
 					},
 					{
-						headerName: '메인이미지',
-						field: 'mainImage',
-						width: 100,
-						cellRenderer: (obj) => {
-							return obj.value ? '<i class="mdi mdi-checkbox-marked-circle-outline"></i>' : '<i class="mdi mdi-close-circle-outline"></i>'
-						}
+						headerName: '이름',
+						field: 'name',
+						width: 90
 					},
 					{
-						headerName: '작성자',
-						field: 'author',
-						width: 160
+						headerName: '활성',
+						field: 'isActive',
+						width: 60,
+						cellRenderer: (obj) => {
+							return obj.value ? '<i class="mdi mdi-check-circle" style="font-size:8px;"></i>' : ''
+						}
 					},
 					{
 						headerName: '등록일시',
 						field: 'createdAt',
-						width: 160,
+						width: 100,
 						valueFormatter: obj => {
 							return this.$moment(obj.value).format('YYYY-MM-DD HH:mm')
 						}
@@ -129,22 +167,35 @@
 			'searchKeyword': function (newValue) {
 				this.gridOptions.api.setQuickFilter(newValue)
 			},
-		},
-		async beforeMount() {
-			//let res = await this.$axios.$get(this.config.apiUrl + `/api/codes`)
+			'searchGrade': function (newValue) {
+				let filterComponent = this.gridOptions.api.getFilterInstance('grade')
+				filterComponent.setModel({
+					type: 'equals',
+					filter: newValue
+				})
+				this.gridOptions.api.onFilterChanged()
+			},
+			'searchActive': function (newValue) {
+				let filterComponent = this.gridOptions.api.getFilterInstance('isActive')
+				filterComponent.setModel({
+					type: 'equals',
+					filter: newValue
+				})
+				this.gridOptions.api.onFilterChanged()
+			},
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('reset-event-list', () => {
+			this.$nuxt.$on('reset-account-list', () => {
 				vm.resetSelection()
 			})
-			this.$nuxt.$on('fetch-event-list', (uid) => {
+			this.$nuxt.$on('fetch-account-list', (uid) => {
 				vm.fetchData(uid)
 			})
 		},
 		beforeDestroy() {
-			this.$nuxt.$off('reset-event-list')
-			this.$nuxt.$off('fetch-event-list')
+			this.$nuxt.$off('reset-account-list')
+			this.$nuxt.$off('fetch-account-list')
 		},
 		async mounted() {
 			await this.fetchData()
@@ -152,25 +203,33 @@
 		methods: {
 			openNewForm() {
 				this.resetSelection()
-				this.$nuxt.$emit('open-event-form')
+				this.$nuxt.$emit('open-account-form')
 			},
 			onRowClicked(props) {
-				this.$nuxt.$emit('open-event-form', props)
+				this.$nuxt.$emit('open-account-form', props)
 				this.resetSelection()
 				props.node.detail = true
 				this.gridOptions.api.redrawRows()
 			},
+			closeForm() {
+				this.gridOptions.api.forEachNode((node) => {
+					node.detail = false
+				})
+				this.cardFormClosed = true
+				this.gridOptions.api.redrawRows()
+			},
 			async fetchData(selectUid) {
-				//API 연동
-				let res = await this.$axios.$get(this.config.apiUrl + '/api/events')
+				// API 연동
+				let res = await this.$axios.$get(this.config.apiUrl +'/api/accounts')
 				this.gridOptions.api.setRowData(res.data)
+
 				// let fakeData = [
 				// 	{
-				// 		uid: 1,
-				// 		title: '벛꽃축제 주차할인',
-				// 		bannerImage: false,
-				// 		mainImage: true,
-				// 		author: '홍길동',
+				// 		uid:1,
+				// 		id: jjjjjj,
+				// 		name: '잭더리퍼',
+				// 		grade: 1,
+				// 		isActive: true,
 				// 		createdAt: '2020-06-04 11:00:00'
 				// 	}
 				// ]
@@ -198,11 +257,11 @@
 				let seletedCnt = selectedUids.length
 				if (seletedCnt) {
 					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-						this.$axios.$post(this.config.apiUrl + '/api/events/bulkDelete', {
+						this.$axios.$post(this.config.apiUrl + '/api/accounts/bulkDelete', {
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')
-							this.$nuxt.$emit('close-event-form')
+							this.cardFormClosed = true
 							this.fetchData()
 						})
 					})
@@ -213,3 +272,4 @@
 		}
 	}
 </script>
+

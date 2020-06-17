@@ -3,10 +3,10 @@
 		<div id="sc-page-content">
 			<div class="uk-grid" data-uk-grid>
 				<div class="uk-width-2-3@l">
-					<ExampleList/>
+					<AccountList/>
 				</div>
 				<div class="uk-width-1-3@l">
-					<ExampleForm/>
+					<AccountForm/>
 				</div>
 			</div>
 		</div>
@@ -14,14 +14,14 @@
 </template>
 
 <script>
-	import ExampleList from "@/components/example/ExampleList"
-	import ExampleForm from "@/components/example/ExampleForm"
+	import AccountList from "@/components/account/AccountList"
+	import AccountForm from "@/components/account/AccountForm"
 
 	export default {
 		//middleware: ['auth'],
 		components: {
-			ExampleList,
-			ExampleForm,
+			AccountList,
+			AccountForm,
 		}
 	}
 </script>

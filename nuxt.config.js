@@ -154,7 +154,7 @@ module.exports = {
 				endpoints: {
 					login: {url: config.apiUrl + '/api/admin/login', method: 'post', propertyName: 'data.token'},
 					logout: {url: config.apiUrl + '/api/admin/logout', method: 'get'},
-					user: {url: config.apiUrl + '/api/admin/check', method: 'get', propertyName: 'data.admin'},
+					// user: {url: config.apiUrl + '/api/admin/check', method: 'get', propertyName: 'data.admin'},
 				},
 			}
 		},

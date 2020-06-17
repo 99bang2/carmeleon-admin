@@ -91,7 +91,7 @@ import moment from '~/plugins/moment'
 import {agGridMixin} from "../../plugins/ag-grid.mixin"
 
 export default {
-	middleware: ['auth'],
+	// middleware: ['auth'],
 	components: {
 		ScInput,
 	},
