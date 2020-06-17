@@ -6,12 +6,14 @@
 					<div class="uk-flex uk-flex-middle">
 						<div class="uk-flex-1">
 							<ScCardTitle>
-								<i class="mdi" :class="{ 'mdi-account-card-details-outline' : sendData.uid, 'mdi-account-plus': !sendData.uid }"/>
+								<i class="mdi"
+								   :class="{ 'mdi-account-card-details-outline' : sendData.uid, 'mdi-account-plus': !sendData.uid }"/>
 								계정{{ sendData.uid ? '상세': '생성' }}
 							</ScCardTitle>
 						</div>
 						<ScCardActions>
-							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close" @click.prevent="closeForm"/>
+							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close"
+							   @click.prevent="closeForm"/>
 						</ScCardActions>
 					</div>
 				</ScCardHeader>
@@ -19,12 +21,12 @@
 					<div class="uk-accordion-content">
 						<form class="uk-grid-small uk-grid" data-uk-grid>
 							<div class="uk-width-1-2@s">
-								<Select2
-									v-model="sendData.grade"
-									:options="gradeOptions"
-									:settings="{ 'width': '100%', 'placeholder': '등급 선택' }"
-									:error-state="$v.sendData.grade.$error"
-								/>
+								<select v-model="sendData.grade" class="uk-select" :error-state="$v.sendData.grade.$error" >
+									<option value="">등급 선택</option>
+									<option value="0">최고 관리자</option>
+									<option value="1">일반 관리자</option>
+								</select>
+
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.grade.required">
 										등급을 선택하세요.
@@ -32,7 +34,8 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-1">
-								<ScInput v-model="sendData.id" :error-state="$v.sendData.id.$error" :validator="$v.sendData.id" :read-only="!!sendData.uid">
+								<ScInput v-model="sendData.id" :error-state="$v.sendData.id.$error"
+										 :validator="$v.sendData.id" :read-only="!!sendData.uid">
 									<label>
 										아이디
 									</label>
@@ -51,11 +54,13 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-2@s">
-								<ScInput v-model="sendData.password" type="password" :error-state="$v.sendData.password.$error" :validator="$v.sendData.password">
+								<ScInput v-model="sendData.password" type="password"
+										 :error-state="$v.sendData.password.$error" :validator="$v.sendData.password">
 									<label>
 										비밀번호
 									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
+									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+										  data-uk-icon="icon: lock"></span>
 								</ScInput>
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.password.required">
@@ -68,11 +73,14 @@
 								<span v-if="sendData.uid" class="uk-form-help-block">* 비밀번호는 변경시에만 입력</span>
 							</div>
 							<div class="uk-width-1-2@s">
-								<ScInput v-model="sendData.passwordConfirm" type="password" :error-state="$v.sendData.passwordConfirm.$error" :validator="$v.sendData.passwordConfirm">
+								<ScInput v-model="sendData.passwordConfirm" type="password"
+										 :error-state="$v.sendData.passwordConfirm.$error"
+										 :validator="$v.sendData.passwordConfirm">
 									<label>
 										비밀번호확인
 									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
+									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+										  data-uk-icon="icon: lock"></span>
 								</ScInput>
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.passwordConfirm.sameAsPassword">
@@ -81,7 +89,8 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-2@s">
-								<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error" :validator="$v.sendData.name">
+								<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error"
+										 :validator="$v.sendData.name">
 									<label>
 										이름
 									</label>
@@ -93,8 +102,10 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-2@s">
-								<input id="switch-css" v-model="sendData.isActive" type="checkbox" class="sc-switch-input">
-								<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
+								<input id="switch-css" v-model="sendData.isActive" type="checkbox"
+									   class="sc-switch-input">
+								<label for="switch-css" class="sc-switch-label"
+									   style="margin-top:15px;margin-left:15px;">
 									<span class="sc-switch-toggle-on">활성</span>
 									<span class="sc-switch-toggle-off">비활성</span>
 								</label>
@@ -102,10 +113,12 @@
 						</form>
 					</div>
 					<div class="uk-margin-top uk-text-center">
-						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="submitForm">
+						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
+								@click="submitForm">
 							{{ sendData.uid ? '수정': '생성' }}
 						</button>
-						<button v-if="sendData.uid" class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
+						<button v-if="sendData.uid" class="sc-button sc-button-primary"
+								:disabled="submitStatus === 'PENDING'"
 								@click="deleteForm">
 							삭제
 						</button>
@@ -121,12 +134,10 @@
 	import {required, minLength, minValue, sameAs, email, requiredIf} from 'vuelidate/lib/validators'
 	import customValidators from '@/plugins/vuelidateValidators'
 	import ScInput from '~/components/Input'
-	import Select2 from '~/components/Select2'
 
 	export default {
 		components: {
-			ScInput,
-			Select2
+			ScInput
 		},
 		mixins: [
 			validationMixin,
@@ -134,32 +145,31 @@
 		props: {
 			mode: {
 				type: String,
-				default:'list'
+				default: 'list'
 			}
 		},
 		data() {
 			return {
 				cardFormClosed: true,
 				submitStatus: null,
-				sendData:{},
-				rows: [],
+				sendData: {},
 				defaultForm: {
 					uid: null,
 					id: '',
 					password: '',
 					passwordConfirm: '',
 					name: '',
-					grade: '',
+					grade: 0,
 					isActive: true
 				},
 			}
 		},
-		validations:{
+		validations: {
 			sendData: {
 				id: {
 					required
 				},
-				password:{
+				password: {
 					required,
 					passwordFormatCheck: customValidators.passwordFormatCheck()
 				},
@@ -191,13 +201,13 @@
 				this.cardFormClosed = true
 				this.$nuxt.$emit('reset-account-list')
 			},
-			deleteForm(){
-				this.$axios.$delete(this.config.apiUrl + '/api/accounts/' + this.sendData.uid,this.sendData).then(async res => {
+			deleteForm() {
+				this.$axios.$delete(this.config.apiUrl + '/api/accounts/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('fetch-event-list',res.data.uid)
+					this.$nuxt.$emit('fetch-account-list', res.data.uid)
 				}).finally(() => {
 					this.deleteStatus = 'OK'
-					this.cardFormClosed=true
+					this.cardFormClosed = true
 				})
 			},
 			submitForm(e) {
@@ -205,6 +215,7 @@
 				this.$v.$touch()
 
 				if (this.$v.$invalid) {
+					console.log(this.$v)
 					this.submitStatus = 'ERROR'
 				} else {
 					this.submitStatus = 'PENDING'
@@ -216,7 +227,8 @@
 				}
 			},
 			postForm() {
-				this.$axios.$post('/api/accounts', this.sendData).then(async res => {
+				console.log(this.sendData)
+				this.$axios.$post(this.config.apiUrl + '/api/accounts', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
 					this.$nuxt.$emit('fetch-account-list', res.data.uid)
 				}).finally(() => {
@@ -224,31 +236,31 @@
 				})
 			},
 			putForm() {
-				this.$axios.$put('/api/accounts/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$put(this.config.apiUrl + '/api/accounts/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-account-list', res.data.uid)
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
 			},
-			created() {
-				let vm = this
-				this.$nuxt.$on('open-account-form', (data) => {
-					vm.settingForm(data)
-				})
-				this.$nuxt.$on('close-account-form', () => {
-					vm.closeForm()
-				})
-			},
-			async beforeMount() {
-				this.sendData = this.defaultForm
-			},
-			beforeDestroy() {
-				this.$nuxt.$off('open-account-form')
-				this.$nuxt.$off('close-account-form')
-			}
+		},
+		created() {
+			let vm = this
+			this.$nuxt.$on('open-account-form', (data) => {
+				vm.settingForm(data)
+			})
+			this.$nuxt.$on('close-account-form', () => {
+				vm.closeForm()
+			})
+		},
+		async beforeMount() {
+			this.sendData = this.defaultForm
+		},
+		beforeDestroy() {
+			this.$nuxt.$off('open-account-form')
+			this.$nuxt.$off('close-account-form')
 		}
-    }
+	}
 </script>
 
 <style lang="scss">

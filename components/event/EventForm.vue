@@ -63,18 +63,18 @@
 							</div>
 
 							<div class="uk-width-1-2">
-								<Select v-model="sendData.eventType" class="uk-select">
+								<select v-model="sendData.eventType" class="uk-select">
 									<option value="">이벤트 종류</option>
 									<option value="0">팝업적용</option>
 									<option value="1">팝업미적용</option>
-								</Select>
+								</select>
 							</div>
 							<div class="uk-width-1-2">
-								<Select v-model="sendData.isOpen" class="uk-select">
+								<select v-model="sendData.isOpen" class="uk-select">
 									<option value="">공개여부</option>
 									<option value=true>공개</option>
 									<option value=false>비공개</option>
-								</Select>
+								</select>
 							</div>
 						</form>
 					</div>

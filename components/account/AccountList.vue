@@ -102,12 +102,9 @@
 		},
 		computed: {
 			gradeOptions() {
-				let opts = [{
-					"grade": {
-						"0": "최고관리자",
-						"1": "일반관리자"
-					},
-				}]
+				let opts = []
+				opts.push({id: 0, text: "최고 관리자"})
+				opts.push({id: 1, text: "일반 관리자"})
 				return opts
 			},
 			columnDefs() {
@@ -136,7 +133,7 @@
 						field: 'grade',
 						width: 100,
 						cellRenderer: (obj) => {
-							return obj.data.gradeName
+							return obj.data.grade === 0 ?'최고 관리자': '일반 관리자'
 						}
 					},
 					{
@@ -222,18 +219,6 @@
 				// API 연동
 				let res = await this.$axios.$get(this.config.apiUrl +'/api/accounts')
 				this.gridOptions.api.setRowData(res.data)
-
-				// let fakeData = [
-				// 	{
-				// 		uid:1,
-				// 		id: jjjjjj,
-				// 		name: '잭더리퍼',
-				// 		grade: 1,
-				// 		isActive: true,
-				// 		createdAt: '2020-06-04 11:00:00'
-				// 	}
-				// ]
-				// this.gridOptions.api.setRowData(fakeData)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
 						if (node.data.uid === selectUid) {
