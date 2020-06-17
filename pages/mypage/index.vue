@@ -47,47 +47,6 @@
 									</div>
 								</div>
 							</div>
-							<div class="uk-margin-top">
-								<div class="uk-flex-middle uk-grid" data-uk-grid>
-									<div class="uk-width-1-4@m">
-										<label class="sc-color-secondary">
-											전화번호
-										</label>
-									</div>
-									<div class="uk-width-expand">
-										<ScInput id="user-phone" v-model="userData.phone"></ScInput>
-									</div>
-								</div>
-							</div>
-							<div class="uk-margin-top">
-								<div class="uk-flex-middle uk-grid" data-uk-grid>
-									<div class="uk-width-1-4@m">
-										<label class="sc-color-secondary">
-											휴대전화
-										</label>
-									</div>
-									<div class="uk-width-expand">
-										<ScInput id="user-mobile" v-model="userData.mobile" />
-									</div>
-								</div>
-							</div>
-							<div class="uk-margin-top">
-								<div class="uk-flex-middle uk-grid" data-uk-grid>
-									<div class="uk-width-1-4@m">
-										<label class="sc-color-secondary">
-											이메일
-										</label>
-									</div>
-									<div class="uk-width-expand">
-										<ScInput id="user-email" v-model="userData.email" :error-state="$v.userData.email.$error" :validator="$v.userData.email" />
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.userData.email.email">
-												올바른 이메일 형식이 아닙니다.
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
 						</ScCardBody>
 					</ScCard>
 				</div>
@@ -136,7 +95,7 @@ export default {
 	},
 	methods: {
 		async fetchData() {
-			let user = await this.$axios.$get(this.config.apiUrl + `/api/admin`)
+			let user = await this.$axios.$get(this.config.apiUrl + `/api/accounts`)
 			console.log(user.data)
 			this.userData = user.data
 		},
@@ -147,7 +106,7 @@ export default {
 				this.submitStatus = 'ERROR'
 			} else {
 				this.submitStatus = 'PENDING'
-				this.$axios.$put(this.config.apiUrl + '/api/admin', this.userData).then(res => {
+				this.$axios.$put(this.config.apiUrl + '/api/accounts', this.userData).then(res => {
 					this.callNotification('수정하였습니다.')
 					this.fetchData()
 				}).finally(() => {

@@ -18,7 +18,7 @@
 	import AccountForm from "@/components/account/AccountForm"
 
 	export default {
-		//middleware: ['auth'],
+		middleware: ['auth'],
 		components: {
 			AccountList,
 			AccountForm,

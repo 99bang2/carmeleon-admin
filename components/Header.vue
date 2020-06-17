@@ -20,7 +20,7 @@
 					<li>
 						<a href="javascript:void(0)" class="md-color-white">
 							<span class="uk-navbar-toggle-icon"><i class="mdi mdi-account"></i></span>
-							<!--<span class="uk-navbar-subtitle" style="font-size:14px;vertical-align: top;line-height: 50px;">{{ $auth.user.name }}</span>-->
+<!--							<span class="uk-navbar-subtitle" style="font-size:14px;vertical-align: top;line-height: 50px;">{{ $auth.user.name }}</span>-->
 						</a>
 						<div class="uk-navbar-dropdown uk-dropdown-small">
 							<ul class="uk-nav uk-nav-navbar">

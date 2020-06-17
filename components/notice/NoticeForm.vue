@@ -103,6 +103,7 @@
 				sendData: {},
 				defaultForm: {
 					uid: null,
+					accountUid:0,
 					title: '',
 					content: ''
 				}
@@ -119,6 +120,7 @@
 			}
 		},
 		created() {
+
 			let vm = this
 			this.$nuxt.$on('open-notice-form', (data) => {
 				vm.settingForm(data)
@@ -177,7 +179,7 @@
 				}
 			},
 			postForm() {
-				console.log(this.sendData);
+				this.sendData.accountUid =this.$auth.user.uid;
 				this.$axios.$post(this.config.apiUrl + '/api/notices', this.sendData).then(async res => {
 					this.callNotification('등록하였습니다.')
 					this.$nuxt.$emit('fetch-notice-list', res.data.uid)

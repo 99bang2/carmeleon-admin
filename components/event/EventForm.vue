@@ -128,6 +128,7 @@
 					title:'',
 					bannerImage: '',
 					mainImage: '',
+					accountUid: 0,
 					startDate:'',
 					endDate: '',
 					eventType:0,
@@ -208,12 +209,14 @@
 				}
 			},
 			postForm() {
+				// this.sendData.accountUid =
 				//-- 파일 전송을 위한 FormData 정의 --//
 				const formData = new FormData()
 				formData.append("bannerImage", this.sendData.bannerImage)
 				formData.append("mainImage", this.sendData.mainImage)
 
 				//---- 기타 파라미터 항목들 추가 ----//
+				formData.append("accountUid", this.$auth.user.uid)
 				formData.append("title", this.sendData.title)
 				formData.append("startDate", this.sendData.startDate)
 				formData.append("endDate", this.sendData.endDate)

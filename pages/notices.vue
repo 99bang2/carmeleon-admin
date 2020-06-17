@@ -17,7 +17,7 @@
 import NoticeList from "@/components/notice/NoticeList"
 import NoticeForm from "@/components/notice/NoticeForm"
 export default {
-	//middleware: ['auth'],
+	middleware: ['auth'],
 	components: {
 		NoticeList,
 		NoticeForm,

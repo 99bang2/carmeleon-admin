@@ -18,7 +18,7 @@
 	import EventForm from "@/components/event/EventForm"
 
 	export default {
-		//middleware: ['auth'],
+		middleware: ['auth'],
 		components: {
 			EventList,
 			EventForm,

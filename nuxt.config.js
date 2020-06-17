@@ -152,9 +152,9 @@ module.exports = {
 		strategies: {
 			local: {
 				endpoints: {
-					login: {url: config.apiUrl + '/api/admin/login', method: 'post', propertyName: 'data.token'},
-					logout: {url: config.apiUrl + '/api/admin/logout', method: 'get'},
-					// user: {url: config.apiUrl + '/api/admin/check', method: 'get', propertyName: 'data.admin'},
+					login: {url: config.apiUrl + '/api/account/login', method: 'post', propertyName: 'data.token'},
+					logout: {url: config.apiUrl + '/api/account/logout', method: 'get'},
+					user: {url: config.apiUrl + '/api/account/check', method: 'get', propertyName: 'data.account'},
 				},
 			}
 		},

@@ -41,7 +41,7 @@ import ScInput from '~/components/Input'
 
 export default {
 	layout: 'login_page',
-	// middleware: ['auth'],
+	middleware: ['auth'],
 	components: {
 		ScInput
 	},
