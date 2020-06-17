@@ -93,7 +93,7 @@ export default {
 				},
 				{
 					headerName: '작성자',
-					field: 'author',
+					field: 'account.name',
 					width: 160
 				},
 				{

@@ -66,7 +66,7 @@ import moment from '~/plugins/moment'
 import {agGridMixin} from "../../plugins/ag-grid.mixin"
 
 export default {
-	//middleware: ['auth'],
+	// middleware: ['auth'],
 	components: {
 		ScInput,
 	},
@@ -78,37 +78,39 @@ export default {
 		return {
 			submitStatus: null,
 			userData: {},
+			defaultForm: {
+				uid:null,
+
+			}
 		}
 	},
 	validations: {
 		userData: {
 			name: {
 				required
-			},
-			email: {
-				email
 			}
 		}
 	},
 	async mounted() {
-		await this.fetchData()
+
+		await this.fetchData(this.$auth.user.uid)
 	},
 	methods: {
-		async fetchData() {
-			let user = await this.$axios.$get(this.config.apiUrl + `/api/accounts`)
-			console.log(user.data)
+		async fetchData(selectUid) {
+			let user = await this.$axios.$get(this.config.apiUrl + '/api/accounts/'+selectUid )
+
 			this.userData = user.data
 		},
 		submitForm(e) {
+			console.log(this.userData)
 			e.preventDefault()
 			this.$v.$touch()
 			if (this.$v.$invalid) {
 				this.submitStatus = 'ERROR'
 			} else {
 				this.submitStatus = 'PENDING'
-				this.$axios.$put(this.config.apiUrl + '/api/accounts', this.userData).then(res => {
+				this.$axios.$put(this.config.apiUrl + '/api/accounts/'+this.userData.uid, this.userData).then(res => {
 					this.callNotification('수정하였습니다.')
-					this.fetchData()
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})

@@ -111,7 +111,7 @@
 					},
 					{
 						headerName: '작성자',
-						field: 'author',
+						field: 'account.name',
 						width: 160
 					},
 					{
@@ -164,17 +164,6 @@
 				//API 연동
 				let res = await this.$axios.$get(this.config.apiUrl + '/api/events')
 				this.gridOptions.api.setRowData(res.data)
-				// let fakeData = [
-				// 	{
-				// 		uid: 1,
-				// 		title: '벛꽃축제 주차할인',
-				// 		bannerImage: false,
-				// 		mainImage: true,
-				// 		author: '홍길동',
-				// 		createdAt: '2020-06-04 11:00:00'
-				// 	}
-				// ]
-				// this.gridOptions.api.setRowData(fakeData)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
 						if (node.data.uid === selectUid) {
