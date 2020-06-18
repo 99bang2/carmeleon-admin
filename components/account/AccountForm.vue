@@ -53,7 +53,7 @@
 									</li>
 								</ul>
 							</div>
-							<div class="uk-width-1-2@s">
+							<div v-if="sendData.uid" class="uk-width-1-2@s">
 								<ScInput v-model="sendData.password" type="password"
 										 :error-state="$v.sendData.password.$error" :validator="$v.sendData.password">
 									<label>
@@ -72,7 +72,7 @@
 								</ul>
 								<span v-if="sendData.uid" class="uk-form-help-block">* 비밀번호는 변경시에만 입력</span>
 							</div>
-							<div class="uk-width-1-2@s">
+							<div v-if="sendData.uid" class="uk-width-1-2@s">
 								<ScInput v-model="sendData.passwordConfirm" type="password"
 										 :error-state="$v.sendData.passwordConfirm.$error"
 										 :validator="$v.sendData.passwordConfirm">

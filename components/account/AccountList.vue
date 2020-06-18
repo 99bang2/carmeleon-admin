@@ -131,7 +131,7 @@
 					{
 						headerName: '등급',
 						field: 'grade',
-						width: 100,
+						width: 160,
 						cellRenderer: (obj) => {
 							return obj.data.grade === 0 ?'최고 관리자': '일반 관리자'
 						}
@@ -139,7 +139,7 @@
 					{
 						headerName: '이름',
 						field: 'name',
-						width: 90
+						width: 160
 					},
 					{
 						headerName: '활성',
@@ -152,7 +152,7 @@
 					{
 						headerName: '등록일시',
 						field: 'createdAt',
-						width: 100,
+						width: 160,
 						valueFormatter: obj => {
 							return this.$moment(obj.value).format('YYYY-MM-DD HH:mm')
 						}
