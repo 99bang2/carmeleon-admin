@@ -167,10 +167,19 @@
 		validations: {
 			sendData: {
 				id: {
-					required
+					required,
+					idFormatCheck: customValidators.idFormatCheck(),
+					async isUnique(value) {
+						if (value === '') return true
+						if (this.sendData.uid) return true
+						let res = await this.$axios.$get(`/api/account/unique/${value}`)
+						return Boolean(res.data)
+					}
 				},
 				password: {
-					required,
+					required: requiredIf(function (nestedModel) {
+						return !nestedModel.uid
+					}),
 					passwordFormatCheck: customValidators.passwordFormatCheck()
 				},
 				passwordConfirm: {
