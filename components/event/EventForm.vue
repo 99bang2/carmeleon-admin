@@ -39,22 +39,31 @@
 							<!--	bannerImage 이미지 1-->
 							<div class="uk-width-1-2">
 								<div data-uk-form-custom="target: true">
-									<input type="file" accept="image/*" ref="bannerImage" @change="onChangeFile">
-									<input class="uk-visible@s uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
+									<input type="file" accept="image/*" ref="bannerImage" @change="onChangeBannerImageFile">
+									<input class="uk-visible@s uk-input uk-form-width-medium" type="text"
+										   placeholder="Select file" disabled>
+									<div class="uk-width-1-1 image-preview" v-if="sendData.bannerImage">
+										<img class="preview" :src="bannerImageData">
+									</div>
 								</div>
 							</div>
 							<!--	mainImage	이미지 2-->
 							<div class="uk-width-1-2">
 								<div data-uk-form-custom="target: true">
-									<input type="file" accept="image/*" ref="mainImage" @change="onChangeFile">
-									<input class="uk-visible@s uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
+									<input type="file" accept="image/*" ref="mainImage" @change="onChangeMainImageFile">
+									<input class="uk-visible@s uk-input uk-form-width-medium" type="text"
+										   placeholder="Select file" disabled>
+									<div class="uk-width-1-1 image-preview" v-if="sendData.mainImage">
+										<img class="preview" :src="mainImageData">
+									</div>
 								</div>
 							</div>
 							<div class="uk-width-1-1@s">
 							</div>
 							<div class="uk-width-1-1@s">
 								<div class="uk-grid-small uk-grid" data-uk-grid>
-									<ScInput v-model="eventDate" v-flatpickr="dpRange" placeholder="이벤트 기간" mode="outline">
+									<ScInput v-model="eventDate" v-flatpickr="dpRange" placeholder="이벤트 기간"
+											 mode="outline">
 										<span slot="icon" class="uk-form-icon" data-uk-icon="calendar"></span>
 									</ScInput>
 								</div>
@@ -63,15 +72,15 @@
 							</div>
 
 							<div class="uk-width-1-2">
-								<select v-model="sendData.eventType" class="uk-select">
-									<option value="">이벤트 종류</option>
+								<select v-model="sendData.eventType" class="uk-select" required="required">
+									<option value="" disabled="disabled">이벤트 종류</option>
 									<option value="0">팝업적용</option>
 									<option value="1">팝업미적용</option>
 								</select>
 							</div>
 							<div class="uk-width-1-2">
-								<select v-model="sendData.isOpen" class="uk-select">
-									<option value="">공개여부</option>
+								<select v-model="sendData.isOpen" class="uk-select" required="required">
+									<option value="" disabled="disabled">공개여부</option>
 									<option value=true>공개</option>
 									<option value=false>비공개</option>
 								</select>
@@ -84,7 +93,8 @@
 								@click="submitForm">
 							{{ sendData.uid ? '수정': '등록' }}
 						</button>
-						<button v-if="sendData.uid" class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
+						<button v-if="sendData.uid" class="sc-button sc-button-primary"
+								:disabled="submitStatus === 'PENDING'"
 								@click="deleteForm">
 							삭제
 						</button>
@@ -100,7 +110,8 @@
 	import {required, minLength, minValue, sameAs, email, requiredIf} from 'vuelidate/lib/validators'
 	import ScInput from '~/components/Input'
 	import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate"
-	if(process.client) {
+
+	if (process.client) {
 		require('~/plugins/flatpickr');
 	}
 
@@ -119,25 +130,27 @@
 		},
 		data() {
 			return {
+				bannerImageData:"",
+				mainImageData:"",
 				cardFormClosed: true,
 				submitStatus: null,
 				sendData: {},
-				eventDate:'',
+				eventDate: '',
 				defaultForm: {
 					uid: null,
-					title:'',
+					title: '',
 					bannerImage: '',
 					mainImage: '',
 					accountUid: 0,
-					startDate:'',
+					startDate: '',
 					endDate: '',
-					eventType:0,
-					isOpen: false,
+					eventType: '',
+					isOpen: '',
 				}
 			}
 		},
-		computed:{
-			dpRange () {
+		computed: {
+			dpRange() {
 				return {
 					mode: "range",
 					plugins: [confirmDatePlugin]
@@ -145,31 +158,62 @@
 			},
 		},
 		watch: {
-			'eventDate': function(newVal) {
-				if(newVal.includes("~")){
+			'eventDate': function (newVal) {
+				if (newVal.includes("~")) {
 					this.sendData.startDate = newVal.split('~')[0].trim();
 					this.sendData.endDate = newVal.split('~')[1].trim();
 				}
-			}
+			},
 		},
 		validations: {
 			sendData: {
 				title: {
 					required
 				},
+
 			}
 		},
 		methods: {
-			onChangeFile() {
+			onChangeBannerImageFile(event) {
+				var input = event.target;
+				if(input.files && input.files[0]){
+					var reader = new FileReader();
+					reader.onload = e => {
+						this.bannerImageData = e.target.result;
+					}
+					if(input.files[0].size > 800*800){
+						event.preventDefault();
+						this.callNotification('파일을 다시 확인하세요.')
+						return;
+					}
+					reader.readAsDataURL(input.files[0]);
+				}
 				this.sendData.bannerImage = this.$refs.bannerImage.files[0];
+			},
+			onChangeMainImageFile(event) {
+				var input = event.target;
+				if(input.files && input.files[0]){
+					var reader = new FileReader();
+					reader.onload = e => {
+						this.mainImageData = e.target.result;
+					}
+					if(input.files[0].size > 800*800){
+						event.preventDefault();
+						this.callNotification('파일을 다시 확인하세요.')
+						return;
+					}
+					reader.readAsDataURL(input.files[0]);
+				}
 				this.sendData.mainImage = this.$refs.mainImage.files[0];
 			},
-
-
 			settingForm(props) {
 				this.$v.$reset()
 				if (props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
+					this.eventDate = this.sendData.startDate.substr(0,10)+" ~ "+this.sendData.endDate.substr(0, 10)
+
+					this.bannerImageData = this.sendData.bannerImage
+					this.mainImageData = this.sendData.mainImage
 				} else {
 					this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
 				}
@@ -182,13 +226,13 @@
 				this.cardFormClosed = true
 				this.$nuxt.$emit('reset-event-list')
 			},
-			deleteForm(){
-				this.$axios.$delete(this.config.apiUrl + '/api/events/' + this.sendData.uid,this.sendData).then(async res => {
+			deleteForm() {
+				this.$axios.$delete(this.config.apiUrl + '/api/events/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('fetch-event-list',res.data.uid)
+					this.$nuxt.$emit('fetch-event-list', res.data.uid)
 				}).finally(() => {
 					this.deleteStatus = 'OK'
-					this.cardFormClosed=true
+					this.cardFormClosed = true
 				})
 			},
 			submitForm(e) {
@@ -223,13 +267,9 @@
 				formData.append("eventType", this.sendData.eventType)
 				formData.append("isOpen", this.sendData.isOpen)
 
-				for(let key of formData.entries()){
-					console.log(`${key}`);
-				}
-
-				this.$axios.$post(this.config.apiUrl + '/api/events', formData,{
+				this.$axios.$post(this.config.apiUrl + '/api/events', formData, {
 					headers: {
-						'Content-Type' : 'multipart/form-data'
+						'Content-Type': 'multipart/form-data'
 					}
 				}).then(async res => {
 					this.callNotification('등록하였습니다.')
@@ -239,7 +279,19 @@
 				})
 			},
 			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/api/events/' + this.sendData.uid, this.sendData).then(async res => {
+				const formData = new FormData()
+				formData.append("bannerImage", this.sendData.bannerImage)
+				formData.append("mainImage", this.sendData.mainImage)
+
+				//---- 기타 파라미터 항목들 추가 ----//
+				formData.append("accountUid", this.$auth.user.uid)
+				formData.append("title", this.sendData.title)
+				formData.append("startDate", this.sendData.startDate)
+				formData.append("endDate", this.sendData.endDate)
+				formData.append("eventType", this.sendData.eventType)
+				formData.append("isOpen", this.sendData.isOpen)
+
+				this.$axios.$put(this.config.apiUrl + '/api/events/' + this.sendData.uid, formData).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-event-list', res.data.uid)
 				}).finally(() => {
@@ -260,6 +312,7 @@
 		async beforeMount() {
 			this.sendData = this.defaultForm
 		},
+
 		beforeDestroy() {
 			this.$nuxt.$off('open-event-form')
 			this.$nuxt.$off('close-event-form')
@@ -267,8 +320,26 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.sc-vue-errors li {
 		font-size: 12px;
 	}
+
+	.image-preview{
+		text-align: center;
+		vertical-align: middle ;
+		background-color: #DCDCDC;
+		height: auto;
+		padding: 20px;
+	}
+	img.preview {
+		height: auto;
+		width: auto;
+		max-height: 150px;
+		max-width: 150px;
+		background-color:white;
+		border: 1px solid #DDD;
+		padding: 2px;
+	}
+
 </style>

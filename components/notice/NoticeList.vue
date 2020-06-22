@@ -87,6 +87,11 @@ export default {
 					}
 				},
 				{
+					headerName: '분류',
+					field: 'noticeType',
+					width: 80
+				},
+				{
 					headerName: '제목',
 					field: 'title',
 					suppressSizeToFit: false,
@@ -95,6 +100,14 @@ export default {
 					headerName: '작성자',
 					field: 'account.name',
 					width: 160
+				},
+				{
+					headerName: '활성',
+					field: 'isActive',
+					width: 60,
+					cellRenderer: (obj) => {
+						return obj.value ? '<i class="mdi mdi-check-circle" style="font-size:8px;"></i>' : ''
+					}
 				},
 				{
 					headerName: '등록일시',

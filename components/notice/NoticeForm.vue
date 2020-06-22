@@ -53,6 +53,23 @@
 									</li>
 								</ul>
 							</div>
+							<div class="uk-width-1-2@s">
+								<select v-model="sendData.noticeType" class="uk-select" required="required">
+									<option value="" disabled="disabled">공지사항 분류</option>
+									<option value="0">긴급</option>
+									<option value="1">필수</option>
+									<option value="2">일반</option>
+								</select>
+							</div>
+							<div class="uk-width-1-2@s">
+								<input id="switch-css" v-model="sendData.isOpen" type="checkbox"
+									   class="sc-switch-input">
+								<label for="switch-css" class="sc-switch-label"
+									   style="margin-top:15px;margin-left:15px;">
+									<span class="sc-switch-toggle-on">활성</span>
+									<span class="sc-switch-toggle-off">비활성</span>
+								</label>
+							</div>
 						</form>
 					</div>
 					<div class="uk-margin-top uk-text-center">
@@ -105,7 +122,9 @@
 					uid: null,
 					accountUid:0,
 					title: '',
-					content: ''
+					content: '',
+					noticeType:'',
+					isOpen: false
 				}
 			}
 		},
@@ -116,7 +135,7 @@
 				},
 				content: {
 					required
-				}
+				},
 			}
 		},
 		created() {
