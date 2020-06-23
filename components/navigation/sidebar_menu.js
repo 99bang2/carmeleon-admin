@@ -1,4 +1,5 @@
 import {scHelpers} from "~/assets/js/utils";
+import {updateHeightsInViewport} from "codemirror/src/display/update_lines";
 
 const {uniqueID} = scHelpers;
 
@@ -20,4 +21,10 @@ export const menuEntries = [
 		icon: "mdi mdi-account-supervisor",
 		page: "/accounts",
 	},
+	{
+		id: uniqueID(),
+		title: "Parkings",
+		icon: "mdi mdi-parking",
+		page: "/parkings"
+	}
 ];
