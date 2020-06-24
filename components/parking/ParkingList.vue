@@ -286,23 +286,23 @@
 				this.gridOptions.api.redrawRows()
 			},
 			async fetchData(selectUid) {
-				let fakeData = [
-					{
-						uid: 1,
-						siteType: 0,
-						name: '제일좋은주차장',
-						parkingLot: 100,
-						isActive: true,
-						price: 2000,
-						rating: 5,
-						createdAt: '2020-06-04 11:00:00'
-					}
-				]
-				this.gridOptions.api.setRowData(fakeData)
+				// let fakeData = [
+				// 	{
+				// 		uid: 1,
+				// 		siteType: 0,
+				// 		name: '제일좋은주차장',
+				// 		parkingLot: 100,
+				// 		isActive: true,
+				// 		price: 2000,
+				// 		rating: 5,
+				// 		createdAt: '2020-06-04 11:00:00'
+				// 	}
+				// ]
+				// this.gridOptions.api.setRowData(fakeData)
 
 				// API 연동
-				// let res = await this.$axios.$get(this.config.apiUrl +'/api/parkings')
-				// this.gridOptions.api.setRowData(res.data)
+				let res = await this.$axios.$get(this.config.apiUrl +'/api/parkings')
+				this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
 						if (node.data.uid === selectUid) {

@@ -103,6 +103,7 @@ module.exports = {
 	** Plugins to load before mounting the App
 	*/
 	plugins: [
+		{src: '~/plugins/vue-lazyload.js'},
 		{src: '~/plugins/components.global.js'},
 		{src: '~/plugins/directives.client.js'},
 		{src: '~/plugins/filters.js'},

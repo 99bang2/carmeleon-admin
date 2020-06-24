@@ -70,6 +70,7 @@
 		"vue-good-table": "^2.18.1",
 		"vue-highlightjs": "^1.3.3",
 		"vue-html-to-paper": "^1.3.0",
+		"vue-lazyload": "^1.3.3",
 		"vue-moment": "^4.1.0",
 		"vue-naver-maps": "^0.11.10",
 		"vue-property-decorator": "^8.4.0",

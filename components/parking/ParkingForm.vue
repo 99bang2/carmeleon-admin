@@ -240,10 +240,11 @@
 										@upload-success="uploadImageSuccess"
 										@before-remove="beforeRemove"
 										@edit-image="editImage"
-										:data-images="sendData.pictures"
-										idUpload="myIdUpload"
-										editUpload="myIdEdit"
+
 									></vue-upload-multiple-image>
+									<!--										:data-images="images"-->
+									<!--										idUpload="myIdUpload"-->
+									<!--										editUpload="myIdEdit"-->
 								</div>
 							</div>
 						</form>
@@ -269,14 +270,16 @@
 	import ScCard from "@/components/card/components/Card";
 	import ScInput from "@/components/Input";
 	import ScTextarea from '~/components/Textarea'
+	import ScCardAction from "@/components/card/components/CardActions"
 	import VueUploadMultipleImage from 'vue-upload-multiple-image';
 	import {validationMixin} from 'vuelidate'
 	import PrettyCheck from 'pretty-checkbox-vue/check';
 	import {required, minLength, minValue, sameAs, email, requiredIf} from 'vuelidate/lib/validators'
-
-
+	if(process.client) {
+		require('~/plugins/inputmask');
+	}
 	export default {
-		components: {ScInput, ScCard, ScTextarea, VueUploadMultipleImage, PrettyCheck},
+		components: {ScInput, ScCard, ScTextarea, VueUploadMultipleImage, PrettyCheck,ScCardAction},
 		mixins: [
 			validationMixin,
 		],
@@ -311,99 +314,99 @@
 					productTags: [],
 					optionTags: [],
 					carTags: [],
-					pictures: []
+					images: [],
 				},
 				paymentTagOptions: [
 					{
-						id: '1',
+						id: '11',
 						name: '카드결제',
 						val: 'card',
 					},
 					{
-						id: '2',
+						id: '12',
 						name: '현금결제',
 						val: 'cash'
 					},
 					{
-						id: '3',
+						id: '13',
 						name: '인앱결제',
 						val: 'inApp'
 					}
 				],
 				brandTagOptions: [
 					{
-						id: '1',
+						id: '21',
 						name: '하이파킹',
 						val: 'hiParking',
 					},
 					{
-						id: '2',
+						id: '22',
 						name: '서울시',
 						val: 'cityOfSeoul'
 					}
 				],
 				productTagOptions: [
 					{
-						id: '1',
+						id: '31',
 						name: '시간권',
 						val: 'timePass',
 					},
 					{
-						id: '2',
+						id: '32',
 						name: '당일권',
 						val: 'dayPass'
 					},
 					{
-						id: '3',
+						id: '33',
 						name: '월정기권',
 						val: 'monthPass'
 					}
 				],
 				optionTagOptions: [
 					{
-						id: '1',
+						id: '41',
 						name: '경차',
 						val: 'cityCar',
 					},
 					{
-						id: '2',
+						id: '42',
 						name: '노약자',
 						val: 'cityOfSeoul'
 					},
 					{
-						id: '3',
+						id: '43',
 						name: '장애인',
 						val: 'disabled'
 					},
 					{
-						id: '4',
+						id: '44',
 						name: '임산부',
 						val: 'pregnant'
 					},
 					{
-						id: '5',
+						id: '45',
 						name: '여성',
 						val: 'female'
 					},
 					{
-						id: '6',
+						id: '46',
 						name: '전기차충전',
 						val: 'elecCharge'
 					},
 					{
-						id: '7',
+						id: '47',
 						name: '기계식',
 						val: 'mechanical'
 					}
 				],
 				carTagOptions: [
 					{
-						id: '1',
+						id: '51',
 						name: '버스',
 						val: 'bus',
 					},
 					{
-						id: '2',
+						id: '52',
 						name: '화물',
 						val: 'freight'
 					}
@@ -428,14 +431,16 @@
 		methods: {
 			//multi image upload////////////////////////////////////////////////
 			uploadImageSuccess(formData, index, fileList) {
-				console.log('data', formData, index, fileList)
+				// this.images.unshift(fileList[index])
+				this.sendData.images[index] = fileList[index];
 				// Upload image api
 				// axios.post('http://your-url-upload', formData).then(response => {
 				//   console.log(response)
 				// })
 			},
 			beforeRemove(index, done, fileList) {
-				console.log('index', index, fileList)
+				// console.log('index', index, fileList)
+				this.sendData.images.splice(index,1);
 				var r = confirm("remove image")
 				if (r == true) {
 					done()
@@ -443,7 +448,8 @@
 				}
 			},
 			editImage(formData, index, fileList) {
-				console.log('edit data', formData, index, fileList)
+				// console.log('edit data', formData, index, fileList)
+				this.sendData.images[index] = fileList[index];
 			},
 			//multi image upload////////////////////////////////////////////////
 
@@ -474,12 +480,10 @@
 				})
 			},
 			submitForm(e) {
-				console.log(this.sendData.uid)
 				e.preventDefault()
 				this.$v.$touch()
 
 				if (this.$v.$invalid) {
-					console.log(this.$v)
 					this.submitStatus = 'ERROR'
 				} else {
 					this.submitStatus = 'PENDING'
@@ -491,8 +495,55 @@
 				}
 			},
 			postForm() {
-				console.log(this.sendData)
-				this.$axios.$post(this.config.apiUrl + '/api/parkings', this.sendData).then(async res => {
+				let formData = new FormData();
+
+				//기본 값 정의
+				formData.append("siteType", this.sendData.siteType)
+				formData.append("name", this.sendData.name)
+				formData.append("lat", this.sendData.lat)
+				formData.append("lon", this.sendData.lon)
+				formData.append("tel", this.sendData.tel)
+				formData.append("phone", this.sendData.phone)
+				formData.append("email", this.sendData.email)
+				formData.append("manager", this.sendData.manager)
+				formData.append("isActive", this.sendData.isActive)
+				formData.append("price", this.sendData.price)
+				formData.append("address", this.sendData.address)
+				formData.append("info", this.sendData.info)
+				formData.append("priceInfo", this.sendData.priceInfo)
+
+				//JSON Data 정의
+				for( var i = 0; i < this.sendData.images.length; i++ ){
+					let image = this.sendData.images[i];
+					formData.append('images[' + i + ']', image);
+				}
+				for( var i = 0; i < this.sendData.paymentTags.length; i++ ){
+					let paymentTag = this.sendData.paymentTags[i];
+					formData.append('paymentTags[' + i + ']', paymentTag);
+				}
+				for( var i = 0; i < this.sendData.brandTags.length; i++ ){
+					let brandTag = this.sendData.brandTags[i];
+					formData.append('brandTags[' + i + ']', brandTag);
+				}
+				for( var i = 0; i < this.sendData.productTags.length; i++ ){
+					let productTag = this.sendData.productTags[i];
+					formData.append('productTags[' + i + ']', productTag);
+				}
+				for( var i = 0; i < this.sendData.optionTags.length; i++ ){
+					let optionTag = this.sendData.optionTags[i];
+					formData.append('optionTags[' + i + ']', optionTag);
+				}
+				for( var i = 0; i < this.sendData.carTags.length; i++ ){
+					let carTag = this.sendData.carTags[i];
+					formData.append('carTags[' + i + ']', carTag);
+				}
+
+
+				this.$axios.$post(this.config.apiUrl + '/api/parkings', formData,{
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}
+				}).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
 					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
 				}).finally(() => {
@@ -500,7 +551,51 @@
 				})
 			},
 			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/api/parkings/' + this.sendData.uid, this.sendData).then(async res => {
+				let formData = new FormData();
+
+				//기본 값 정의
+				formData.append("siteType", this.sendData.siteType)
+				formData.append("name", this.sendData.name)
+				formData.append("lat", this.sendData.lat)
+				formData.append("lon", this.sendData.lon)
+				formData.append("tel", this.sendData.tel)
+				formData.append("phone", this.sendData.phone)
+				formData.append("email", this.sendData.email)
+				formData.append("manager", this.sendData.manager)
+				formData.append("isActive", this.sendData.isActive)
+				formData.append("price", this.sendData.price)
+				formData.append("address", this.sendData.address)
+				formData.append("info", this.sendData.info)
+				formData.append("priceInfo", this.sendData.priceInfo)
+
+				//JSON Data 정의
+				for( var i = 0; i < this.sendData.images.length; i++ ){
+					let image = this.sendData.images[i];
+					formData.append('images[' + i + ']', image);
+				}
+				for( var i = 0; i < this.sendData.paymentTags.length; i++ ){
+					let paymentTag = this.sendData.paymentTags[i];
+					formData.append('paymentTags[' + i + ']', paymentTag);
+				}
+				for( var i = 0; i < this.sendData.brandTags.length; i++ ){
+					let brandTag = this.sendData.brandTags[i];
+					formData.append('brandTags[' + i + ']', brandTag);
+				}
+				for( var i = 0; i < this.sendData.productTags.length; i++ ){
+					let productTag = this.sendData.productTags[i];
+					formData.append('productTags[' + i + ']', productTag);
+				}
+				for( var i = 0; i < this.sendData.optionTags.length; i++ ){
+					let optionTag = this.sendData.optionTags[i];
+					formData.append('optionTags[' + i + ']', optionTag);
+				}
+				for( var i = 0; i < this.sendData.carTags.length; i++ ){
+					let carTag = this.sendData.carTags[i];
+					formData.append('carTags[' + i + ']', carTag);
+				}
+
+
+				this.$axios.$put(this.config.apiUrl + '/api/parkings/' + this.sendData.uid, formData).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
 				}).finally(() => {
