@@ -182,16 +182,16 @@
 							<div class="uk-width-1-3@s">
 								<ul class="uk-list">
 									<h6>결제태그</h6>
-									<li v-for="tag in paymentTagOptions" :key="tag.id">
-										<PrettyCheck v-model="sendData.paymentTags" :value="tag.val" class="p-icon">
+									<li v-for="tag in paymentTag" :key="tag.id">
+										<PrettyCheck v-model="sendData.paymentTag" :value="tag.value" class="p-icon">
 											<i slot="extra" class="icon mdi mdi-check"></i>
 											{{tag.name}}
 										</PrettyCheck>
 									</li>
 
 									<h6>제휴태그</h6>
-									<li v-for="tag in brandTagOptions" :key="tag.id">
-										<PrettyCheck v-model="sendData.brandTags" :value="tag.val"  class="p-icon">
+									<li v-for="tag in brandTag" :key="tag.id">
+										<PrettyCheck v-model="sendData.brandTag" :value="tag.value" class="p-icon">
 											<i slot="extra" class="icon mdi mdi-check"></i>
 											{{tag.name}}
 										</PrettyCheck>
@@ -202,16 +202,16 @@
 							<div class="uk-width-1-3@s">
 								<ul class="uk-list">
 									<h6>상품태그</h6>
-									<li v-for="tag in productTagOptions" :key="tag.id">
-										<PrettyCheck v-model="sendData.productTags" :value="tag.val" class="p-icon">
+									<li v-for="tag in productTag" :key="tag.id">
+										<PrettyCheck v-model="sendData.productTag" :value="tag.value" class="p-icon">
 											<i slot="extra" class="icon mdi mdi-check"></i>
 											{{tag.name}}
 										</PrettyCheck>
 									</li>
 
 									<h6>차량태그</h6>
-									<li v-for="tag in carTagOptions" :key="tag.id">
-										<PrettyCheck v-model="sendData.carTags" :value="tag.val" class="p-icon">
+									<li v-for="tag in carTag" :key="tag.id">
+										<PrettyCheck v-model="sendData.carTag" :value="tag.value" class="p-icon">
 											<i slot="extra" class="icon mdi mdi-check"></i>
 											{{tag.name}}
 										</PrettyCheck>
@@ -222,8 +222,8 @@
 							<div class="uk-width-auto">
 								<ul class="uk-list">
 									<h6>옵션태그</h6>
-									<li v-for="tag in optionTagOptions" :key="tag.id">
-										<PrettyCheck v-model="sendData.optionTags" :value="tag.val" class="p-icon">
+									<li v-for="tag in optionTag" :key="tag.id">
+										<PrettyCheck v-model="sendData.optionTag" :value="tag.value" class="p-icon">
 											<i slot="extra" class="icon mdi mdi-check"></i>
 											{{tag.name}}
 										</PrettyCheck>
@@ -270,6 +270,7 @@
 	import {validationMixin} from 'vuelidate'
 	import PrettyCheck from 'pretty-checkbox-vue/check';
 	import {required, minLength, minValue, sameAs, email, requiredIf} from 'vuelidate/lib/validators'
+
 	if (process.client) {
 		require('~/plugins/inputmask');
 	}
@@ -304,106 +305,106 @@
 					address: '',
 					info: '',
 					priceInfo: '',
-					paymentTags: [],
-					brandTags: [],
-					productTags: [],
-					optionTags: [],
-					carTags: [],
+					paymentTag: [],
+					brandTag: [],
+					productTag: [],
+					optionTag: [],
+					carTag: [],
 					images: [],
 				},
-				paymentTagOptions: [
+				paymentTag: [
 					{
 						id: '11',
 						name: '카드결제',
-						val: 'card',
+						value: 'card',
 					},
 					{
 						id: '12',
 						name: '현금결제',
-						val: 'cash',
+						value: 'cash',
 					},
 					{
 						id: '13',
 						name: '인앱결제',
-						val: 'inApp',
+						value: 'inApp',
 					}
 				],
-				brandTagOptions: [
+				brandTag: [
 					{
 						id: '21',
 						name: '하이파킹',
-						val: 'hiParking',
+						value: 'hiParking',
 					},
 					{
 						id: '22',
 						name: '서울시',
-						val: 'cityOfSeoul',
+						value: 'cityOfSeoul',
 					}
 				],
-				productTagOptions: [
+				productTag: [
 					{
 						id: '31',
 						name: '시간권',
-						val: 'timePass',
+						value: 'timePass',
 					},
 					{
 						id: '32',
 						name: '당일권',
-						val: 'dayPass',
+						value: 'dayPass',
 					},
 					{
 						id: '33',
 						name: '월정기권',
-						val: 'monthPass',
+						value: 'monthPass',
 					}
 				],
-				optionTagOptions: [
+				optionTag: [
 					{
 						id: '41',
 						name: '경차',
-						val: 'cityCar',
+						value: 'cityCar',
 					},
 					{
 						id: '42',
 						name: '노약자',
-						val: 'cityOfSeoul',
+						value: 'cityOfSeoul',
 					},
 					{
 						id: '43',
 						name: '장애인',
-						val: 'disabled',
+						value: 'disabled',
 					},
 					{
 						id: '44',
 						name: '임산부',
-						val: 'pregnant',
+						value: 'pregnant',
 					},
 					{
 						id: '45',
 						name: '여성',
-						val: 'female',
+						value: 'female',
 					},
 					{
 						id: '46',
 						name: '전기차충전',
-						val: 'elecCharge',
+						value: 'elecCharge',
 					},
 					{
 						id: '47',
 						name: '기계식',
-						val: 'mechanical',
+						value: 'mechanical',
 					}
 				],
-				carTagOptions: [
+				carTag: [
 					{
 						id: '51',
 						name: '버스',
-						val: 'bus',
+						value: 'bus',
 					},
 					{
 						id: '52',
 						name: '화물',
-						val: 'freight',
+						value: 'freight',
 					}
 				],
 			}
@@ -456,6 +457,7 @@
 				this.$v.$reset()
 				if (props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
+					console.log(this.sendData)
 				} else {
 					this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
 				}
@@ -480,7 +482,6 @@
 			submitForm(e) {
 				e.preventDefault()
 				this.$v.$touch()
-
 				if (this.$v.$invalid) {
 					this.submitStatus = 'ERROR'
 				} else {
@@ -518,38 +519,35 @@
 					formData.append('images', image);
 				}
 
-				let paymentTag = []
-				for (var i = 0; i < this.sendData.paymentTags.length; i++) {
-					paymentTag.push(this.sendData.paymentTags[i]);
+				for (var i = 0; i < this.sendData.paymentTag.length; i++) {
+					formData.append('paymentTag', this.sendData.paymentTag[i]);
 				}
-				console.log(paymentTag)
-				formData.append('paymentTags', paymentTag);
+				formData.append('paymentTag'," ");
 
-				let brandTag = []
-				for (var i = 0; i < this.sendData.brandTags.length; i++) {
-					brandTag.push(this.sendData.brandTags[i]);
+				for (var i = 0; i < this.sendData.brandTag.length; i++) {
+					formData.append('brandTag', this.sendData.brandTag[i]);
 				}
-				formData.append('brandTags', brandTag);
+				formData.append('brandTag'," ");
 
-				let productTag = []
-				for (var i = 0; i < this.sendData.productTags.length; i++) {
-					productTag.push(this.sendData.productTags[i]);
+				for (var i = 0; i < this.sendData.productTag.length; i++) {
+					formData.append('productTag', this.sendData.productTag[i]);
 				}
-				formData.append('productTags', productTag);
+				formData.append('productTag'," ");
 
-				let optionTag = []
-				for (var i = 0; i < this.sendData.optionTags.length; i++) {
-					optionTag.push(this.sendData.optionTags[i]);
+				for (var i = 0; i < this.sendData.optionTag.length; i++) {
+					formData.append('optionTag', this.sendData.optionTag[i]);
 				}
-				formData.append('optionTags', optionTag);
+				formData.append('optionTag'," ");
 
-				let carTag = []
-				for (var i = 0; i < this.sendData.carTags.length; i++) {
-					carTag.push(this.sendData.carTags[i]);
+				for (var i = 0; i < this.sendData.carTag.length; i++) {
+					formData.append('carTag', this.sendData.carTag[i]);
 				}
-				formData.append('carTags', carTag);
+				formData.append('carTag'," ");
 
-				console.log(formData);
+				// for(var i of formData.values()){
+				// 	console.log(i);
+				// }
+
 				this.$axios.$post(this.config.apiUrl + '/api/parkings', formData, {
 					headers: {
 						'Content-Type': 'multipart/form-data'
@@ -586,35 +584,30 @@
 					formData.append('images', image);
 				}
 
-				let paymentTag = []
-				for (var i = 0; i < this.sendData.paymentTags.length; i++) {
-					paymentTag.push(this.sendData.paymentTags[i]);
+				for (var i = 0; i < this.sendData.paymentTag.length; i++) {
+					formData.append('paymentTag', this.sendData.paymentTag[i]);
 				}
-				formData.append('paymentTags', paymentTag);
+				formData.append('paymentTag'," ");
 
-				let brandTag = []
-				for (var i = 0; i < this.sendData.brandTags.length; i++) {
-					brandTag.push(this.sendData.brandTags[i]);
+				for (var i = 0; i < this.sendData.brandTag.length; i++) {
+					formData.append('brandTag', this.sendData.brandTag[i]);
 				}
-				formData.append('brandTags', brandTag);
+				formData.append('brandTag'," ");
 
-				let productTag = []
-				for (var i = 0; i < this.sendData.productTags.length; i++) {
-					productTag.push(this.sendData.productTags[i]);
+				for (var i = 0; i < this.sendData.productTag.length; i++) {
+					formData.append('productTag', this.sendData.productTag[i]);
 				}
-				formData.append('productTags', productTag);
+				formData.append('productTag'," ");
 
-				let optionTag = []
-				for (var i = 0; i < this.sendData.optionTags.length; i++) {
-					optionTag.push(this.sendData.optionTags[i]);
+				for (var i = 0; i < this.sendData.optionTag.length; i++) {
+					formData.append('optionTag', this.sendData.optionTag[i]);
 				}
-				formData.append('optionTags', optionTag);
+				formData.append('optionTag'," ");
 
-				let carTag = []
-				for (var i = 0; i < this.sendData.carTags.length; i++) {
-					carTag.push(this.sendData.carTags[i]);
+				for (var i = 0; i < this.sendData.carTag.length; i++) {
+					formData.append('carTag', this.sendData.carTag[i]);
 				}
-				formData.append('carTags', carTag);
+				formData.append('carTag'," ");
 
 
 				this.$axios.$put(this.config.apiUrl + '/api/parkings/' + this.sendData.uid, formData).then(async res => {
