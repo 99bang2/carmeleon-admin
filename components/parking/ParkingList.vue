@@ -132,15 +132,15 @@
 								let typeName = ''
 								switch (obj.value) {
 									case 0 :
-										badge = 'md-bg-teal-600'
+										badge = 'md-bg-green-500'
 										typeName = '하이파킹'
 										break
 									case 1 :
-										badge = 'md-bg-blue-600'
+										badge = 'md-bg-blue-500'
 										typeName = '제휴'
 										break
 									case 2 :
-										badge = 'md-bg-gray-600'
+										badge = 'md-bg-gray-500'
 										typeName = '일반'
 										break
 								}

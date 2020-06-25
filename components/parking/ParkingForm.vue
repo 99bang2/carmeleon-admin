@@ -239,6 +239,7 @@
 										@upload-success="uploadImageSuccess"
 										@before-remove="beforeRemove"
 										@edit-image="editImage"
+										:data-images="tempImage"
 									></vue-upload-multiple-image>
 								</div>
 							</div>
@@ -290,6 +291,7 @@
 				cardFormClosed: true,
 				submitStatus: null,
 				sendData: {},
+				tempImage: [],
 				defaultForm: {
 					uid: null,
 					siteType: '',
@@ -310,7 +312,7 @@
 					productTag: [],
 					optionTag: [],
 					carTag: [],
-					images: [],
+					picture: [],
 				},
 				paymentTag: [
 					{
@@ -427,19 +429,19 @@
 		methods: {
 			//multi image upload////////////////////////////////////////////////
 			uploadImageSuccess(formData, index, fileList) {
-				// this.images.unshift(fileList[index])
-				for (var value of formData.values()) {
-					this.sendData.images[index] = value;
+				console.log(fileList);
+				// this.picture.unshift(fileList[index])
+				for (var key of formData.keys()) {
+					this.sendData.picture[index] = key;
+					console.log(key);
 				}
-				console.log(this.sendData.images)
 				// Upload image api
 				// axios.post('http://your-url-upload', formData).then(response => {
 				//   console.log(response)
 				// })
 			},
 			beforeRemove(index, done, fileList) {
-				// console.log('index', index, fileList)
-				this.sendData.images.splice(index, 1);
+				this.sendData.picture.splice(index, 1);
 				let r = confirm("remove image")
 				if (r == true) {
 					done()
@@ -447,8 +449,7 @@
 				}
 			},
 			editImage(formData, index, fileList) {
-				// console.log('edit data', formData, index, fileList)
-				this.sendData.images[index] = fileList[index];
+				this.sendData.picture[index] = fileList[index];
 			},
 			//multi image upload////////////////////////////////////////////////
 
@@ -457,7 +458,15 @@
 				this.$v.$reset()
 				if (props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
-					console.log(this.sendData)
+					// vue-upload-multiple-image 패키지 사용
+					// 주차장 상세보기 할 때, upload된 영역 불러올때 사용
+					if(this.sendData.picture!==null) {
+						for (let i = 0; i < this.sendData.picture.length; i++) {
+							let img = {}
+							img.path = this.sendData.picture[i]
+							this.tempImage[i] = img
+						}
+					}
 				} else {
 					this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
 				}
@@ -494,9 +503,7 @@
 				}
 			},
 			postForm() {
-
 				let formData = new FormData();
-
 				//기본 값 정의
 				formData.append("siteType", this.sendData.siteType)
 				formData.append("name", this.sendData.name)
@@ -514,39 +521,35 @@
 				formData.append("priceInfo", this.sendData.priceInfo)
 
 				//JSON Data 정의
-				for (var i = 0; i < this.sendData.images.length; i++) {
-					let image = this.sendData.images[i];
+				//데이터를 한개 삽입 시 전달이 안됨 Sol. formData끝에 " " 를 append
+				for (var i = 0; i < this.sendData.picture.length; i++) {
+					let image = this.sendData.picture[i];
 					formData.append('images', image);
 				}
-
 				for (var i = 0; i < this.sendData.paymentTag.length; i++) {
 					formData.append('paymentTag', this.sendData.paymentTag[i]);
 				}
-				formData.append('paymentTag'," ");
 
 				for (var i = 0; i < this.sendData.brandTag.length; i++) {
 					formData.append('brandTag', this.sendData.brandTag[i]);
 				}
-				formData.append('brandTag'," ");
 
 				for (var i = 0; i < this.sendData.productTag.length; i++) {
 					formData.append('productTag', this.sendData.productTag[i]);
 				}
-				formData.append('productTag'," ");
 
 				for (var i = 0; i < this.sendData.optionTag.length; i++) {
 					formData.append('optionTag', this.sendData.optionTag[i]);
 				}
-				formData.append('optionTag'," ");
 
 				for (var i = 0; i < this.sendData.carTag.length; i++) {
 					formData.append('carTag', this.sendData.carTag[i]);
 				}
-				formData.append('carTag'," ");
 
-				// for(var i of formData.values()){
-				// 	console.log(i);
-				// }
+				console.log("이것은 폼데이타")
+				for(var i of formData.values()){
+					console.log(i);
+				}
 
 				this.$axios.$post(this.config.apiUrl + '/api/parkings', formData, {
 					headers: {
@@ -579,38 +582,37 @@
 				formData.append("priceInfo", this.sendData.priceInfo)
 
 				//JSON Data 정의
-				for (var i = 0; i < this.sendData.images.length; i++) {
-					let image = this.sendData.images[i];
+				for (var i = 0; i < this.sendData.picture.length; i++) {
+					let image = this.sendData.picture[i];
 					formData.append('images', image);
 				}
 
 				for (var i = 0; i < this.sendData.paymentTag.length; i++) {
 					formData.append('paymentTag', this.sendData.paymentTag[i]);
 				}
-				formData.append('paymentTag'," ");
 
 				for (var i = 0; i < this.sendData.brandTag.length; i++) {
 					formData.append('brandTag', this.sendData.brandTag[i]);
 				}
-				formData.append('brandTag'," ");
 
 				for (var i = 0; i < this.sendData.productTag.length; i++) {
 					formData.append('productTag', this.sendData.productTag[i]);
 				}
-				formData.append('productTag'," ");
 
 				for (var i = 0; i < this.sendData.optionTag.length; i++) {
 					formData.append('optionTag', this.sendData.optionTag[i]);
 				}
-				formData.append('optionTag'," ");
 
 				for (var i = 0; i < this.sendData.carTag.length; i++) {
 					formData.append('carTag', this.sendData.carTag[i]);
 				}
-				formData.append('carTag'," ");
 
 
-				this.$axios.$put(this.config.apiUrl + '/api/parkings/' + this.sendData.uid, formData).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/api/parkings/' + this.sendData.uid, formData, {
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}
+				}).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
 				}).finally(() => {
