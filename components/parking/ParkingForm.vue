@@ -429,27 +429,29 @@
 		methods: {
 			//multi image upload////////////////////////////////////////////////
 			uploadImageSuccess(formData, index, fileList) {
-				console.log(fileList);
-				// this.picture.unshift(fileList[index])
-				for (var key of formData.keys()) {
-					this.sendData.picture[index] = key;
-					console.log(key);
-				}
-				// Upload image api
-				// axios.post('http://your-url-upload', formData).then(response => {
-				//   console.log(response)
-				// })
+				formData.append('dir', 'site')
+				this.$axios.$post(this.config.apiUrl + '/api/uploads/', formData).then(response => {
+					console.log(response.data)
+					this.sendData.picture[index] = response.data;
+				})
 			},
 			beforeRemove(index, done, fileList) {
-				this.sendData.picture.splice(index, 1);
 				let r = confirm("remove image")
 				if (r == true) {
 					done()
+					console.log("아무거나", index)
+					console.log(this.sendData.picture)
+					this.sendData.picture.splice(index,1);
+					console.log(this.sendData.picture)
 				} else {
 				}
 			},
 			editImage(formData, index, fileList) {
-				this.sendData.picture[index] = fileList[index];
+				formData.append('dir', 'site')
+				this.$axios.$post(this.config.apiUrl + '/api/uploads/', formData).then(response => {
+					console.log(response.data)
+					this.sendData.picture[index] = response.data;
+				})
 			},
 			//multi image upload////////////////////////////////////////////////
 
@@ -458,9 +460,13 @@
 				this.$v.$reset()
 				if (props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
+					console.log(this.sendData.picture)
+
+
 					// vue-upload-multiple-image 패키지 사용
 					// 주차장 상세보기 할 때, upload된 영역 불러올때 사용
-					if(this.sendData.picture!==null) {
+					this.tempImage = []
+					if (this.sendData.picture !== null) {
 						for (let i = 0; i < this.sendData.picture.length; i++) {
 							let img = {}
 							img.path = this.sendData.picture[i]
@@ -503,59 +509,7 @@
 				}
 			},
 			postForm() {
-				let formData = new FormData();
-				//기본 값 정의
-				formData.append("siteType", this.sendData.siteType)
-				formData.append("name", this.sendData.name)
-				formData.append("lat", this.sendData.lat)
-				formData.append("lon", this.sendData.lon)
-				formData.append("tel", this.sendData.tel)
-				formData.append("phone", this.sendData.phone)
-				formData.append("email", this.sendData.email)
-				formData.append("manager", this.sendData.manager)
-				formData.append("isActive", this.sendData.isActive)
-				formData.append("parkingLot", this.sendData.parkingLot)
-				formData.append("price", this.sendData.price)
-				formData.append("address", this.sendData.address)
-				formData.append("info", this.sendData.info)
-				formData.append("priceInfo", this.sendData.priceInfo)
-
-				//JSON Data 정의
-				//데이터를 한개 삽입 시 전달이 안됨 Sol. formData끝에 " " 를 append
-				for (var i = 0; i < this.sendData.picture.length; i++) {
-					let image = this.sendData.picture[i];
-					formData.append('images', image);
-				}
-				for (var i = 0; i < this.sendData.paymentTag.length; i++) {
-					formData.append('paymentTag', this.sendData.paymentTag[i]);
-				}
-
-				for (var i = 0; i < this.sendData.brandTag.length; i++) {
-					formData.append('brandTag', this.sendData.brandTag[i]);
-				}
-
-				for (var i = 0; i < this.sendData.productTag.length; i++) {
-					formData.append('productTag', this.sendData.productTag[i]);
-				}
-
-				for (var i = 0; i < this.sendData.optionTag.length; i++) {
-					formData.append('optionTag', this.sendData.optionTag[i]);
-				}
-
-				for (var i = 0; i < this.sendData.carTag.length; i++) {
-					formData.append('carTag', this.sendData.carTag[i]);
-				}
-
-				console.log("이것은 폼데이타")
-				for(var i of formData.values()){
-					console.log(i);
-				}
-
-				this.$axios.$post(this.config.apiUrl + '/api/parkings', formData, {
-					headers: {
-						'Content-Type': 'multipart/form-data'
-					}
-				}).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/api/parkings', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
 					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
 				}).finally(() => {
@@ -563,56 +517,7 @@
 				})
 			},
 			putForm() {
-				let formData = new FormData();
-
-				//기본 값 정의
-				formData.append("siteType", this.sendData.siteType)
-				formData.append("name", this.sendData.name)
-				formData.append("lat", this.sendData.lat)
-				formData.append("lon", this.sendData.lon)
-				formData.append("tel", this.sendData.tel)
-				formData.append("phone", this.sendData.phone)
-				formData.append("email", this.sendData.email)
-				formData.append("manager", this.sendData.manager)
-				formData.append("parkingLot", this.sendData.parkingLot)
-				formData.append("isActive", this.sendData.isActive)
-				formData.append("price", this.sendData.price)
-				formData.append("address", this.sendData.address)
-				formData.append("info", this.sendData.info)
-				formData.append("priceInfo", this.sendData.priceInfo)
-
-				//JSON Data 정의
-				for (var i = 0; i < this.sendData.picture.length; i++) {
-					let image = this.sendData.picture[i];
-					formData.append('images', image);
-				}
-
-				for (var i = 0; i < this.sendData.paymentTag.length; i++) {
-					formData.append('paymentTag', this.sendData.paymentTag[i]);
-				}
-
-				for (var i = 0; i < this.sendData.brandTag.length; i++) {
-					formData.append('brandTag', this.sendData.brandTag[i]);
-				}
-
-				for (var i = 0; i < this.sendData.productTag.length; i++) {
-					formData.append('productTag', this.sendData.productTag[i]);
-				}
-
-				for (var i = 0; i < this.sendData.optionTag.length; i++) {
-					formData.append('optionTag', this.sendData.optionTag[i]);
-				}
-
-				for (var i = 0; i < this.sendData.carTag.length; i++) {
-					formData.append('carTag', this.sendData.carTag[i]);
-				}
-
-
-				this.$axios.$post(this.config.apiUrl + '/api/parkings/' + this.sendData.uid, formData, {
-					headers: {
-						'Content-Type': 'multipart/form-data'
-					}
-				}).then(async res => {
+				this.$axios.$put(this.config.apiUrl + '/api/parkings/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
 				}).finally(() => {
