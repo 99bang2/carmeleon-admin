@@ -65,26 +65,44 @@
 								let label = ''
 								let star =''
 								switch (obj.value) {
-									case 5:
-										star = '★★★★★'
+									case 10:
+										star='★★★★★'
 										break;
-									case 4:
+									case 9:
+										star = '★★★★☆'
+										break;
+									case 8:
 										star = '★★★★'
 										break;
-									case 3:
+									case 7:
+										star = '★★★☆'
+										break;
+									case 6:
 										star = '★★★'
 										label = 'uk-label-success'
 										break;
-									case 2:
+									case 5:
+										star = '★★☆'
+										label = 'uk-label-success'
+										break;
+									case 4:
 										star = '★★'
 										label = 'uk-label-warning'
 										break;
-									case 1:
+									case 3:
+										star = '★☆'
+										label = 'uk-label-warning'
+										break;
+									case 2:
 										star = '★'
 										label = 'uk-label-danger'
 										break;
+									case 1:
+										star = '★☆'
+										label = 'uk-label-danger'
+										break;
 								}
-								return `<div style="text-align:right"><span class="uk-label ${label}">${star}&nbsp;&nbsp;${obj.value}</span></div>`
+								return `<div style="text-align:right"><span class="uk-label ${label}">${star}&nbsp;&nbsp;${obj.value/2}</span></div>`
 							}
 						}
 					}
