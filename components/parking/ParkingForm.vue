@@ -17,245 +17,264 @@
 					</div>
 				</ScCardHeader>
 				<ScCardBody style="padding-top:0px">
-					<div class="uk-accordion-content">
-						<form class="uk-grid-small uk-grid" data-uk-grid>
-							<!--	siteType, name  -->
-							<div class="uk-width-1-3">
-								<select v-model="sendData.siteType" class="uk-select" required="required">
-									<option value="" disabled="disabled">주차장 유형</option>
-									<option value="0">하이파킹</option>
-									<option value="1">제휴</option>
-									<option value="2">일반</option>
-								</select>
-							</div>
-							<div class="uk-width-2-3">
-								<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error"
-										 :validator="$v.sendData.name">
-									<label>
-										주차장 이름
-									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-										  data-uk-icon="icon: pencil"/>
-								</ScInput>
-								<ul class="sc-vue-errors">
-									<li v-if="!$v.sendData.name.required">
-										주차장 이름을 입력하세요.
-									</li>
-								</ul>
-							</div>
-							<!--	최대 가용 대수 , 위도 경도  -->
-							<div class="uk-width-1-3">
-								<ScInput v-model="sendData.parkingLot" :error-state="$v.sendData.parkingLot.$error"
-										 :validator="$v.sendData.parkingLot">
-									<label>
-										최대가용대수
-									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-										  data-uk-icon="icon: pencil"/>
-								</ScInput>
-								<ul class="sc-vue-errors">
-									<li v-if="!$v.sendData.parkingLot.required">
-										최대가용대수를 입력하세요.
-									</li>
-								</ul>
-							</div>
-							<div class="uk-width-1-3">
-								<ScInput v-model="sendData.lat" :error-state="$v.sendData.lat.$error"
-										 :validator="$v.sendData.lat">
-									<label>
-										위도
-									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-										  data-uk-icon="icon: location"/>
-								</ScInput>
-								<ul class="sc-vue-errors">
-									<li v-if="!$v.sendData.lat.required">
-										위도를 입력해주세요.
-									</li>
-								</ul>
-							</div>
-							<div class="uk-width-1-3">
-								<ScInput v-model="sendData.lon" :error-state="$v.sendData.lon.$error"
-										 :validator="$v.sendData.lon">
-									<label>
-										경도
-									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-										  data-uk-icon="icon: location"/>
-								</ScInput>
-								<ul class="sc-vue-errors">
-									<li v-if="!$v.sendData.parkingLot.required">
-										경도를 입력해주세요.
-									</li>
-								</ul>
-							</div>
-							<!--	연락처, 휴대전화        -->
-							<div class="uk-width-1-2">
-								<ScInput v-model="sendData.tel">
-									<label>
-										연락처
-									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-										  data-uk-icon="icon: receiver"/>
-								</ScInput>
-							</div>
-							<div class="uk-width-1-2">
-								<ScInput v-model="sendData.phone">
-									<label>
-										휴대전화
-									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-										  data-uk-icon="icon: phone"/>
-								</ScInput>
-							</div>
-							<!--	이메일, 담당자이름      -->
-							<div class="uk-width-1-2">
-								<ScInput v-model="sendData.email" v-input-mask="{ 'alias': 'email' }">
-									<label>
-										이메일
-									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: mail"/>
-								</ScInput>
-							</div>
-							<div class="uk-width-1-2">
-								<ScInput v-model="sendData.manager">
-									<label>
-										담당자
-									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"/>
-								</ScInput>
-							</div>
-							<!--	기준가격, 이용가능여부 -->
-							<div class="uk-width-1-2">
-								<ScInput v-model="sendData.price">
-									<label>
-										기준가격
-									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
-								</ScInput>
-							</div>
-							<div class="uk-width-1-2">
-								<input id="switch-css" v-model="sendData.isActive" type="checkbox"
-									   class="sc-switch-input">
-								<label for="switch-css" class="sc-switch-label"
-									   style="margin-top:15px;margin-left:15px;">
-									<span class="sc-switch-toggle-on">운영중</span>
-									<span class="sc-switch-toggle-off">미운영</span>
-								</label>
-							</div>
-							<!--    주소                    -->
-							<div class="uk-width-1-1">
-								<ScInput v-model="sendData.address">
-									<label>
-										주소
-									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: home"/>
-								</ScInput>
-							</div>
-							<hr>
-							<!--    주차장 안내             -->
-							<div class="uk-width-1-1">
-								<ScTextarea
-									v-model="sendData.info"
-									:cols="30"
-									:rows="4"
-									:autosize="true"
-									mode="outline"
-								>
-									<label>주차장 안내 입력</label>
-								</ScTextarea>
-							</div>
-							<!--    요금 안내               -->
-							<div class="uk-width-1-1">
-								<ScTextarea
-									v-model="sendData.priceInfo"
-									:cols="30"
-									:rows="4"
-									:autosize="true"
-									mode="outline"
-								>
-									<label>요금 안내 입력</label>
-								</ScTextarea>
-							</div>
-							<hr>
-							<!--    결제태그 제휴태그-->
-							<div class="uk-width-1-3@s">
-								<ul class="uk-list">
-									<h6>결제태그</h6>
-									<li v-for="tag in paymentTag" :key="tag.id">
-										<PrettyCheck v-model="sendData.paymentTag" :value="tag.value" class="p-icon">
-											<i slot="extra" class="icon mdi mdi-check"></i>
-											{{tag.name}}
-										</PrettyCheck>
-									</li>
+					<ul class="uk-child-width-expand" data-uk-tab v-show="sendData.uid">
+						<li class="uk-active">
+							<a href="javascript:void(0)">
+								주차장 정보관리
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid)">
+								주차장 리뷰보기
+							</a>
+						</li>
+					</ul>
+					<ul class="uk-switcher">
+						<li>
+							<div class="uk-accordion-content">
+								<form class="uk-grid-small uk-grid" data-uk-grid>
+									<!--	siteType, name  -->
+									<div class="uk-width-1-3">
+										<select v-model="sendData.siteType" class="uk-select" required="required">
+											<option value="" disabled="disabled">주차장 유형</option>
+											<option value="0">하이파킹</option>
+											<option value="1">제휴</option>
+											<option value="2">일반</option>
+										</select>
+									</div>
+									<div class="uk-width-2-3">
+										<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error"
+												 :validator="$v.sendData.name">
+											<label>
+												주차장 이름
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: pencil"/>
+										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.name.required">
+												주차장 이름을 입력하세요.
+											</li>
+										</ul>
+									</div>
+									<!--	최대 가용 대수 , 위도 경도  -->
+									<div class="uk-width-1-3">
+										<ScInput v-model="sendData.parkingLot" :error-state="$v.sendData.parkingLot.$error"
+												 :validator="$v.sendData.parkingLot">
+											<label>
+												최대가용대수
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: pencil"/>
+										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.parkingLot.required">
+												최대가용대수를 입력하세요.
+											</li>
+										</ul>
+									</div>
+									<div class="uk-width-1-3">
+										<ScInput v-model="sendData.lat" :error-state="$v.sendData.lat.$error"
+												 :validator="$v.sendData.lat">
+											<label>
+												위도
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: location"/>
+										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.lat.required">
+												위도를 입력해주세요.
+											</li>
+										</ul>
+									</div>
+									<div class="uk-width-1-3">
+										<ScInput v-model="sendData.lon" :error-state="$v.sendData.lon.$error"
+												 :validator="$v.sendData.lon">
+											<label>
+												경도
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: location"/>
+										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.parkingLot.required">
+												경도를 입력해주세요.
+											</li>
+										</ul>
+									</div>
+									<!--	연락처, 휴대전화        -->
+									<div class="uk-width-1-2">
+										<ScInput v-model="sendData.tel">
+											<label>
+												연락처
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: receiver"/>
+										</ScInput>
+									</div>
+									<div class="uk-width-1-2">
+										<ScInput v-model="sendData.phone">
+											<label>
+												휴대전화
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: phone"/>
+										</ScInput>
+									</div>
+									<!--	이메일, 담당자이름      -->
+									<div class="uk-width-1-2">
+										<ScInput v-model="sendData.email" v-input-mask="{ 'alias': 'email' }">
+											<label>
+												이메일
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: mail"/>
+										</ScInput>
+									</div>
+									<div class="uk-width-1-2">
+										<ScInput v-model="sendData.manager">
+											<label>
+												담당자
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"/>
+										</ScInput>
+									</div>
+									<!--	기준가격, 이용가능여부 -->
+									<div class="uk-width-1-2">
+										<ScInput v-model="sendData.price">
+											<label>
+												기준가격
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+										</ScInput>
+									</div>
+									<div class="uk-width-1-2">
+										<input id="switch-css" v-model="sendData.isActive" type="checkbox"
+											   class="sc-switch-input">
+										<label for="switch-css" class="sc-switch-label"
+											   style="margin-top:15px;margin-left:15px;">
+											<span class="sc-switch-toggle-on">운영중</span>
+											<span class="sc-switch-toggle-off">미운영</span>
+										</label>
+									</div>
+									<!--    주소                    -->
+									<div class="uk-width-1-1">
+										<ScInput v-model="sendData.address">
+											<label>
+												주소
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: home"/>
+										</ScInput>
+									</div>
+									<hr>
+									<!--    주차장 안내             -->
+									<div class="uk-width-1-1">
+										<ScTextarea
+											v-model="sendData.info"
+											:cols="30"
+											:rows="4"
+											:autosize="true"
+											mode="outline"
+										>
+											<label>주차장 안내 입력</label>
+										</ScTextarea>
+									</div>
+									<!--    요금 안내               -->
+									<div class="uk-width-1-1">
+										<ScTextarea
+											v-model="sendData.priceInfo"
+											:cols="30"
+											:rows="4"
+											:autosize="true"
+											mode="outline"
+										>
+											<label>요금 안내 입력</label>
+										</ScTextarea>
+									</div>
+									<hr>
+									<!--    결제태그 제휴태그-->
+									<div class="uk-width-1-3@s">
+										<ul class="uk-list">
+											<h6>결제태그</h6>
+											<li v-for="tag in paymentTag" :key="tag.id">
+												<PrettyCheck v-model="sendData.paymentTag" :value="tag.value" class="p-icon">
+													<i slot="extra" class="icon mdi mdi-check"></i>
+													{{tag.name}}
+												</PrettyCheck>
+											</li>
 
-									<h6>제휴태그</h6>
-									<li v-for="tag in brandTag" :key="tag.id">
-										<PrettyCheck v-model="sendData.brandTag" :value="tag.value" class="p-icon">
-											<i slot="extra" class="icon mdi mdi-check"></i>
-											{{tag.name}}
-										</PrettyCheck>
-									</li>
-								</ul>
-							</div>
-							<!--   	상품태그  차량태그-->
-							<div class="uk-width-1-3@s">
-								<ul class="uk-list">
-									<h6>상품태그</h6>
-									<li v-for="tag in productTag" :key="tag.id">
-										<PrettyCheck v-model="sendData.productTag" :value="tag.value" class="p-icon">
-											<i slot="extra" class="icon mdi mdi-check"></i>
-											{{tag.name}}
-										</PrettyCheck>
-									</li>
+											<h6>제휴태그</h6>
+											<li v-for="tag in brandTag" :key="tag.id">
+												<PrettyCheck v-model="sendData.brandTag" :value="tag.value" class="p-icon">
+													<i slot="extra" class="icon mdi mdi-check"></i>
+													{{tag.name}}
+												</PrettyCheck>
+											</li>
+										</ul>
+									</div>
+									<!--   	상품태그  차량태그-->
+									<div class="uk-width-1-3@s">
+										<ul class="uk-list">
+											<h6>상품태그</h6>
+											<li v-for="tag in productTag" :key="tag.id">
+												<PrettyCheck v-model="sendData.productTag" :value="tag.value" class="p-icon">
+													<i slot="extra" class="icon mdi mdi-check"></i>
+													{{tag.name}}
+												</PrettyCheck>
+											</li>
 
-									<h6>차량태그</h6>
-									<li v-for="tag in carTag" :key="tag.id">
-										<PrettyCheck v-model="sendData.carTag" :value="tag.value" class="p-icon">
-											<i slot="extra" class="icon mdi mdi-check"></i>
-											{{tag.name}}
-										</PrettyCheck>
-									</li>
-								</ul>
+											<h6>차량태그</h6>
+											<li v-for="tag in carTag" :key="tag.id">
+												<PrettyCheck v-model="sendData.carTag" :value="tag.value" class="p-icon">
+													<i slot="extra" class="icon mdi mdi-check"></i>
+													{{tag.name}}
+												</PrettyCheck>
+											</li>
+										</ul>
+									</div>
+									<!--    옵션태그-->
+									<div class="uk-width-auto">
+										<ul class="uk-list">
+											<h6>옵션태그</h6>
+											<li v-for="tag in optionTag" :key="tag.id">
+												<PrettyCheck v-model="sendData.optionTag" :value="tag.value" class="p-icon">
+													<i slot="extra" class="icon mdi mdi-check"></i>
+													{{tag.name}}
+												</PrettyCheck>
+											</li>
+										</ul>
+									</div>
+									<hr>
+									<!--    주차장 이미지           -->
+									<div class="uk-width-1-1">
+										<h4>주차장 이미지 등록</h4>
+										<div style="display: flex; justify-content: center;">
+											<vue-upload-multiple-image
+												@upload-success="uploadImageSuccess"
+												@before-remove="beforeRemove"
+												@edit-image="editImage"
+												:data-images="tempImage"
+											></vue-upload-multiple-image>
+										</div>
+									</div>
+								</form>
 							</div>
-							<!--    옵션태그-->
-							<div class="uk-width-auto">
-								<ul class="uk-list">
-									<h6>옵션태그</h6>
-									<li v-for="tag in optionTag" :key="tag.id">
-										<PrettyCheck v-model="sendData.optionTag" :value="tag.value" class="p-icon">
-											<i slot="extra" class="icon mdi mdi-check"></i>
-											{{tag.name}}
-										</PrettyCheck>
-									</li>
-								</ul>
+							<div class="uk-margin-top uk-text-center">
+								<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
+										@click="submitForm">
+									{{ sendData.uid ? '수정': '생성' }}
+								</button>
+								<button v-if="sendData.uid" class="sc-button sc-button-primary"
+										:disabled="submitStatus === 'PENDING'"
+										@click="deleteForm">
+									삭제
+								</button>
 							</div>
-							<hr>
-							<!--    주차장 이미지           -->
-							<div class="uk-width-1-1">
-								<h4>주차장 이미지 등록</h4>
-								<div style="display: flex; justify-content: center;">
-									<vue-upload-multiple-image
-										@upload-success="uploadImageSuccess"
-										@before-remove="beforeRemove"
-										@edit-image="editImage"
-										:data-images="tempImage"
-									></vue-upload-multiple-image>
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="uk-margin-top uk-text-center">
-						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
-								@click="submitForm">
-							{{ sendData.uid ? '수정': '생성' }}
-						</button>
-						<button v-if="sendData.uid" class="sc-button sc-button-primary"
-								:disabled="submitStatus === 'PENDING'"
-								@click="deleteForm">
-							삭제
-						</button>
-					</div>
+						</li>
+						<li>
+							<rating-list></rating-list>
+						</li>
+					</ul>
 				</ScCardBody>
 			</ScCard>
 		</Transition>
@@ -271,12 +290,13 @@
 	import {validationMixin} from 'vuelidate'
 	import PrettyCheck from 'pretty-checkbox-vue/check';
 	import {required, minLength, minValue, sameAs, email, requiredIf} from 'vuelidate/lib/validators'
+	import RatingList from "@/components/parking/RatingList"
 
 	if (process.client) {
 		require('~/plugins/inputmask');
 	}
 	export default {
-		components: {ScInput, ScCard, ScTextarea, VueUploadMultipleImage, PrettyCheck, ScCardAction},
+		components: {ScInput, ScCard, ScTextarea, VueUploadMultipleImage, PrettyCheck, ScCardAction, RatingList},
 		mixins: [
 			validationMixin,
 		],
@@ -427,6 +447,9 @@
 			}
 		},
 		methods: {
+			openNewForm(siteUid){
+				this.$nuxt.$emit('open-rate-list',siteUid)
+			},
 			//multi image upload////////////////////////////////////////////////
 			uploadImageSuccess(formData, index, fileList) {
 				formData.append('dir', 'site')
