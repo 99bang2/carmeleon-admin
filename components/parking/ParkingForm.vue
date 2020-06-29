@@ -58,7 +58,7 @@
 										</ul>
 									</div>
 									<!--	최대 가용 대수 , 위도 경도  -->
-									<div class="uk-width-1-3">
+									<div class="uk-width-1-2">
 										<ScInput v-model="sendData.parkingLot"
 												 :error-state="$v.sendData.parkingLot.$error"
 												 :validator="$v.sendData.parkingLot">
@@ -479,7 +479,6 @@
 			uploadImageSuccess(formData, index, fileList) {
 				formData.append('dir', 'site')
 				this.$axios.$post(this.config.apiUrl + '/api/uploads/', formData).then(response => {
-					console.log(response.data)
 					this.sendData.picture[index] = response.data;
 				})
 			},
@@ -487,17 +486,13 @@
 				let r = confirm("remove image")
 				if (r == true) {
 					done()
-					console.log("아무거나", index)
-					console.log(this.sendData.picture)
 					this.sendData.picture.splice(index, 1);
-					console.log(this.sendData.picture)
 				} else {
 				}
 			},
 			editImage(formData, index, fileList) {
 				formData.append('dir', 'site')
 				this.$axios.$post(this.config.apiUrl + '/api/uploads/', formData).then(response => {
-					console.log(response.data)
 					this.sendData.picture[index] = response.data;
 				})
 			},
@@ -506,12 +501,11 @@
 
 			settingForm(props) {
 				this.$v.$reset()
+				this.tempImage = []
 				if (props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
-
 					// vue-upload-multiple-image 패키지 사용
 					// 주차장 상세보기 할 때, upload된 영역 불러올때 사용
-					this.tempImage = []
 					if (this.sendData.picture !== null) {
 						for (let i = 0; i < this.sendData.picture.length; i++) {
 							let img = {}

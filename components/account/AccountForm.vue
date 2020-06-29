@@ -220,12 +220,10 @@
 				})
 			},
 			submitForm(e) {
-				console.log(this.sendData.uid)
 				e.preventDefault()
 				this.$v.$touch()
 
 				if (this.$v.$invalid) {
-					console.log(this.$v)
 					this.submitStatus = 'ERROR'
 				} else {
 					this.submitStatus = 'PENDING'
@@ -237,7 +235,6 @@
 				}
 			},
 			postForm() {
-				console.log(this.sendData)
 				this.$axios.$post(this.config.apiUrl + '/api/accounts', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
 					this.$nuxt.$emit('fetch-account-list', res.data.uid)

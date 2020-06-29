@@ -72,18 +72,30 @@
 							</div>
 
 							<div class="uk-width-1-2">
-								<select v-model="sendData.eventType" class="uk-select" required="required">
+								<select v-model="sendData.eventType" class="uk-select" required="required" :error-state="$v.sendData.eventType.$error"
+										:validator="$v.sendData.eventType">
 									<option value="" disabled="disabled">이벤트 종류</option>
 									<option value="0">팝업적용</option>
 									<option value="1">팝업미적용</option>
 								</select>
+								<ul class="sc-vue-errors">
+									<li v-if="!$v.sendData.eventType.required">
+										이벤트 종류를 선택해주세요
+									</li>
+								</ul>
 							</div>
 							<div class="uk-width-1-2">
-								<select v-model="sendData.isOpen" class="uk-select" required="required">
+								<select v-model="sendData.isOpen" class="uk-select" required="required" :error-state="$v.sendData.isOpen.$error"
+										:validator="$v.sendData.isOpen">
 									<option value="" disabled="disabled">공개여부</option>
 									<option value=true>공개</option>
 									<option value=false>비공개</option>
 								</select>
+								<ul class="sc-vue-errors">
+									<li v-if="!$v.sendData.isOpen.required">
+										공개여부를 선택해주세요
+									</li>
+								</ul>
 							</div>
 						</form>
 					</div>
@@ -170,6 +182,12 @@
 				title: {
 					required
 				},
+				eventType: {
+					required
+				},
+				isOpen:{
+					required
+				}
 
 			}
 		},
@@ -208,6 +226,8 @@
 			},
 			settingForm(props) {
 				this.$v.$reset()
+				this.bannerImageData =""
+				this.mainImageData =""
 				if (props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
 					this.eventDate = this.sendData.startDate.substr(0,10)+" ~ "+this.sendData.endDate.substr(0, 10)
@@ -215,6 +235,7 @@
 					this.bannerImageData = this.sendData.bannerImage
 					this.mainImageData = this.sendData.mainImage
 				} else {
+					this.eventDate = ""
 					this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
 				}
 				this.cardFormClosed = true
@@ -238,10 +259,7 @@
 			submitForm(e) {
 				e.preventDefault()
 				this.$v.$touch()
-
 				if (this.$v.$invalid) {
-					console.log(this.$v.sendData.admin.id)
-					console.log(this.$v)
 					this.submitStatus = 'ERROR'
 				} else {
 					this.submitStatus = 'PENDING'

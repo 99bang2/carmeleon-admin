@@ -185,8 +185,6 @@
 				e.preventDefault()
 				this.$v.$touch()
 				if (this.$v.$invalid) {
-					console.log(this.$v.sendData.admin.id)
-					console.log(this.$v)
 					this.submitStatus = 'ERROR'
 				} else {
 					this.submitStatus = 'PENDING'
