@@ -58,7 +58,7 @@
 										</ul>
 									</div>
 									<!--	최대 가용 대수 , 위도 경도  -->
-									<div class="uk-width-1-2">
+									<div class="uk-width-1-3">
 										<ScInput v-model="sendData.parkingLot"
 												 :error-state="$v.sendData.parkingLot.$error"
 												 :validator="$v.sendData.parkingLot">
@@ -74,51 +74,51 @@
 											</li>
 										</ul>
 									</div>
-									<!--    주소                    -->
-									<div class="uk-width-1-2 uk-flex"
-										 style="justify-content: space-around; align-items: flex-end">
-										<div class="uk-width-3-4@s">
-											<ScInput v-model="sendData.address" class="uk-flex-1">
-												<label>
-													주소
-												</label>
-											</ScInput>
-										</div>
-										<a href="javascript:void(0)" class="uk-width-1-5 sc-button sc-button-icon sc-button-outline sc-button-flat sc-button-large"
-										   @click.prevent="searchPlace(sendData.address)">
-											<span data-uk-icon="icon: location"></span>
-										</a>
+									<!--    주소  변형              -->
+									<!--									<div class="uk-width-1-2 uk-flex"-->
+									<!--										 style="justify-content: space-around; align-items: flex-end">-->
+									<!--										<div class="uk-width-3-4@s">-->
+									<!--											<ScInput v-model="sendData.address" class="uk-flex-1">-->
+									<!--												<label>-->
+									<!--													주소-->
+									<!--												</label>-->
+									<!--											</ScInput>-->
+									<!--										</div>-->
+									<!--										<a href="javascript:void(0)" class="uk-width-1-5 sc-button sc-button-icon sc-button-outline sc-button-flat sc-button-large"-->
+									<!--										   @click.prevent="searchPlace(sendData.address)">-->
+									<!--											<span data-uk-icon="icon: location"></span>-->
+									<!--										</a>-->
+									<!--									</div>-->
+									<div class="uk-width-1-3">
+										<ScInput v-model="sendData.lat" :error-state="$v.sendData.lat.$error"
+												 :validator="$v.sendData.lat">
+											<label>
+												위도
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: location"/>
+										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.lat.required">
+												위도를 입력해주세요.
+											</li>
+										</ul>
 									</div>
-									<!--									<div class="uk-width-1-3">-->
-									<!--										<ScInput v-model="sendData.lat" :error-state="$v.sendData.lat.$error"-->
-									<!--												 :validator="$v.sendData.lat">-->
-									<!--											<label>-->
-									<!--												위도-->
-									<!--											</label>-->
-									<!--											<span slot="icon" class="uk-form-icon uk-form-icon-flip"-->
-									<!--												  data-uk-icon="icon: location"/>-->
-									<!--										</ScInput>-->
-									<!--										<ul class="sc-vue-errors">-->
-									<!--											<li v-if="!$v.sendData.lat.required">-->
-									<!--												위도를 입력해주세요.-->
-									<!--											</li>-->
-									<!--										</ul>-->
-									<!--									</div>-->
-									<!--									<div class="uk-width-1-3">-->
-									<!--										<ScInput v-model="sendData.lon" :error-state="$v.sendData.lon.$error"-->
-									<!--												 :validator="$v.sendData.lon">-->
-									<!--											<label>-->
-									<!--												경도-->
-									<!--											</label>-->
-									<!--											<span slot="icon" class="uk-form-icon uk-form-icon-flip"-->
-									<!--												  data-uk-icon="icon: location"/>-->
-									<!--										</ScInput>-->
-									<!--										<ul class="sc-vue-errors">-->
-									<!--											<li v-if="!$v.sendData.parkingLot.required">-->
-									<!--												경도를 입력해주세요.-->
-									<!--											</li>-->
-									<!--										</ul>-->
-									<!--									</div>-->
+									<div class="uk-width-1-3">
+										<ScInput v-model="sendData.lon" :error-state="$v.sendData.lon.$error"
+												 :validator="$v.sendData.lon">
+											<label>
+												경도
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: location"/>
+										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.parkingLot.required">
+												경도를 입력해주세요.
+											</li>
+										</ul>
+									</div>
 									<!--	연락처, 휴대전화        -->
 									<div class="uk-width-1-2">
 										<ScInput v-model="sendData.tel">
@@ -176,7 +176,16 @@
 											<span class="sc-switch-toggle-off">미운영</span>
 										</label>
 									</div>
+									<div class="uk-width-1-1">
+										<ScInput v-model="sendData.address">
+											<label>
+												주소입력
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: location"/>
+										</ScInput>
 
+									</div>
 									<hr>
 									<!--    주차장 안내             -->
 									<div class="uk-width-1-1">
