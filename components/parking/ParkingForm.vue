@@ -508,8 +508,6 @@
 				this.$v.$reset()
 				if (props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
-					console.log(this.sendData.picture)
-
 
 					// vue-upload-multiple-image 패키지 사용
 					// 주차장 상세보기 할 때, upload된 영역 불러올때 사용

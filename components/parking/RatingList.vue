@@ -1,21 +1,22 @@
 <template>
-	<ag-grid-vue
-		style="width: 100%;"
-		class="ag-theme-material"
-		:dom-layout="'autoHeight'"
-		:default-col-def="defaultColDef"
-		:column-defs="columnDefs"
-		:grid-options="gridOptions"
-		:pagination="true"
-		:pagination-page-size="10"
-		:row-model-type="'normal'"
-		:cache-overflow-size="10"
-		:cache-block-size="10"
-		:max-concurrent-datasource-requests="1"
-		:max-blocks-in-cache="10"
-		:framework-components="frameworkComponents"
-	>
-	</ag-grid-vue>
+	<div>
+		<button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-danger uk-width-1-1" @click="deleteDatas">
+			<span data-uk-icon="icon: trash" class="md-color-red-600 uk-margin-small-right"></span>
+			리뷰 삭제
+		</button>
+		<ag-grid-vue
+			style="width: 100%;"
+			class="ag-theme-material"
+			:dom-layout="'autoHeight'"
+			:default-col-def="defaultColDef"
+			:column-defs="columnDefs"
+			:grid-options="gridOptions"
+			:pagination="true"
+			:pagination-page-size="10"
+			:framework-components="frameworkComponents"
+		>
+		</ag-grid-vue>
+	</div>
 </template>
 
 <script>
@@ -27,6 +28,7 @@
 		],
 		data() {
 			return {
+				siteUid: null,
 				gridOptions: {
 					localeText: {noRowsToShow: '등록된 리뷰가 없습니다.'},
 					suppressRowClickSelection: true,
@@ -34,7 +36,6 @@
 					rowSelection: 'multiple',
 					onGridReady: this.onGridReady,
 					onFirstDataRendered: this.onFirstDataRendered,
-					onCellClicked: this.onRowClicked,
 					rowHeight: 45,
 					getRowStyle: this.getRowStyle,
 				},
@@ -43,6 +44,20 @@
 		computed: {
 			columnDefs() {
 				return [
+					{
+						headerName: "",
+						field: "",
+						width: 50,
+						resizable: false,
+						headerCheckboxSelection: true,
+						headerCheckboxSelectionFilteredOnly: true,
+						checkboxSelection: true,
+						suppressMovable: true,
+						onCellClicked: false,
+						cellStyle: {
+							'text-align': 'center'
+						}
+					},
 					{
 						headerName: '구분',
 						field: 'rateType',
@@ -54,7 +69,7 @@
 					{
 						headerName: '리뷰',
 						field: 'review',
-						width: 320,
+						width: 250,
 					},
 					{
 						headerName: '평점',
@@ -63,10 +78,10 @@
 						cellRenderer: (obj) => {
 							if (obj.data) {
 								let label = ''
-								let star =''
+								let star = ''
 								switch (obj.value) {
 									case 10:
-										star='★★★★★'
+										star = '★★★★★'
 										break;
 									case 9:
 										star = '★★★★☆'
@@ -102,10 +117,10 @@
 										label = 'uk-label-danger'
 										break;
 								}
-								return `<div style="text-align:right"><span class="uk-label ${label}">${star}&nbsp;&nbsp;${obj.value/2}</span></div>`
+								return `<div style="text-align:right"><span class="uk-label ${label}">${star}&nbsp;&nbsp;${obj.value / 2}</span></div>`
 							}
 						}
-					}
+					},
 				]
 			}
 		},
@@ -113,12 +128,30 @@
 			async fetchData(siteUid) {
 				let res = await this.$axios.$get(this.config.apiUrl + '/api/rates/site/' + siteUid)
 				this.gridOptions.api.setRowData(res.data)
-			}
+			},
+			deleteDatas() {
+				let selected = this.gridOptions.api.getSelectedRows()
+				let selectedUids = selected.map(({uid}) => uid)
+				let seletedCnt = selectedUids.length
+				if (seletedCnt) {
+					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
+						this.$axios.$post(this.config.apiUrl + '/api/rates/bulkDelete', {
+							uids: selectedUids
+						}).then(res => {
+							this.callNotification('삭제하였습니다.')
+							this.fetchData(this.siteUid)
+						})
+					})
+				} else {
+					this.callAlertError('삭제할 항목을 선택해주세요.')
+				}
+			},
 		},
 		created() {
 			let vm = this
 			this.$nuxt.$on('open-rate-list', (uid) => {
 				vm.fetchData(uid)
+				vm.siteUid = uid
 			})
 		},
 		beforeDestroy() {
