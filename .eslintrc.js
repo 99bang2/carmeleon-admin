@@ -24,6 +24,7 @@ module.exports = {
 		"vue/html-indent": ["warn", "tab"],
 		"vue/max-attributes-per-line": "off",
 		"vue/html-closing-bracket-spacing": "off",
+		"vue/html-closing-bracket-newline": "off",
 		"vue/html-self-closing": ["warn", {
 			"html": {
 				"void": "never",

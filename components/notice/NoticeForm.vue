@@ -25,7 +25,8 @@
 									<label>
 										제목
 									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
+									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+										  data-uk-icon="icon: pencil"/>
 								</ScInput>
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.title.required">
@@ -77,7 +78,8 @@
 								@click="submitForm">
 							{{ sendData.uid ? '수정': '등록' }}
 						</button>
-						<button v-if="sendData.uid" class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
+						<button v-if="sendData.uid" class="sc-button sc-button-primary"
+								:disabled="submitStatus === 'PENDING'"
 								@click="deleteForm">
 							삭제
 						</button>
@@ -120,10 +122,10 @@
 				sendData: {},
 				defaultForm: {
 					uid: null,
-					accountUid:0,
+					accountUid: 0,
 					title: '',
 					content: '',
-					noticeType:'',
+					noticeType: '',
 					isOpen: false
 				}
 			}
@@ -172,13 +174,13 @@
 				this.cardFormClosed = true
 				this.$nuxt.$emit('reset-notice-list')
 			},
-			deleteForm(){
-				this.$axios.$delete(this.config.apiUrl + '/api/notices/' + this.sendData.uid,this.sendData).then(async res => {
+			deleteForm() {
+				this.$axios.$delete(this.config.apiUrl + '/api/notices/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('fetch-notice-list',res.data.uid)
+					this.$nuxt.$emit('fetch-notice-list', res.data.uid)
 				}).finally(() => {
 					this.deleteStatus = 'OK'
-					this.cardFormClosed=true
+					this.cardFormClosed = true
 				})
 			},
 			submitForm(e) {
@@ -196,13 +198,13 @@
 				}
 			},
 			postForm() {
-				this.sendData.accountUid =this.$auth.user.uid;
+				this.sendData.accountUid = this.$auth.user.uid;
 				this.$axios.$post(this.config.apiUrl + '/api/notices', this.sendData).then(async res => {
 					this.callNotification('등록하였습니다.')
 					this.$nuxt.$emit('fetch-notice-list', res.data.uid)
 				}).finally(() => {
 					this.submitStatus = 'OK'
-					this.cardFormClosed =true
+					this.cardFormClosed = true
 				})
 			},
 			putForm() {

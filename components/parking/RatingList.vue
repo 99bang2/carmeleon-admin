@@ -1,21 +1,24 @@
 <template>
 	<div>
-		<button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-danger uk-width-1-1" @click="deleteDatas">
+		<button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-danger uk-width-1-1"
+				@click="deleteDatas">
 			<span data-uk-icon="icon: trash" class="md-color-red-600 uk-margin-small-right"></span>
 			리뷰 삭제
 		</button>
-		<ag-grid-vue
-			style="width: 100%;"
-			class="ag-theme-material"
-			:dom-layout="'autoHeight'"
-			:default-col-def="defaultColDef"
-			:column-defs="columnDefs"
-			:grid-options="gridOptions"
-			:pagination="true"
-			:pagination-page-size="10"
-			:framework-components="frameworkComponents"
-		>
-		</ag-grid-vue>
+		<div>
+			<ag-grid-vue
+				style="width: 100%;"
+				class="ag-theme-material"
+				:dom-layout="'autoHeight'"
+				:default-col-def="defaultColDef"
+				:column-defs="columnDefs"
+				:grid-options="gridOptions"
+				:pagination="true"
+				:pagination-page-size="10"
+				:framework-components="frameworkComponents"
+			>
+			</ag-grid-vue>
+		</div>
 	</div>
 </template>
 
@@ -36,8 +39,10 @@
 					rowSelection: 'multiple',
 					onGridReady: this.onGridReady,
 					onFirstDataRendered: this.onFirstDataRendered,
-					rowHeight: 45,
 					getRowStyle: this.getRowStyle,
+					getRowHeight: this.getRowHeight,
+					rowData: this.rowData,
+					rowHeight: 45,
 				},
 			}
 		},
@@ -52,16 +57,16 @@
 						headerCheckboxSelection: true,
 						headerCheckboxSelectionFilteredOnly: true,
 						checkboxSelection: true,
-						suppressMovable: true,
+						suppressMovable: false,
 						onCellClicked: false,
 						cellStyle: {
-							'text-align': 'center'
+							'text-align': 'center',
 						}
 					},
 					{
 						headerName: '구분',
 						field: 'rateType',
-						width: 50,
+						width: 80,
 						cellRenderer: (obj) => {
 							return obj.value ? '<span uk-icon="icon: happy"></span>' : '<span uk-icon="icon: ban"></span>'
 						}
@@ -69,12 +74,13 @@
 					{
 						headerName: '리뷰',
 						field: 'review',
-						width: 250,
+						width: 280,
 					},
 					{
 						headerName: '평점',
 						field: 'rate',
 						suppressSizeToFit: false,
+						cellClass: 'ratestyle',
 						cellRenderer: (obj) => {
 							if (obj.data) {
 								let label = ''
@@ -117,7 +123,7 @@
 										label = 'uk-label-danger'
 										break;
 								}
-								return `<div style="text-align:right"><span class="uk-label ${label}">${star}&nbsp;&nbsp;${obj.value / 2}</span></div>`
+								return `<div><span class="uk-label ${label}">${star}&nbsp;&nbsp;${obj.value / 2}</span></div>`
 							}
 						}
 					},
@@ -147,6 +153,19 @@
 				}
 			},
 		},
+		beforeMount() {
+			this.defaultColDef = {
+				cellClass: 'cell-wrap-text',
+				autoHeight: true,
+				resizable: true,
+			};
+			this.getRowHeight = params => {
+				return (
+					params.api.getSizesForCurrentTheme().rowHeight *
+					Math.floor(params.data.review.length / 50)
+				);
+			};
+		},
 		created() {
 			let vm = this
 			this.$nuxt.$on('open-rate-list', (uid) => {
@@ -160,6 +179,15 @@
 	}
 </script>
 
-<style scoped>
+<style>
+	.cell-wrap-text {
+		white-space: normal !important;
+	}
 
+	.ag-row .ag-cell {
+		display: flex;
+		justify-content: left; /* align horizontal */
+		align-items: center;
+		line-height: 25px;
+	}
 </style>
