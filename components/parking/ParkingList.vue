@@ -19,12 +19,12 @@
 					<div class="uk-width-3-5@s">
 						<div class="uk-grid-small uk-grid" data-uk-grid>
 							<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
-							   style="height:40px;" @click.prevent="fetchData">
+							   style="height:40px;" @click.prevent="refreshFilter">
 								<i class="mdi mdi-refresh"></i>
 							</a>
 							<div class="uk-width-1-5@s">
 								<select v-model="searchSiteType" class="uk-select" required="required">
-									<option value="" disabled="disabled">주차장 유형</option>
+									<option value="">주차장 유형</option>
 									<option value="0">하이파킹</option>
 									<option value="1">제휴</option>
 									<option value="2">일반</option>
@@ -32,14 +32,14 @@
 							</div>
 							<div class="uk-width-1-5@s">
 								<select v-model="searchActive" class="uk-select" required="required">
-									<option value="" disabled="disabled">활성 상태</option>
+									<option value="">활성 상태</option>
 									<option value="true">운영중</option>
 									<option value="false">미운영</option>
 								</select>
 							</div>
 							<div class="uk-width-1-5@s">
 								<select v-model="searchRating" class="uk-select" required="required">
-									<option value="" disabled="disabled">평점</option>
+									<option value="">평점</option>
 									<option value="4">★★★★★ 5</option>
 									<option value="3">★★★★ 4</option>
 									<option value="2">★★★ 3</option>
@@ -268,6 +268,11 @@
 			await this.fetchData()
 		},
 		methods: {
+			refreshFilter(){
+				this.searchType = ""
+				this.searchActive = ""
+				this.searchRating =""
+			},
 			openNewForm() {
 				this.resetSelection()
 				this.$nuxt.$emit('open-parking-form')

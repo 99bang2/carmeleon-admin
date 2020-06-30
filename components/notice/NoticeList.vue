@@ -8,8 +8,10 @@
 					</ScCardTitle>
 				</div>
 				<div class="uk-text-nowrap">
-					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-plus" style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="추가" />
-					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline" style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="삭제" />
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-plus" style="display: inline-block"
+					   @click.prevent="openNewForm" data-uk-tooltip="추가"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline"
+					   style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="삭제"/>
 				</div>
 			</ScCardHeader>
 			<ScCardBody>
@@ -43,157 +45,172 @@
 </template>
 
 <script>
-import ScInput from '~/components/Input'
-import {agGridMixin} from "~/plugins/ag-grid.mixin"
+	import ScInput from '~/components/Input'
+	import {agGridMixin} from "~/plugins/ag-grid.mixin"
 
-export default {
-	components: {
-		ScInput,
-	},
-	mixins: [
-		agGridMixin
-	],
-	data() {
-		return {
-			gridOptions: {
-				suppressRowClickSelection: true,
-				suppressMenuHide: true,
-				rowSelection: 'multiple',
-				onGridReady: this.onGridReady,
-				onFirstDataRendered: this.onFirstDataRendered,
-				onCellClicked: this.onRowClicked,
-				rowHeight: 45,
-				getRowStyle: this.getRowStyle
+	export default {
+		components: {
+			ScInput,
+		},
+		mixins: [
+			agGridMixin
+		],
+		data() {
+			return {
+				gridOptions: {
+					suppressRowClickSelection: true,
+					suppressMenuHide: true,
+					rowSelection: 'multiple',
+					onGridReady: this.onGridReady,
+					onFirstDataRendered: this.onFirstDataRendered,
+					onCellClicked: this.onRowClicked,
+					rowHeight: 45,
+					getRowStyle: this.getRowStyle
+				},
+				searchType: '',
+				searchKeyword: '',
+			}
+		},
+		computed: {
+			columnDefs() {
+				return [
+					{
+						headerName: "",
+						field: "",
+						width: 50,
+						resizable: false,
+						headerCheckboxSelection: true,
+						headerCheckboxSelectionFilteredOnly: true,
+						checkboxSelection: true,
+						suppressMovable: true,
+						onCellClicked: false,
+						cellStyle: {
+							'text-align': 'center'
+						}
+					},
+					{
+						headerName: '분류',
+						field: 'noticeType',
+						width: 80,
+						cellRenderer: (obj) => {
+							let typeName = ""
+							switch (obj.value) {
+								case 0:
+									typeName = "긴급"
+									break;
+								case 1:
+									typeName = "필수"
+									break;
+								case 2:
+									typeName = "일반"
+								break;
+							}
+							return typeName
+						}
+					},
+					{
+						headerName: '제목',
+						field: 'title',
+						suppressSizeToFit: false,
+					},
+					{
+						headerName: '작성자',
+						field: 'account.name',
+						width: 160
+					},
+					{
+						headerName: '활성',
+						field: 'isActive',
+						width: 60,
+						cellRenderer: (obj) => {
+							return obj.value ? '<i class="mdi mdi-check-circle" style="font-size:8px;"></i>' : ''
+						}
+					},
+					{
+						headerName: '등록일시',
+						field: 'createdAt',
+						width: 160,
+						valueFormatter: obj => {
+							return this.$moment(obj.value).format('YYYY-MM-DD HH:mm')
+						}
+					}
+				]
+			}
+		},
+		watch: {
+			'searchKeyword': function (newValue) {
+				this.gridOptions.api.setQuickFilter(newValue)
 			},
-			searchType: '',
-			searchKeyword: '',
-		}
-	},
-	computed: {
-		columnDefs() {
-			return [
-				{
-					headerName: "",
-					field: "",
-					width: 50,
-					resizable: false,
-					headerCheckboxSelection: true,
-					headerCheckboxSelectionFilteredOnly: true,
-					checkboxSelection: true,
-					suppressMovable: true,
-					onCellClicked: false,
-					cellStyle: {
-						'text-align': 'center'
-					}
-				},
-				{
-					headerName: '분류',
-					field: 'noticeType',
-					width: 80
-				},
-				{
-					headerName: '제목',
-					field: 'title',
-					suppressSizeToFit: false,
-				},
-				{
-					headerName: '작성자',
-					field: 'account.name',
-					width: 160
-				},
-				{
-					headerName: '활성',
-					field: 'isActive',
-					width: 60,
-					cellRenderer: (obj) => {
-						return obj.value ? '<i class="mdi mdi-check-circle" style="font-size:8px;"></i>' : ''
-					}
-				},
-				{
-					headerName: '등록일시',
-					field: 'createdAt',
-					width: 160,
-					valueFormatter: obj => {
-						return this.$moment(obj.value).format('YYYY-MM-DD HH:mm')
-					}
-				}
-			]
-		}
-	},
-	watch: {
-		'searchKeyword': function (newValue) {
-			this.gridOptions.api.setQuickFilter(newValue)
 		},
-	},
-	async beforeMount() {
-		//let res = await this.$axios.$get(this.config.apiUrl + `/api/codes`)
-	},
-	created() {
-		let vm = this
-		this.$nuxt.$on('reset-notice-list', () => {
-			vm.resetSelection()
-		})
-		this.$nuxt.$on('fetch-notice-list', (uid) => {
-			vm.fetchData(uid)
-		})
-	},
-	beforeDestroy() {
-		this.$nuxt.$off('reset-notice-list')
-		this.$nuxt.$off('fetch-notice-list')
-	},
-	async mounted() {
-		await this.fetchData()
-	},
-	methods: {
-		openNewForm() {
-			this.resetSelection()
-			this.$nuxt.$emit('open-notice-form')
+		async beforeMount() {
+			//let res = await this.$axios.$get(this.config.apiUrl + `/api/codes`)
 		},
-		onRowClicked(props) {
-			this.$nuxt.$emit('open-notice-form', props)
-			this.resetSelection()
-			props.node.detail = true
-			this.gridOptions.api.redrawRows()
-		},
-		async fetchData(selectUid) {
-			//API 연동
-			let res = await this.$axios.$get(this.config.apiUrl + '/api/notices')
-			this.gridOptions.api.setRowData(res.data)
-			if(selectUid) {
-				this.gridOptions.api.forEachNode((node) => {
-					if(node.data.uid === selectUid) {
-						this.onRowClicked({
-							node: node,
-							data: node.data
-						})
-					}
-				})
-			}
-		},
-		resetSelection() {
-			this.gridOptions.api.forEachNode((node) => {
-				node.detail = false
+		created() {
+			let vm = this
+			this.$nuxt.$on('reset-notice-list', () => {
+				vm.resetSelection()
 			})
-			this.gridOptions.api.redrawRows()
+			this.$nuxt.$on('fetch-notice-list', (uid) => {
+				vm.fetchData(uid)
+			})
 		},
-		deleteDatas() {
-			let selected = this.gridOptions.api.getSelectedRows()
-			let selectedUids = selected.map(({uid}) => uid)
-			let seletedCnt = selectedUids.length
-			if (seletedCnt) {
-				UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-					this.$axios.$post(this.config.apiUrl + '/api/notices/bulkDelete', {
-						uids: selectedUids
-					}).then(res => {
-						this.callNotification('삭제하였습니다.')
-						this.$nuxt.$emit('close-notice-form')
-						this.fetchData()
+		beforeDestroy() {
+			this.$nuxt.$off('reset-notice-list')
+			this.$nuxt.$off('fetch-notice-list')
+		},
+		async mounted() {
+			await this.fetchData()
+		},
+		methods: {
+			openNewForm() {
+				this.resetSelection()
+				this.$nuxt.$emit('open-notice-form')
+			},
+			onRowClicked(props) {
+				this.$nuxt.$emit('open-notice-form', props)
+				this.resetSelection()
+				props.node.detail = true
+				this.gridOptions.api.redrawRows()
+			},
+			async fetchData(selectUid) {
+				//API 연동
+				let res = await this.$axios.$get(this.config.apiUrl + '/api/notices')
+				this.gridOptions.api.setRowData(res.data)
+				if (selectUid) {
+					this.gridOptions.api.forEachNode((node) => {
+						if (node.data.uid === selectUid) {
+							this.onRowClicked({
+								node: node,
+								data: node.data
+							})
+						}
 					})
+				}
+			},
+			resetSelection() {
+				this.gridOptions.api.forEachNode((node) => {
+					node.detail = false
 				})
-			} else {
-				this.callAlertError('삭제할 항목을 선택해주세요.')
-			}
-		},
+				this.gridOptions.api.redrawRows()
+			},
+			deleteDatas() {
+				let selected = this.gridOptions.api.getSelectedRows()
+				let selectedUids = selected.map(({uid}) => uid)
+				let seletedCnt = selectedUids.length
+				if (seletedCnt) {
+					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
+						this.$axios.$post(this.config.apiUrl + '/api/notices/bulkDelete', {
+							uids: selectedUids
+						}).then(res => {
+							this.callNotification('삭제하였습니다.')
+							this.$nuxt.$emit('close-notice-form')
+							this.fetchData()
+						})
+					})
+				} else {
+					this.callAlertError('삭제할 항목을 선택해주세요.')
+				}
+			},
+		}
 	}
-}
 </script>
