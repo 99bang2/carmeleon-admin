@@ -21,12 +21,12 @@
 					<div class="uk-accordion-content">
 						<form class="uk-grid-small uk-grid" data-uk-grid>
 							<div class="uk-width-1-2@s">
-								<select v-model="sendData.grade" class="uk-select" :error-state="$v.sendData.grade.$error" >
-									<option value="">등급 선택</option>
-									<option value="0">최고 관리자</option>
-									<option value="1">일반 관리자</option>
-								</select>
-
+								<Select2
+									v-model="sendData.grade"
+									:options="gradeOpts"
+									:settings="{ 'width': '100%', 'placeholder': '등급 선택' }"
+									:error-state="$v.sendData.grade.$error"
+								/>
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.grade.required">
 										등급을 선택하세요.
@@ -134,9 +134,11 @@
 	import {required, minLength, minValue, sameAs, email, requiredIf} from 'vuelidate/lib/validators'
 	import customValidators from '@/plugins/vuelidateValidators'
 	import ScInput from '~/components/Input'
+	import Select2 from "@/components/Select2";
 
 	export default {
 		components: {
+			Select2,
 			ScInput
 		},
 		mixins: [
@@ -152,6 +154,10 @@
 			return {
 				cardFormClosed: true,
 				submitStatus: null,
+				gradeOpts: [
+					{id: 0, text: '최고관리자'},
+					{id: 1, text: '일반관리자'}
+				],
 				sendData: {},
 				defaultForm: {
 					uid: null,
@@ -159,7 +165,7 @@
 					password: '',
 					passwordConfirm: '',
 					name: '',
-					grade: 0,
+					grade: '',
 					isActive: true
 				},
 			}
