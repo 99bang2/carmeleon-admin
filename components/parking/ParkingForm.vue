@@ -33,7 +33,7 @@
 						<li>
 							<div class="uk-accordion-content">
 								<form class="uk-grid-small uk-grid" data-uk-grid>
-									<!--	siteType, name  -->
+									<!--	siteType, name , isActive -->
 									<div class="uk-width-1-3">
 										<Select2
 											v-model="sendData.siteType"
@@ -47,7 +47,7 @@
 											</li>
 										</ul>
 									</div>
-									<div class="uk-width-2-3">
+									<div class="uk-width-2-5">
 										<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error"
 												 :validator="$v.sendData.name">
 											<label>
@@ -62,8 +62,17 @@
 											</li>
 										</ul>
 									</div>
-									<!--	최대 가용 대수 , 위도 경도  -->
-									<div class="uk-width-1-3">
+									<div class="uk-width-1-5">
+										<input id="switch-css" v-model="sendData.isActive" type="checkbox"
+											   class="sc-switch-input">
+										<label for="switch-css" class="sc-switch-label"
+											   style="margin-top:15px;margin-left:15px;">
+											<span class="sc-switch-toggle-on">운영중</span>
+											<span class="sc-switch-toggle-off">미운영</span>
+										</label>
+									</div>
+									<!--	최대 가용 대수 , 가격  -->
+									<div class="uk-width-1-2">
 										<ScInput v-model="sendData.parkingLot"
 												 :error-state="$v.sendData.parkingLot.$error"
 												 :validator="$v.sendData.parkingLot">
@@ -77,56 +86,59 @@
 											<li v-if="!$v.sendData.parkingLot.required">
 												최대가용대수를 입력하세요.
 											</li>
+											<li v-if="!$v.sendData.parkingLot.integerFormatCheck">
+												올바른 형식이 아닙니다.
+											</li>
+										</ul>
+									</div>
+									<div class="uk-width-1-2">
+										<ScInput v-model="sendData.price" :error-state="$v.sendData.price.$error"
+												 :validator="$v.sendData.price">
+											<label>
+												기준가격
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: tag"/>
+										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.price.required">
+												가격을 입력해주세요.
+											</li>
 											<li v-if="!$v.sendData.price.integerFormatCheck">
 												올바른 형식이 아닙니다.
 											</li>
 										</ul>
 									</div>
-									<!--    주소  변형              -->
-									<!--									<div class="uk-width-1-2 uk-flex"-->
-									<!--										 style="justify-content: space-around; align-items: flex-end">-->
-									<!--										<div class="uk-width-3-4@s">-->
-									<!--											<ScInput v-model="sendData.address" class="uk-flex-1">-->
-									<!--												<label>-->
-									<!--													주소-->
-									<!--												</label>-->
-									<!--											</ScInput>-->
-									<!--										</div>-->
-									<!--										<a href="javascript:void(0)" class="uk-width-1-5 sc-button sc-button-icon sc-button-outline sc-button-flat sc-button-large"-->
-									<!--										   @click.prevent="searchPlace(sendData.address)">-->
-									<!--											<span data-uk-icon="icon: location"></span>-->
-									<!--										</a>-->
+									<!--									<div class="uk-width-1-3">-->
+									<!--										<ScInput v-model="sendData.lat" :error-state="$v.sendData.lat.$error"-->
+									<!--												 :validator="$v.sendData.lat">-->
+									<!--											<label>-->
+									<!--												위도-->
+									<!--											</label>-->
+									<!--											<span slot="icon" class="uk-form-icon uk-form-icon-flip"-->
+									<!--												  data-uk-icon="icon: location"/>-->
+									<!--										</ScInput>-->
+									<!--										<ul class="sc-vue-errors">-->
+									<!--											<li v-if="!$v.sendData.lat.required">-->
+									<!--												위도를 입력해주세요.-->
+									<!--											</li>-->
+									<!--										</ul>-->
 									<!--									</div>-->
-									<div class="uk-width-1-3">
-										<ScInput v-model="sendData.lat" :error-state="$v.sendData.lat.$error"
-												 :validator="$v.sendData.lat">
-											<label>
-												위도
-											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-												  data-uk-icon="icon: location"/>
-										</ScInput>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.lat.required">
-												위도를 입력해주세요.
-											</li>
-										</ul>
-									</div>
-									<div class="uk-width-1-3">
-										<ScInput v-model="sendData.lon" :error-state="$v.sendData.lon.$error"
-												 :validator="$v.sendData.lon">
-											<label>
-												경도
-											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-												  data-uk-icon="icon: location"/>
-										</ScInput>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.parkingLot.required">
-												경도를 입력해주세요.
-											</li>
-										</ul>
-									</div>
+									<!--									<div class="uk-width-1-3">-->
+									<!--										<ScInput v-model="sendData.lon" :error-state="$v.sendData.lon.$error"-->
+									<!--												 :validator="$v.sendData.lon">-->
+									<!--											<label>-->
+									<!--												경도-->
+									<!--											</label>-->
+									<!--											<span slot="icon" class="uk-form-icon uk-form-icon-flip"-->
+									<!--												  data-uk-icon="icon: location"/>-->
+									<!--										</ScInput>-->
+									<!--										<ul class="sc-vue-errors">-->
+									<!--											<li v-if="!$v.sendData.parkingLot.required">-->
+									<!--												경도를 입력해주세요.-->
+									<!--											</li>-->
+									<!--										</ul>-->
+									<!--									</div>-->
 									<!--	연락처, 휴대전화        -->
 									<div class="uk-width-1-2">
 										<ScInput v-model="sendData.tel">
@@ -148,7 +160,8 @@
 									</div>
 									<!--	이메일, 담당자이름      -->
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.email" :error-state="$v.sendData.email.$error" :validator="$v.sendData.email">
+										<ScInput v-model="sendData.email" :error-state="$v.sendData.email.$error"
+												 :validator="$v.sendData.email">
 											<label>
 												이메일
 											</label>
@@ -170,45 +183,49 @@
 												  data-uk-icon="icon: user"/>
 										</ScInput>
 									</div>
-									<!--	기준가격, 이용가능여부 -->
-									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.price" :error-state="$v.sendData.price.$error"
-												 :validator="$v.sendData.price">
-											<label>
-												기준가격
-											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-												  data-uk-icon="icon: tag"/>
-										</ScInput>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.price.required">
-												가격을 입력해주세요.
-											</li>
-											<li v-if="!$v.sendData.price.integerFormatCheck">
-												올바른 형식이 아닙니다.
+									<!--	주소입력 -->
+									<div class="uk-width-1-1 uk-flex"
+										 style="justify-content: space-around; align-items: center">
+										<div class="uk-width-5-6">
+											<ScInput v-model="sendData.address" class="uk-flex-1"
+													 :error-state="$v.sendData.address.$error"
+													 :validator="$v.sendData.address">
+												<label>
+													주소
+												</label>
+											</ScInput>
+											<ul class="sc-vue-errors">
+												<li v-if="!$v.sendData.address.required">
+													주소를 입력하세요.
+												</li>
+											</ul>
+										</div>
+										<a href="javascript:void(0)"
+										   class="sc-button sc-button-icon sc-button-outline sc-button-large"
+										   @click.prevent="searchPlace(sendData.address)">
+											<span data-uk-icon="icon: search"></span>
+										</a>
+									</div>
+									<div v-if="searchAddr" class="uk-width-1-1" style="margin: 15px; padding: 0px;">
+										<ul class="uk-list uk-list-divider uk-list-collapse">
+											<li class ="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index
+												style="justify-content: space-between" type="button"
+												@click="selectAddr(item)">
+												<span v-html="item.title"></span>
+												<span class="selectIcon" data-uk-icon="icon: check"></span>
 											</li>
 										</ul>
 									</div>
-									<div class="uk-width-1-2">
-										<input id="switch-css" v-model="sendData.isActive" type="checkbox"
-											   class="sc-switch-input">
-										<label for="switch-css" class="sc-switch-label"
-											   style="margin-top:15px;margin-left:15px;">
-											<span class="sc-switch-toggle-on">운영중</span>
-											<span class="sc-switch-toggle-off">미운영</span>
-										</label>
-									</div>
-									<div class="uk-width-1-1">
-										<ScInput v-model="sendData.address">
-											<label>
-												주소입력
-											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-												  data-uk-icon="icon: location"/>
-										</ScInput>
 
-									</div>
-									<hr>
+									<!--									<div class="uk-width-1-1">-->
+									<!--										<ScInput v-model="sendData.address">-->
+									<!--											<label>-->
+									<!--												주소입력-->
+									<!--											</label>-->
+									<!--											<span slot="icon" class="uk-form-icon uk-form-icon-flip"-->
+									<!--												  data-uk-icon="icon: location"/>-->
+									<!--										</ScInput>-->
+									<!--									</div>-->
 									<!--    주차장 안내             -->
 									<div class="uk-width-1-1">
 										<ScTextarea
@@ -233,7 +250,6 @@
 											<label>요금 안내 입력</label>
 										</ScTextarea>
 									</div>
-									<hr>
 									<!--    결제태그 제휴태그-->
 									<div class="uk-width-1-3@s">
 										<ul class="uk-list">
@@ -291,7 +307,6 @@
 											</li>
 										</ul>
 									</div>
-									<hr>
 									<!--    주차장 이미지           -->
 									<div class="uk-width-1-1">
 										<h4>주차장 이미지 등록</h4>
@@ -345,7 +360,16 @@
 		require('~/plugins/inputmask');
 	}
 	export default {
-		components: {Select2, ScInput, ScCard, ScTextarea, VueUploadMultipleImage, PrettyCheck, ScCardAction, RatingList},
+		components: {
+			Select2,
+			ScInput,
+			ScCard,
+			ScTextarea,
+			VueUploadMultipleImage,
+			PrettyCheck,
+			ScCardAction,
+			RatingList
+		},
 		mixins: [
 			validationMixin,
 		],
@@ -357,7 +381,7 @@
 		},
 		data() {
 			return {
-				siteOpts:[
+				siteOpts: [
 					{id: 0, text: "하이파킹"},
 					{id: 1, text: "제휴"},
 					{id: 2, text: "일반"},
@@ -367,6 +391,7 @@
 				submitStatus: null,
 				sendData: {},
 				tempImage: [],
+				searchAddr: [],
 				defaultForm: {
 					uid: null,
 					siteType: '',
@@ -492,13 +517,16 @@
 					required
 				}, name: {
 					required
-				}, parkingLot: {
+				}, address: {
+					required
+				},
+				parkingLot: {
 					required,
 					integerFormatCheck: customValidators.integerFormatCheck()
 				}, price: {
 					required,
 					integerFormatCheck: customValidators.integerFormatCheck()
-				} ,
+				},
 				lat: {
 					required
 				}, lon: {
@@ -509,6 +537,27 @@
 			}
 		},
 		methods: {
+			selectAddr(searchItem) {
+				this.$axios.$post(this.config.apiUrl + '/api/searchLocal', {address: searchItem.address}).then(async res => {
+					this.callNotification("검색을 완료하였습니다.")
+					console.log(res.data.addresses[0])
+					this.sendData.address = res.data.addresses[0].jibunAddress
+					this.sendData.lat = res.data.addresses[0].x
+					this.sendData.lon = res.data.addresses[0].y
+					this.searchAddr=[]
+				}).finally(() => {
+					this.submitStatus = 'OK'
+				})
+			},
+			searchPlace(searchString) {
+				if (!searchString) this.callAlertError("주소가 입력되지 않았습니다.")
+				this.$axios.$post(this.config.apiUrl + '/api/searchList', {keyword: searchString}).then(async res => {
+					this.callNotification('목록을 가져왔습니다.')
+					this.searchAddr = res.data.items
+				}).finally(() => {
+					this.submitStatus = 'OK'
+				})
+			},
 			openNewForm(siteUid) {
 				this.$nuxt.$emit('open-rate-list', siteUid)
 			},
@@ -624,6 +673,19 @@
 <style lang="scss">
 	@import 'assets/scss/vue/_pretty_checkboxes';
 
+	.selectAddr {
+		float: right !important;
+	}
+	.selectIcon{
+		display: none;
+	}
+	.selectAddr:hover{
+		cursor:pointer;
+		background-color: #4db6ac;
+	}
+	.selectAddr:hover > .selectIcon{
+		display: block;
+	}
 	.sc-vue-errors li {
 		font-size: 12px;
 	}
