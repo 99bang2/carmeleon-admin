@@ -35,12 +35,17 @@
 								<form class="uk-grid-small uk-grid" data-uk-grid>
 									<!--	siteType, name  -->
 									<div class="uk-width-1-3">
-										<select v-model="sendData.siteType" class="uk-select" required="required">
-											<option value="" disabled="disabled">주차장 유형</option>
-											<option value="0">하이파킹</option>
-											<option value="1">제휴</option>
-											<option value="2">일반</option>
-										</select>
+										<Select2
+											v-model="sendData.siteType"
+											:options="siteOpts"
+											:settings="{ 'width': '100%', 'placeholder': '주차장 유형' }"
+											:error-state="$v.sendData.siteType.$error"
+										/>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.siteType.required">
+												주차장 유형을 선택하세요.
+											</li>
+										</ul>
 									</div>
 									<div class="uk-width-2-3">
 										<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error"
@@ -58,7 +63,7 @@
 										</ul>
 									</div>
 									<!--	최대 가용 대수 , 위도 경도  -->
-									<div class="uk-width-1-2">
+									<div class="uk-width-1-3">
 										<ScInput v-model="sendData.parkingLot"
 												 :error-state="$v.sendData.parkingLot.$error"
 												 :validator="$v.sendData.parkingLot">
@@ -71,6 +76,9 @@
 										<ul class="sc-vue-errors">
 											<li v-if="!$v.sendData.parkingLot.required">
 												최대가용대수를 입력하세요.
+											</li>
+											<li v-if="!$v.sendData.price.integerFormatCheck">
+												올바른 형식이 아닙니다.
 											</li>
 										</ul>
 									</div>
@@ -140,13 +148,18 @@
 									</div>
 									<!--	이메일, 담당자이름      -->
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.email" v-input-mask="{ 'alias': 'email' }">
+										<ScInput v-model="sendData.email" :error-state="$v.sendData.email.$error" :validator="$v.sendData.email">
 											<label>
 												이메일
 											</label>
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
 												  data-uk-icon="icon: mail"/>
 										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.email.email">
+												올바른 이메일 형식이 아닙니다.
+											</li>
+										</ul>
 									</div>
 									<div class="uk-width-1-2">
 										<ScInput v-model="sendData.manager">
@@ -159,13 +172,22 @@
 									</div>
 									<!--	기준가격, 이용가능여부 -->
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.price">
+										<ScInput v-model="sendData.price" :error-state="$v.sendData.price.$error"
+												 :validator="$v.sendData.price">
 											<label>
 												기준가격
 											</label>
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
 												  data-uk-icon="icon: tag"/>
 										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.price.required">
+												가격을 입력해주세요.
+											</li>
+											<li v-if="!$v.sendData.price.integerFormatCheck">
+												올바른 형식이 아닙니다.
+											</li>
+										</ul>
 									</div>
 									<div class="uk-width-1-2">
 										<input id="switch-css" v-model="sendData.isActive" type="checkbox"
@@ -314,14 +336,16 @@
 	import VueUploadMultipleImage from 'vue-upload-multiple-image';
 	import {validationMixin} from 'vuelidate'
 	import PrettyCheck from 'pretty-checkbox-vue/check';
-	import {required, minLength, minValue, sameAs, email, requiredIf} from 'vuelidate/lib/validators'
+	import {required, email} from 'vuelidate/lib/validators'
 	import RatingList from "@/components/parking/RatingList"
+	import Select2 from "@/components/Select2";
+	import customValidators from "@/plugins/vuelidateValidators";
 
 	if (process.client) {
 		require('~/plugins/inputmask');
 	}
 	export default {
-		components: {ScInput, ScCard, ScTextarea, VueUploadMultipleImage, PrettyCheck, ScCardAction, RatingList},
+		components: {Select2, ScInput, ScCard, ScTextarea, VueUploadMultipleImage, PrettyCheck, ScCardAction, RatingList},
 		mixins: [
 			validationMixin,
 		],
@@ -333,6 +357,12 @@
 		},
 		data() {
 			return {
+				siteOpts:[
+					{id: 0, text: "하이파킹"},
+					{id: 1, text: "제휴"},
+					{id: 2, text: "일반"},
+
+				],
 				cardFormClosed: true,
 				submitStatus: null,
 				sendData: {},
@@ -463,12 +493,19 @@
 				}, name: {
 					required
 				}, parkingLot: {
-					required
-				}, lat: {
+					required,
+					integerFormatCheck: customValidators.integerFormatCheck()
+				}, price: {
+					required,
+					integerFormatCheck: customValidators.integerFormatCheck()
+				} ,
+				lat: {
 					required
 				}, lon: {
 					required
-				},
+				}, email: {
+					email
+				}
 			}
 		},
 		methods: {

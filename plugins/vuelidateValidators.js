@@ -26,5 +26,9 @@ customValidators.passwordFormatCheck = () => helpers.regex(
 	'passwordFormatCheck',
 	/^[a-zA-Z0-9@$!%*#?&+_]{4,20}$/i
 )
+customValidators.integerFormatCheck = () => helpers.regex(
+	'integerFormatCheck',
+	/[0-9]/i
+)
 
 export default customValidators
