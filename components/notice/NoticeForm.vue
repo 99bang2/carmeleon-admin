@@ -55,12 +55,17 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-2@s">
-								<select v-model="sendData.noticeType" class="uk-select" required="required">
-									<option value="" disabled="disabled">공지사항 분류</option>
-									<option value="0">긴급</option>
-									<option value="1">필수</option>
-									<option value="2">일반</option>
-								</select>
+								<Select2
+									v-model="sendData.noticeType"
+									:options="noticeOpts"
+									:settings="{'width': '100%', 'placeholder':'공지사항 분류'}"
+									:error-state="$v.sendData.noticeType.$error"
+								/>
+								<ul class="sc-vue-errors">
+									<li v-if="!$v.sendData.noticeType.required">
+										공지사항 분류를 선택하세요.
+									</li>
+								</ul>
 							</div>
 							<div class="uk-width-1-2@s">
 								<input id="switch-css" v-model="sendData.isOpen" type="checkbox"
@@ -93,17 +98,15 @@
 <script>
 	import {validationMixin} from 'vuelidate'
 	import {required, minLength, minValue, sameAs, email, requiredIf} from 'vuelidate/lib/validators'
-	import customValidators from '~/plugins/vuelidateValidators'
 	import ScInput from '~/components/Input'
 	import ScTextarea from '~/components/Textarea'
 	import Select2 from '~/components/Select2'
-	import moment from '~/plugins/moment'
 
 	export default {
 		components: {
 			ScInput,
 			ScTextarea,
-			//Select2
+			Select2
 		},
 		mixins: [
 			validationMixin,
@@ -116,6 +119,11 @@
 		},
 		data() {
 			return {
+				noticeOpts:[
+					{id: 0, text: '긴급'},
+					{id: 1, text: '필수'},
+					{id: 2, text: '일반'},
+				],
 				cardFormClosed: true,
 				submitStatus: null,
 				deleteStatus: null,
@@ -138,6 +146,9 @@
 				content: {
 					required
 				},
+				noticeType: {
+					required
+				}
 			}
 		},
 		created() {
