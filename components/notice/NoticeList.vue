@@ -120,7 +120,7 @@
 					},
 					{
 						headerName: '활성',
-						field: 'isActive',
+						field: 'isOpen',
 						width: 60,
 						cellRenderer: (obj) => {
 							return obj.value ? '<i class="mdi mdi-check-circle" style="font-size:8px;"></i>' : ''

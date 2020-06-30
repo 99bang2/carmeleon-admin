@@ -63,39 +63,37 @@
 							<div class="uk-width-1-1@s">
 								<div class="uk-grid-small uk-grid" data-uk-grid>
 									<ScInput v-model="eventDate" v-flatpickr="dpRange" placeholder="이벤트 기간"
-											 mode="outline">
+											 mode="outline" :error-state="$v.sendData.startDate.$error"
+											 :validator="$v.sendData.startDate">
 										<span slot="icon" class="uk-form-icon" data-uk-icon="calendar"></span>
 									</ScInput>
+									<ul class="sc-vue-errors">
+										<li v-if="!$v.sendData.startDate.required">
+											이벤트 기간을 입력하세요.
+										</li>
+									</ul>
 								</div>
 							</div>
 							<div class="uk-width-1-1@s">
 							</div>
 
 							<div class="uk-width-1-2">
-								<select v-model="sendData.eventType" class="uk-select" required="required" :error-state="$v.sendData.eventType.$error"
-										:validator="$v.sendData.eventType">
-									<option value="" disabled="disabled">이벤트 종류</option>
-									<option value="0">팝업적용</option>
-									<option value="1">팝업미적용</option>
-								</select>
+								<Select2 v-model="sendData.eventType" :options="eventOpts" :settings="{ 'width': '100%', 'placeholder': '이벤트 종류' }"
+										 :error-state="$v.sendData.eventType.$error" />
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.eventType.required">
-										이벤트 종류를 선택해주세요
+										이벤트 종류를 선택하세요.
 									</li>
 								</ul>
 							</div>
-							<div class="uk-width-1-2">
-								<select v-model="sendData.isOpen" class="uk-select" required="required" :error-state="$v.sendData.isOpen.$error"
-										:validator="$v.sendData.isOpen">
-									<option value="" disabled="disabled">공개여부</option>
-									<option value=true>공개</option>
-									<option value=false>비공개</option>
-								</select>
-								<ul class="sc-vue-errors">
-									<li v-if="!$v.sendData.isOpen.required">
-										공개여부를 선택해주세요
-									</li>
-								</ul>
+							<div class="uk-width-1-2@s">
+								<input id="switch-css" v-model="sendData.isOpen" type="checkbox"
+									   class="sc-switch-input">
+								<label for="switch-css" class="sc-switch-label"
+									   style="margin-top:15px;margin-left:15px;">
+									<span class="sc-switch-toggle-on">공개</span>
+									<span class="sc-switch-toggle-off">비공개</span>
+								</label>
 							</div>
 						</form>
 					</div>
@@ -119,9 +117,10 @@
 
 <script>
 	import {validationMixin} from 'vuelidate'
-	import {required, minLength, minValue, sameAs, email, requiredIf} from 'vuelidate/lib/validators'
+	import {required, between, minLength, minValue, sameAs, email, requiredIf} from 'vuelidate/lib/validators'
 	import ScInput from '~/components/Input'
 	import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate"
+	import Select2 from "@/components/Select2";
 
 	if (process.client) {
 		require('~/plugins/flatpickr');
@@ -129,6 +128,7 @@
 
 	export default {
 		components: {
+			Select2,
 			ScInput,
 		},
 		mixins: [
@@ -142,6 +142,10 @@
 		},
 		data() {
 			return {
+				eventOpts:[
+					{id: 0, text: '팝업적용'},
+					{id: 1, text: '팝업미적용'}
+				],
 				bannerImageData:"",
 				mainImageData:"",
 				cardFormClosed: true,
@@ -183,12 +187,11 @@
 					required
 				},
 				eventType: {
-					required
+					required,
 				},
-				isOpen:{
+				startDate: {
 					required
 				}
-
 			}
 		},
 		methods: {
