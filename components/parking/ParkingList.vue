@@ -179,7 +179,7 @@
 					},
 					{
 						headerName: '평점',
-						field: 'rating',
+						field: 'rate',
 						width: 120,
 						cellRenderer: (obj) => {
 							if (obj.data) {

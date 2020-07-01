@@ -32,5 +32,11 @@ export const menuEntries = [
 		title: "ReviewTemplates",
 		icon: "mdi mdi-file-document",
 		page: "/reviewTemplates"
+	},
+	{
+		id: uniqueID(),
+		title: "PointProducts",
+		icon: "mdi mdi-coin",
+		page: "/pointProducts"
 	}
 ];

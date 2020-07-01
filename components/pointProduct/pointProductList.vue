@@ -4,40 +4,21 @@
 			<ScCardHeader class="uk-flex uk-flex-middle sc-theme-bg-dark sc-light" separator>
 				<div class="uk-flex-1">
 					<ScCardTitle>
-						<slot><i class="mdi mdi-file-find"/> 리뷰템플릿목록</slot>
+						<slot><i class="mdi mdi-coin"/>포인트상품목록</slot>
 					</ScCardTitle>
 				</div>
 				<div class="uk-text-nowrap">
-					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-file-plus"
-					   style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="리뷰템플릿생성"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-tag-plus"
+					   style="display: inline-block" @click.prevent="addPoints" data-uk-tooltip="추가포인트적용"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-shape-circle-plus"
+					   style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="포인트상품생성"/>
 					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline"
-					   style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="리뷰템플릿삭제"/>
+					   style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="포인트상품삭제"/>
 				</div>
 			</ScCardHeader>
 			<ScCardBody>
 				<div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
-					<div class="uk-width-2-5@s">
-						<div class="uk-grid-small uk-grid" data-uk-grid>
-							<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
-							   style="height:40px;" @click.prevent="refreshFilter">
-								<i class="mdi mdi-refresh"></i>
-							</a>
-							<div class="uk-width-1-3@s">
-								<label>
-									<select v-model="searchReviewType" class="uk-select">
-										<option value="">
-											모든리뷰유형
-										</option>
-										<option v-for="reviewType in reviewTypeOptions" :key="reviewType.id"
-												:value="reviewType.id">
-											{{ reviewType.text }}
-										</option>
-									</select>
-								</label>
-							</div>
-						</div>
-					</div>
-					<div class="uk-width-1-5@s">
+					<div class="uk-width-3-5@s">
 					</div>
 					<div class="uk-width-2-5@s">
 						<ScInput v-model="searchKeyword" placeholder="검색">
@@ -76,6 +57,7 @@
 		],
 		data() {
 			return {
+				addPoint: null,
 				gridOptions: {
 					suppressRowClickSelection: true,
 					suppressMenuHide: true,
@@ -87,18 +69,9 @@
 					getRowStyle: this.getRowStyle
 				},
 				searchKeyword: '',
-				searchReviewType: '',
 			}
 		},
 		computed: {
-			reviewTypeOptions() {
-				let opts = []
-				opts.push({id: 0, text: "아주좋은리뷰"})
-				opts.push({id: 1, text: "좋은리뷰"})
-				opts.push({id: 2, text: "나쁜리뷰"})
-				opts.push({id: 3, text: "아주나쁜리뷰"})
-				return opts
-			},
 			columnDefs() {
 				return [
 					{
@@ -116,32 +89,28 @@
 						}
 					},
 					{
-						headerName: "리뷰유형",
-						field: "reviewType",
-						width: 150,
+						headerName: "포인트",
+						field: "point",
+						width: 300,
 						cellRenderer: (obj) => {
-							let tempData = ""
-							switch (obj.value) {
-								case 0:
-									tempData = "아주좋은리뷰"
-									break;
-								case 1:
-									tempData = "좋은리뷰"
-									break;
-								case 2:
-									tempData = "나쁜리뷰"
-									break;
-								case 3:
-									tempData = "아주나쁜리뷰"
-									break;
-							}
-							return tempData
+							return obj.value + ' Point'
 						}
 					},
 					{
-						headerName: "리뷰내용",
-						field: "review",
-						width: 650,
+						headerName: "가격",
+						field: "price",
+						width: 300,
+						cellRenderer: (obj) => {
+							return obj.value + ' 원'
+						}
+					},
+					{
+						headerName: "추가포인트",
+						field: "addPoint",
+						width: 200,
+						cellRenderer: (obj) => {
+							return obj.value ? '+' + obj.value : ''
+						}
 					},
 					{
 						headerName: '등록일시',
@@ -158,42 +127,30 @@
 			'searchKeyword': function (newValue) {
 				this.gridOptions.api.setQuickFilter(newValue)
 			},
-			'searchReviewType': function (newValue) {
-				let filterComponent = this.gridOptions.api.getFilterInstance('reviewType')
-				filterComponent.setModel({
-					type: 'equals',
-					filter: newValue
-				})
-				this.gridOptions.api.onFilterChanged()
-			},
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('reset-reviewTemplate-list', () => {
+			this.$nuxt.$on('reset-pointProduct-list', () => {
 				vm.resetSelection()
 			})
-			this.$nuxt.$on('fetch-reviewTemplate-list', (uid) => {
+			this.$nuxt.$on('fetch-pointProduct-list', (uid) => {
 				vm.fetchData(uid)
 			})
 		},
 		beforeDestroy() {
-			this.$nuxt.$off('reset-reviewTemplate-list')
-			this.$nuxt.$off('fetch-reviewTemplate-list')
+			this.$nuxt.$off('reset-pointProduct-list')
+			this.$nuxt.$off('fetch-pointProduct-list')
 		},
 		async mounted() {
 			await this.fetchData()
 		},
 		methods: {
-			refreshFilter() {
-				this.searchReviewType = ""
-			},
-
 			openNewForm() {
 				this.resetSelection()
-				this.$nuxt.$emit('open-reviewTemplate-form')
+				this.$nuxt.$emit('open-pointProduct-form')
 			},
 			onRowClicked(props) {
-				this.$nuxt.$emit('open-reviewTemplate-form', props)
+				this.$nuxt.$emit('open-pointProduct-form', props)
 				this.resetSelection()
 				props.node.detail = true
 				this.gridOptions.api.redrawRows()
@@ -207,7 +164,7 @@
 			},
 			async fetchData(selectUid) {
 				// API 연동
-				let res = await this.$axios.$get(this.config.apiUrl + '/api/reviewTemplates')
+				let res = await this.$axios.$get(this.config.apiUrl + '/api/pointProducts')
 				this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
@@ -226,17 +183,36 @@
 				})
 				this.gridOptions.api.redrawRows()
 			},
+			addPoints() {
+				let selected = this.gridOptions.api.getSelectedRows()
+				let selectedUids = selected.map(({uid}) => uid)
+				let seletedCnt = selectedUids.length
+				if (seletedCnt) {
+					UIkit.modal.prompt(`적용할 추가포인트(%)를 입력해주세요`, this.addPoint).then((pointPercent) => {
+						this.$axios.$post(this.config.apiUrl + '/api/pointProducts/addPoint', {
+							addPoint: pointPercent,
+							uids: selectedUids
+						}).then(res => {
+							this.callNotification('적용했습니다.')
+							this.$nuxt.$emit('close-pointProduct-form')
+							this.fetchData()
+						})
+					})
+				} else {
+					this.callAlertError('적용할 항목을 선택해주세요.')
+				}
+			},
 			deleteDatas() {
 				let selected = this.gridOptions.api.getSelectedRows()
 				let selectedUids = selected.map(({uid}) => uid)
 				let seletedCnt = selectedUids.length
 				if (seletedCnt) {
 					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-						this.$axios.$post(this.config.apiUrl + '/api/reviewTemplates/bulkDelete', {
+						this.$axios.$post(this.config.apiUrl + '/api/pointProducts/bulkDelete', {
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')
-							this.$nuxt.$emit('close-reviewTemplate-form')
+							this.$nuxt.$emit('close-pointProduct-form')
 							this.fetchData()
 						})
 					})
