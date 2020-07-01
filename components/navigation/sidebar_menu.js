@@ -26,5 +26,11 @@ export const menuEntries = [
 		title: "Parkings",
 		icon: "mdi mdi-parking",
 		page: "/parkings"
+	},
+	{
+		id: uniqueID(),
+		title: "ReviewTemplates",
+		icon: "mdi mdi-file-document",
+		page: "/reviewTemplates"
 	}
 ];

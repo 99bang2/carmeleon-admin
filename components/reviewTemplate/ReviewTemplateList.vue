@@ -4,14 +4,14 @@
 			<ScCardHeader class="uk-flex uk-flex-middle sc-theme-bg-dark sc-light" separator>
 				<div class="uk-flex-1">
 					<ScCardTitle>
-						<slot><i class="mdi mdi-account-search"/> 계정목록</slot>
+						<slot><i class="mdi mdi-file-find"/> 리뷰템플릿목록</slot>
 					</ScCardTitle>
 				</div>
 				<div class="uk-text-nowrap">
-					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-account-plus"
-					   style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="계정생성"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-file-plus"
+					   style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="리뷰템플릿생성"/>
 					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline"
-					   style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="계정삭제"/>
+					   style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="리뷰템플릿삭제"/>
 				</div>
 			</ScCardHeader>
 			<ScCardBody>
@@ -24,26 +24,14 @@
 							</a>
 							<div class="uk-width-1-3@s">
 								<label>
-									<select v-model="searchGrade" class="uk-select">
+									<select v-model="searchReviewType" class="uk-select">
 										<option value="">
-											모든 등급
+											모든리뷰유형
 										</option>
-										<option v-for="grade in gradeOptions" :key="grade.id" :value="grade.id">
-											{{ grade.text }}
+										<option v-for="reviewType in reviewTypeOptions" :key="reviewType.id"
+												:value="reviewType.id">
+											{{ reviewType.text }}
 										</option>
-									</select>
-								</label>
-							</div>
-							<div class="uk-width-1-3@s">
-								<label>
-									<select v-model="searchActive" class="uk-select">
-										<option value="">
-											활성상태
-										</option>
-										<option value="true">
-											활성
-										</option>
-										<option value="false">비활성</option>
 									</select>
 								</label>
 							</div>
@@ -79,7 +67,6 @@
 	import ScInput from '~/components/Input'
 	import {agGridMixin} from "@/plugins/ag-grid.mixin";
 
-
 	export default {
 		components: {
 			ScInput
@@ -100,15 +87,16 @@
 					getRowStyle: this.getRowStyle
 				},
 				searchKeyword: '',
-				searchActive: '',
-				searchGrade: ''
+				searchReviewType: '',
 			}
 		},
 		computed: {
-			gradeOptions() {
+			reviewTypeOptions() {
 				let opts = []
-				opts.push({id: 0, text: "최고 관리자"})
-				opts.push({id: 1, text: "일반 관리자"})
+				opts.push({id: 0, text: "아주좋은리뷰"})
+				opts.push({id: 1, text: "좋은리뷰"})
+				opts.push({id: 2, text: "나쁜리뷰"})
+				opts.push({id: 3, text: "아주나쁜리뷰"})
 				return opts
 			},
 			columnDefs() {
@@ -128,30 +116,32 @@
 						}
 					},
 					{
-						headerName: '아이디',
-						field: 'id',
+						headerName: "리뷰유형",
+						field: "reviewType",
+						width: 150,
+						cellRenderer: (obj) => {
+							let tempData = ""
+							switch (obj.value) {
+								case 0:
+									tempData = "아주좋은리뷰"
+									break;
+								case 1:
+									tempData = "좋은리뷰"
+									break;
+								case 2:
+									tempData = "나쁜리뷰"
+									break;
+								case 3:
+									tempData = "아주나쁜리뷰"
+									break;
+							}
+							return tempData
+						}
+					},
+					{
+						headerName: "리뷰내용",
+						field: "review",
 						suppressSizeToFit: false,
-					},
-					{
-						headerName: '등급',
-						field: 'grade',
-						width: 160,
-						cellRenderer: (obj) => {
-							return obj.data.grade === 0 ?'최고 관리자': '일반 관리자'
-						}
-					},
-					{
-						headerName: '이름',
-						field: 'name',
-						width: 160
-					},
-					{
-						headerName: '활성',
-						field: 'isActive',
-						width: 60,
-						cellRenderer: (obj) => {
-							return obj.value ? '<i class="mdi mdi-check-circle" style="font-size:8px;"></i>' : ''
-						}
 					},
 					{
 						headerName: '등록일시',
@@ -168,16 +158,8 @@
 			'searchKeyword': function (newValue) {
 				this.gridOptions.api.setQuickFilter(newValue)
 			},
-			'searchGrade': function (newValue) {
-				let filterComponent = this.gridOptions.api.getFilterInstance('grade')
-				filterComponent.setModel({
-					type: 'equals',
-					filter: newValue
-				})
-				this.gridOptions.api.onFilterChanged()
-			},
-			'searchActive': function (newValue) {
-				let filterComponent = this.gridOptions.api.getFilterInstance('isActive')
+			'searchReviewType': function (newValue) {
+				let filterComponent = this.gridOptions.api.getFilterInstance('reviewType')
 				filterComponent.setModel({
 					type: 'equals',
 					filter: newValue
@@ -187,31 +169,31 @@
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('reset-account-list', () => {
+			this.$nuxt.$on('reset-reviewTemplate-list', () => {
 				vm.resetSelection()
 			})
-			this.$nuxt.$on('fetch-account-list', (uid) => {
+			this.$nuxt.$on('fetch-reviewTemplate-list', (uid) => {
 				vm.fetchData(uid)
 			})
 		},
 		beforeDestroy() {
-			this.$nuxt.$off('reset-account-list')
-			this.$nuxt.$off('fetch-account-list')
+			this.$nuxt.$off('reset-reviewTemplate-list')
+			this.$nuxt.$off('fetch-reviewTemplate-list')
 		},
 		async mounted() {
 			await this.fetchData()
 		},
 		methods: {
-			refreshFilter(){
-				this.searchGrade = ""
-				this.searchActive = ""
+			refreshFilter() {
+				this.searchReviewType = ""
 			},
+
 			openNewForm() {
 				this.resetSelection()
-				this.$nuxt.$emit('open-account-form')
+				this.$nuxt.$emit('open-reviewTemplate-form')
 			},
 			onRowClicked(props) {
-				this.$nuxt.$emit('open-account-form', props)
+				this.$nuxt.$emit('open-reviewTemplate-form', props)
 				this.resetSelection()
 				props.node.detail = true
 				this.gridOptions.api.redrawRows()
@@ -225,7 +207,7 @@
 			},
 			async fetchData(selectUid) {
 				// API 연동
-				let res = await this.$axios.$get(this.config.apiUrl +'/api/accounts')
+				let res = await this.$axios.$get(this.config.apiUrl + '/api/reviewTemplates')
 				this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
@@ -250,11 +232,11 @@
 				let seletedCnt = selectedUids.length
 				if (seletedCnt) {
 					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-						this.$axios.$post(this.config.apiUrl + '/api/accounts/bulkDelete', {
+						this.$axios.$post(this.config.apiUrl + '/api/reviewTemplates/bulkDelete', {
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')
-							this.$nuxt.$emit('close-account-form')
+							this.$nuxt.$emit('close-reviewTemplate-form')
 							this.fetchData()
 						})
 					})
@@ -266,3 +248,6 @@
 	}
 </script>
 
+<style scoped>
+
+</style>

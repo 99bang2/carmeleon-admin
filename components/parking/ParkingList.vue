@@ -321,7 +321,7 @@
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')
-							this.cardFormClosed = true
+							this.$nuxt.$emit('close-parking-form')
 							this.fetchData()
 						})
 					})
