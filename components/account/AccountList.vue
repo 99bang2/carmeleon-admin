@@ -205,6 +205,7 @@
 			refreshFilter(){
 				this.searchGrade = ""
 				this.searchActive = ""
+				this.fetchData()
 			},
 			openNewForm() {
 				this.resetSelection()

@@ -185,9 +185,10 @@
 		},
 		methods: {
 			refreshFilter() {
+				this.searchKeyword = ""
 				this.searchReviewType = ""
+				this.fetchData()
 			},
-
 			openNewForm() {
 				this.resetSelection()
 				this.$nuxt.$emit('open-reviewTemplate-form')

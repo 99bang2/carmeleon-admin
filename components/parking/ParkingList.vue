@@ -40,11 +40,11 @@
 							<div class="uk-width-1-5@s">
 								<select v-model="searchRating" class="uk-select" required="required">
 									<option value="">평점</option>
-									<option value="4">★★★★★ 5</option>
-									<option value="3">★★★★ 4</option>
-									<option value="2">★★★ 3</option>
-									<option value="1">★★ 2</option>
-									<option value="0">★ 1</option>
+									<option value="4">★ 4~5</option>
+									<option value="3">★ 3~4</option>
+									<option value="2">★ 2~3</option>
+									<option value="1">★ 1~2</option>
+									<option value="0">★ 0~1</option>
 								</select>
 							</div>
 						</div>
@@ -181,32 +181,25 @@
 						headerName: '평점',
 						field: 'rate',
 						width: 120,
+						filter: 'agNumberColumnFilter',
 						cellRenderer: (obj) => {
 							if (obj.data) {
-								let temp = ''
-								switch (obj.value) {
-									case 0:
-									case 1:
-										temp = '★ 1'
-										break;
-									case 2:
-									case 3:
-										temp = '★★ 2'
-										break;
-									case 4:
-									case 5:
-										temp = '★★★ 3'
-										break;
-									case 6:
-									case 7:
-										temp = '★★★★ 4'
-										break;
-									case 8:
-									case 9:
-										temp = '★★★★★ 5'
-										break;
+								function roundToTwo(num) {
+									return +(Math.round(num + "e+2")  + "e-2");
 								}
-								return `<span>${temp}</span>`;
+								let temp = ''
+								if (obj.value > 8) {
+									temp = '★★★★★'
+								} else if (obj.value > 6 && obj.value <= 8) {
+									temp = '★★★★'
+								} else if (obj.value > 4 && obj.value <= 6) {
+									temp = '★★★'
+								} else if (obj.value > 2 && obj.value <= 4) {
+									temp = '★★'
+								} else {
+									temp = '★'
+								}
+								return `<span>${temp} ${roundToTwo(obj.value / 2)}</span>`;
 							}
 						}
 					},
@@ -240,10 +233,21 @@
 				this.gridOptions.api.onFilterChanged()
 			},
 			'searchRating': function (newValue) {
-				let filterComponent = this.gridOptions.api.getFilterInstance('rating')
+				let tmpValue = parseInt(newValue)
+				let start = (tmpValue) * 2
+				let end = (tmpValue + 1) * 2
+				let filterComponent = this.gridOptions.api.getFilterInstance('rate')
 				filterComponent.setModel({
-					type: 'equals',
-					filter: newValue
+					condition1:{
+						type: 'inRange',
+						filter: start,
+						filterTo: end
+					},
+					operator:'OR',
+					condition2:{
+						type: 'equals',
+						filter: end
+					}
 				})
 				this.gridOptions.api.onFilterChanged()
 			},
@@ -268,10 +272,11 @@
 			await this.fetchData()
 		},
 		methods: {
-			refreshFilter(){
+			refreshFilter() {
 				this.searchType = ""
 				this.searchActive = ""
-				this.searchRating =""
+				this.searchRating = ""
+				this.fetchData()
 			},
 			openNewForm() {
 				this.resetSelection()
@@ -292,7 +297,7 @@
 			},
 			async fetchData(selectUid) {
 				// API 연동
-				let res = await this.$axios.$get(this.config.apiUrl +'/api/parkings')
+				let res = await this.$axios.$get(this.config.apiUrl + '/api/parkings')
 				this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
