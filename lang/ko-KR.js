@@ -4,5 +4,6 @@ export default {
 	'Notices':'공지사항',
 	'Parkings':'주차장관리',
 	'ReviewTemplates' : '리뷰템플릿관리',
-	'PointProducts':'포인트상품관리'
+	'PointProducts':'포인트상품관리',
+	'Tutorials':'튜토리얼관리'
 }
