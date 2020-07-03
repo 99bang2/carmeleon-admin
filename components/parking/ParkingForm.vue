@@ -42,7 +42,7 @@
 											:error-state="$v.sendData.siteType.$error"
 										/>
 										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.siteType.required">
+											<li v-if="!$v.sendData.siteType.required">a
 												주차장 유형을 선택하세요.
 											</li>
 										</ul>
@@ -381,12 +381,6 @@
 		},
 		data() {
 			return {
-				siteOpts: [
-					{id: 0, text: "하이파킹"},
-					{id: 1, text: "제휴"},
-					{id: 2, text: "일반"},
-
-				],
 				cardFormClosed: true,
 				submitStatus: null,
 				sendData: {},
@@ -413,102 +407,7 @@
 					optionTag: [],
 					carTag: [],
 					picture: [],
-				},
-				paymentTag: [
-					{
-						id: '11',
-						name: '카드결제',
-						value: 'card',
-					},
-					{
-						id: '12',
-						name: '현금결제',
-						value: 'cash',
-					},
-					{
-						id: '13',
-						name: '인앱결제',
-						value: 'inApp',
-					}
-				],
-				brandTag: [
-					{
-						id: '21',
-						name: '하이파킹',
-						value: 'hiParking',
-					},
-					{
-						id: '22',
-						name: '서울시',
-						value: 'cityOfSeoul',
-					}
-				],
-				productTag: [
-					{
-						id: '31',
-						name: '시간권',
-						value: 'timePass',
-					},
-					{
-						id: '32',
-						name: '당일권',
-						value: 'dayPass',
-					},
-					{
-						id: '33',
-						name: '월정기권',
-						value: 'monthPass',
-					}
-				],
-				optionTag: [
-					{
-						id: '41',
-						name: '경차',
-						value: 'cityCar',
-					},
-					{
-						id: '42',
-						name: '노약자',
-						value: 'cityOfSeoul',
-					},
-					{
-						id: '43',
-						name: '장애인',
-						value: 'disabled',
-					},
-					{
-						id: '44',
-						name: '임산부',
-						value: 'pregnant',
-					},
-					{
-						id: '45',
-						name: '여성',
-						value: 'female',
-					},
-					{
-						id: '46',
-						name: '전기차충전',
-						value: 'elecCharge',
-					},
-					{
-						id: '47',
-						name: '기계식',
-						value: 'mechanical',
-					}
-				],
-				carTag: [
-					{
-						id: '51',
-						name: '버스',
-						value: 'bus',
-					},
-					{
-						id: '52',
-						name: '화물',
-						value: 'freight',
-					}
-				],
+				}
 			}
 		},
 		validations: {
@@ -584,7 +483,6 @@
 			},
 			//multi image upload////////////////////////////////////////////////
 
-
 			settingForm(props) {
 				this.$v.$reset()
 				this.tempImage = []
@@ -649,7 +547,7 @@
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
-			},
+			}
 		},
 		created() {
 			let vm = this
@@ -662,6 +560,13 @@
 		},
 		async beforeMount() {
 			this.sendData = this.defaultForm
+			let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
+			this.siteOpts = code.data.site
+			this.paymentTag = code.data.paymentTag
+			this.brandTag = code.data.brandTag
+			this.productTag = code.data.productTag
+			this.optionTag = code.data.optionTag
+			this.carTag = code.data.carTag
 		},
 		beforeDestroy() {
 			this.$nuxt.$off('open-parking-form')
