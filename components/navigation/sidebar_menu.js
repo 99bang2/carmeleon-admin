@@ -6,14 +6,9 @@ const {uniqueID} = scHelpers;
 export const menuEntries = [
 	{
 		id: uniqueID(),
-		title: "Events",
-		icon: "mdi mdi-calendar-check",
-		page: "/events",
-	}, {
-		id: uniqueID(),
-		title: "Notices",
-		icon: "mdi mdi-alarm-light",
-		page: "/notices",
+		title: "Parkings",
+		icon: "mdi mdi-parking",
+		page: "/parkings"
 	},
 	{
 		id: uniqueID(),
@@ -23,9 +18,14 @@ export const menuEntries = [
 	},
 	{
 		id: uniqueID(),
-		title: "Parkings",
-		icon: "mdi mdi-parking",
-		page: "/parkings"
+		title: "Events",
+		icon: "mdi mdi-calendar-check",
+		page: "/events",
+	}, {
+		id: uniqueID(),
+		title: "Notices",
+		icon: "mdi mdi-alarm-light",
+		page: "/notices",
 	},
 	{
 		id: uniqueID(),
