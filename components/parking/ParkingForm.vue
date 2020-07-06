@@ -449,13 +449,17 @@
 				})
 			},
 			searchPlace(searchString) {
-				if (!searchString) this.callAlertError("주소가 입력되지 않았습니다.")
-				this.$axios.$post(this.config.apiUrl + '/api/searchList', {keyword: searchString}).then(async res => {
-					this.callNotification('목록을 가져왔습니다.')
-					this.searchAddr = res.data.items
-				}).finally(() => {
-					this.submitStatus = 'OK'
-				})
+				console.log(searchString)
+				if (!searchString) {
+					this.callAlertError("주소가 입력되지 않았습니다.")
+				}else{
+					this.$axios.$post(this.config.apiUrl + '/api/searchList', {keyword: searchString}).then(async res => {
+						this.callNotification('목록을 가져왔습니다.')
+						this.searchAddr = res.data.items
+					}).finally(() => {
+						this.submitStatus = 'OK'
+					})
+				}
 			},
 			openNewForm(siteUid) {
 				this.$nuxt.$emit('open-rate-list', siteUid)

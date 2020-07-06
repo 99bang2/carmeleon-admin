@@ -18,10 +18,10 @@
 				<div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
 					<div class="uk-width-2-5@s">
 					</div>
-					<div class="uk-width-1-5@s">
-					</div>
 					<div class="uk-width-2-5@s">
-						<ScInput v-model="searchKeyword" placeholder="검색">
+					</div>
+					<div class="uk-width-1-5@s">
+						<ScInput v-model="searchKeyword" placeholder="이벤트명 검색">
 							<span slot="icon" class="uk-form-icon" data-uk-icon="search"/>
 						</ScInput>
 					</div>

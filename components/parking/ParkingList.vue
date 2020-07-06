@@ -40,12 +40,12 @@
 							<div style="width: 10px"></div>
 							<div class="uk-width-1-5@s">
 								<IonRangeSlider v-model="searchRating"
-												:settings="{type: 'double',from:0, to:10, values:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0], prefix: 'rate '}"></IonRangeSlider>
+												:settings="{type: 'double',from:0, to:10, values:[0,1,2,3,4,5,6,7,8,9,10], prefix: 'rate '}"></IonRangeSlider>
 							</div>
 						</div>
 					</div>
 					<div class="uk-width-1-5@s">
-						<ScInput v-model="searchKeyword" placeholder="주차장 이름">
+						<ScInput v-model="searchKeyword" placeholder="주차장 이름, 태그">
 							<span slot="icon" class="uk-form-icon" data-uk-icon="search"/>
 						</ScInput>
 					</div>
@@ -194,7 +194,7 @@
 								} else {
 									temp = '★'
 								}
-								return `<span>${temp} ${roundToTwo(obj.value / 2)}</span>`;
+								return `<span>${temp} ${roundToTwo(obj.value)}</span>`;
 							}
 						}
 					},
@@ -205,8 +205,35 @@
 						valueFormatter: obj => {
 							return this.$moment(obj.value).format('YYYY-MM-DD HH:mm')
 						}
-					}
+					},
+					{
+						headerName: '결제태그',
+						field: 'paymentTag',
+						hide:true
+					},
+					{
+						headerName: '상품태그',
+						field: 'productTag',
+						hide:true
+					},
 
+					{
+						headerName: '옵션태그',
+						field: 'optionTag',
+						hide:true
+					},
+
+					{
+						headerName: '제휴태그',
+						field: 'brandTag',
+						hide:true
+					},
+
+					{
+						headerName: '차량태그',
+						field: 'carTag',
+						hide:true
+					},
 				]
 			}
 		},
