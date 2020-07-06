@@ -11,77 +11,85 @@
 								</ScCardTitle>
 							</div>
 						</ScCardHeader>
-						<ScCardBody>
-							<ScTransition
-								group
-								stagger
-								:speed="20"
-								origin="50% 50%"
-								class="uk-child-width-1-5@xl uk-child-width-1-3@l uk-child-width-1-2@s uk-grid uk-grid-match uk-sortable"
-								data-uk-grid
-								data-uk-sortable
-							>
-								<div v-show="showWidgets" key="widgetA">
-									<ScCard>
-										<div class="uk-text-bold uk-text-primary md-bg-green-100 uk-flex uk-flex-center">
-											1st STEP
+						<ScCardBody style="min-height: 745px">
+							<form class="uk-flex uk-flex-center uk-flex-between">
+								<div class="uk-card uk-width-1-6" style="min-height: 600px">
+									<div class="uk-text-center uk-card-header sc-theme-bg-dark sc-light">
+										<h3 class="uk-card-title">
+											step1
+										</h3>
+									</div>
+									<div class="uk-card-body uk-margin" uk-margin>
+										<div uk-form-custom="target: true">
+											<input type="file">
+											<input class="uk-input uk-background-muted uk-padding uk-panel" type="text"
+												   placeholder="Select file" disabled>
 										</div>
-										<div>
-											<ScCardBody>
-
-											</ScCardBody>
-										</div>
-									</ScCard>
+										<img data-src="" width="" height="" alt="" uk-img>
+									</div>
 								</div>
-								<div v-show="showWidgets" key="widgetB">
-									<ScCard>
-										<div class="uk-text-bold uk-text-primary md-bg-green-100 uk-flex uk-flex-center">
-											2nd STEP
+								<div class="uk-card uk-width-1-6" style="min-height: 600px">
+									<div class="uk-text-center uk-card-header sc-theme-bg-dark sc-light">
+										<h3 class="uk-card-title">
+											step2
+										</h3>
+									</div>
+									<div class="uk-card-body uk-margin" uk-margin>
+										<div uk-form-custom="target: true">
+											<input type="file">
+											<input class="uk-input uk-form-width-medium" type="text"
+												   placeholder="Select file" disabled>
 										</div>
-										<div>
-											<ScCardBody>
-
-											</ScCardBody>
-										</div>
-									</ScCard>
+									</div>
 								</div>
-								<div v-show="showWidgets" key="widgetC">
-									<ScCard>
-										<div class="uk-text-bold uk-text-primary md-bg-green-100 uk-flex uk-flex-center">
-											3rd STEP
+								<div class="uk-card uk-width-1-6" style="min-height: 600px">
+									<div class="uk-text-center uk-card-header sc-theme-bg-dark sc-light">
+										<h3 class="uk-card-title">
+											step3
+										</h3>
+									</div>
+									<div class="uk-card-body uk-margin" uk-margin>
+										<div uk-form-custom="target: true">
+											<input type="file">
+											<input class="uk-input uk-form-width-medium" type="text"
+												   placeholder="Select file" disabled>
 										</div>
-										<div>
-											<ScCardBody>
-
-											</ScCardBody>
-										</div>
-									</ScCard>
+									</div>
 								</div>
-								<div v-show="showWidgets" key="widgetD">
-									<ScCard>
-										<div class="uk-text-bold uk-text-primary md-bg-green-100 uk-flex uk-flex-center">
-											4th STEP
+								<div class="uk-card uk-width-1-6" style="min-height: 600px">
+									<div class="uk-text-center uk-card-header sc-theme-bg-dark sc-light">
+										<h3 class="uk-card-title">
+											step4
+										</h3>
+									</div>
+									<div class="uk-card-body uk-margin" uk-margin>
+										<div uk-form-custom="target: true">
+											<input type="file">
+											<input class="uk-input uk-form-width-medium" type="text"
+												   placeholder="Select file" disabled>
 										</div>
-										<div>
-											<ScCardBody>
-
-											</ScCardBody>
-										</div>
-									</ScCard>
+									</div>
 								</div>
-								<div v-show="showWidgets" key="widgetE">
-									<ScCard>
-										<div class="uk-text-bold uk-text-primary md-bg-green-100 uk-flex uk-flex-center">
-											5th STEP
+								<div class="uk-card uk-width-1-6" style="min-height: 600px">
+									<div class="uk-text-center uk-card-header sc-theme-bg-dark sc-light">
+										<h3 class="uk-card-title">
+										step5
+										</h3>
+									</div>
+									<div class="uk-card-body uk-margin" uk-margin>
+										<div uk-form-custom="target: true">
+											<input type="file">
+											<input class="uk-input uk-form-width-medium" type="text"
+												   placeholder="Select file" disabled>
 										</div>
-										<div>
-											<ScCardBody>
-
-											</ScCardBody>
-										</div>
-									</ScCard>
+									</div>
 								</div>
-							</ScTransition>
+							</form>
+							<div class="uk-margin-top uk-text-center">
+								<button class="sc-button sc-button-primary">
+									등록
+								</button>
+							</div>
 						</ScCardBody>
 					</ScCard>
 				</div>
@@ -89,28 +97,14 @@
 		</div>
 	</div>
 </template>
-
 <script>
 
+	import ScCard from "@/components/card/components/Card";
+
 	export default {
-		components: {
-		},
-		data: () => ({
-
-			ramUsage: 82,
-			showWidgets:false
-		}),
-		mounted () {
-			this.$nextTick(() => {
-				this.showWidgets = true;
-			})
-		},
-		methods:{
-
-		}
+		components: {ScCard}
 	}
 </script>
 
 <style scoped>
-
 </style>

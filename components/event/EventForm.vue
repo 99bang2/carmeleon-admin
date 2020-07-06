@@ -161,7 +161,7 @@
 					startDate: '',
 					endDate: '',
 					eventType: '',
-					isOpen: '',
+					isOpen: false,
 				}
 			}
 		},
