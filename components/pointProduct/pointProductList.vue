@@ -91,7 +91,7 @@
 					{
 						headerName: "포인트",
 						field: "point",
-						width: 300,
+						width: 200,
 						cellRenderer: (obj) => {
 							return obj.value + ' Point'
 						}
@@ -99,7 +99,7 @@
 					{
 						headerName: "가격",
 						field: "price",
-						width: 300,
+						width: 200,
 						cellRenderer: (obj) => {
 							return obj.value + ' 원'
 						}
@@ -107,9 +107,17 @@
 					{
 						headerName: "추가포인트",
 						field: "addPoint",
-						width: 200,
+						width: 210,
 						cellRenderer: (obj) => {
 							return obj.value ? '+' + obj.value : ''
+						}
+					},
+					{
+						headerName: "추가포인트 퍼센트(%)",
+						field: "addPointPercent",
+						width: 210,
+						cellRenderer: (obj) => {
+							return obj.value ? obj.value + '%' :''
 						}
 					},
 					{

@@ -96,6 +96,7 @@
 					point: null,
 					price: null,
 					addPoint:null,
+					addPointPercent: null,
 				},
 			}
 		},
