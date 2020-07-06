@@ -109,36 +109,6 @@
 											</li>
 										</ul>
 									</div>
-									<!--									<div class="uk-width-1-3">-->
-									<!--										<ScInput v-model="sendData.lat" :error-state="$v.sendData.lat.$error"-->
-									<!--												 :validator="$v.sendData.lat">-->
-									<!--											<label>-->
-									<!--												위도-->
-									<!--											</label>-->
-									<!--											<span slot="icon" class="uk-form-icon uk-form-icon-flip"-->
-									<!--												  data-uk-icon="icon: location"/>-->
-									<!--										</ScInput>-->
-									<!--										<ul class="sc-vue-errors">-->
-									<!--											<li v-if="!$v.sendData.lat.required">-->
-									<!--												위도를 입력해주세요.-->
-									<!--											</li>-->
-									<!--										</ul>-->
-									<!--									</div>-->
-									<!--									<div class="uk-width-1-3">-->
-									<!--										<ScInput v-model="sendData.lon" :error-state="$v.sendData.lon.$error"-->
-									<!--												 :validator="$v.sendData.lon">-->
-									<!--											<label>-->
-									<!--												경도-->
-									<!--											</label>-->
-									<!--											<span slot="icon" class="uk-form-icon uk-form-icon-flip"-->
-									<!--												  data-uk-icon="icon: location"/>-->
-									<!--										</ScInput>-->
-									<!--										<ul class="sc-vue-errors">-->
-									<!--											<li v-if="!$v.sendData.parkingLot.required">-->
-									<!--												경도를 입력해주세요.-->
-									<!--											</li>-->
-									<!--										</ul>-->
-									<!--									</div>-->
 									<!--	연락처, 휴대전화        -->
 									<div class="uk-width-1-2">
 										<ScInput v-model="sendData.tel">
@@ -216,16 +186,6 @@
 											</li>
 										</ul>
 									</div>
-
-									<!--									<div class="uk-width-1-1">-->
-									<!--										<ScInput v-model="sendData.address">-->
-									<!--											<label>-->
-									<!--												주소입력-->
-									<!--											</label>-->
-									<!--											<span slot="icon" class="uk-form-icon uk-form-icon-flip"-->
-									<!--												  data-uk-icon="icon: location"/>-->
-									<!--										</ScInput>-->
-									<!--									</div>-->
 									<!--    주차장 안내             -->
 									<div class="uk-width-1-1">
 										<ScTextarea
@@ -315,7 +275,12 @@
 												@upload-success="uploadImageSuccess"
 												@before-remove="beforeRemove"
 												@edit-image="editImage"
+												@mark-is-primary="markIsPrimary"
 												:data-images="tempImage"
+												dragText="Drag Image"
+												browseText="Browse Image"
+												primaryText="Primary Image"
+												markIsPrimaryText="Set Primary Image"
 											></vue-upload-multiple-image>
 										</div>
 									</div>
@@ -439,7 +404,6 @@
 			selectAddr(searchItem) {
 				this.$axios.$post(this.config.apiUrl + '/api/searchLocal', {address: searchItem.address}).then(async res => {
 					this.callNotification("검색을 완료하였습니다.")
-					console.log(res.data.addresses[0])
 					this.sendData.address = res.data.addresses[0].jibunAddress
 					this.sendData.lat = res.data.addresses[0].x
 					this.sendData.lon = res.data.addresses[0].y
@@ -449,7 +413,6 @@
 				})
 			},
 			searchPlace(searchString) {
-				console.log(searchString)
 				if (!searchString) {
 					this.callAlertError("주소가 입력되지 않았습니다.")
 				}else{
@@ -485,6 +448,11 @@
 					this.sendData.picture[index] = response.data;
 				})
 			},
+			markIsPrimary(index, fileList){
+				let temp = this.sendData.picture[0]
+				this.sendData.picture[0] = this.sendData.picture[index]
+				this.sendData.picture[index] = temp
+			},
 			//multi image upload////////////////////////////////////////////////
 
 			settingForm(props) {
@@ -497,6 +465,13 @@
 					if (this.sendData.picture !== null) {
 						for (let i = 0; i < this.sendData.picture.length; i++) {
 							let img = {}
+							if(i === 0){
+								img.default = 1
+								img.highlight=1
+							}else{
+								img.default = 0
+								img.highlight=0
+							}
 							img.path = this.sendData.picture[i]
 							this.tempImage[i] = img
 						}

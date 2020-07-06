@@ -177,11 +177,10 @@
 						width: 120,
 						filter: 'agNumberColumnFilter',
 						cellRenderer: (obj) => {
-							if (obj.data) {
+							if (obj.value) {
 								function roundToTwo(num) {
 									return +(Math.round(num + "e+2") + "e-2");
 								}
-
 								let temp = ''
 								if (obj.value > 8) {
 									temp = '★★★★★'
