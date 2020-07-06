@@ -16,7 +16,7 @@
 			</ScCardHeader>
 			<ScCardBody>
 				<div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
-					<div class="uk-width-3-5@s">
+					<div class="uk-width-4-5@s">
 						<div class="uk-grid-small uk-grid" data-uk-grid>
 							<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
 							   style="height:40px;" @click.prevent="refreshFilter">
@@ -37,20 +37,12 @@
 									<option value="false">미운영</option>
 								</select>
 							</div>
+							<div style="width: 10px"></div>
 							<div class="uk-width-1-5@s">
-								<select v-model="searchRating" class="uk-select" required="required">
-									<option value="">평점</option>
-									<option value="4">★ 4~5</option>
-									<option value="3">★ 3~4</option>
-									<option value="2">★ 2~3</option>
-									<option value="1">★ 1~2</option>
-									<option value="0">★ 0~1</option>
-								</select>
+								<IonRangeSlider v-model="searchRating"
+												:settings="{type: 'double',from:0, to:10, values:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0], prefix: 'rate '}"></IonRangeSlider>
 							</div>
 						</div>
-					</div>
-					<div class="uk-width-1-5@s">
-
 					</div>
 					<div class="uk-width-1-5@s">
 						<ScInput v-model="searchKeyword" placeholder="주차장 이름">
@@ -79,9 +71,11 @@
 <script>
 	import {agGridMixin} from "@/plugins/ag-grid.mixin";
 	import ScInput from '~/components/Input'
+	import IonRangeSlider from "@/components/RangeSlider";
 
 	export default {
 		components: {
+			IonRangeSlider,
 			ScInput
 		},
 		mixins: [
@@ -185,8 +179,9 @@
 						cellRenderer: (obj) => {
 							if (obj.data) {
 								function roundToTwo(num) {
-									return +(Math.round(num + "e+2")  + "e-2");
+									return +(Math.round(num + "e+2") + "e-2");
 								}
+
 								let temp = ''
 								if (obj.value > 8) {
 									temp = '★★★★★'
@@ -233,21 +228,27 @@
 				this.gridOptions.api.onFilterChanged()
 			},
 			'searchRating': function (newValue) {
-				let tmpValue = parseInt(newValue)
-				let start = (tmpValue) * 2
-				let end = (tmpValue + 1) * 2
+				let start = parseInt(newValue.split(";")[0])
+				let end = parseInt(newValue.split(";")[1])
+				console.log(start, end)
+				console.log(typeof start, typeof end)
 				let filterComponent = this.gridOptions.api.getFilterInstance('rate')
 				filterComponent.setModel({
-					condition1:{
+					operator: 'OR',
+					condition1: {
 						type: 'inRange',
 						filter: start,
 						filterTo: end
 					},
-					operator:'OR',
-					condition2:{
+					condition2: {
+						type: 'equals',
+						filter: start,
+					},
+					condition3: {
 						type: 'equals',
 						filter: end
-					}
+					},
+
 				})
 				this.gridOptions.api.onFilterChanged()
 			},
@@ -273,9 +274,9 @@
 		},
 		methods: {
 			refreshFilter() {
-				this.searchType = ""
+				this.searchSiteType = ""
 				this.searchActive = ""
-				this.searchRating = ""
+				this.searchRating = "0;10"
 				this.fetchData()
 			},
 			openNewForm() {
