@@ -207,30 +207,32 @@
 					},
 					{
 						headerName: '결제태그',
-						field: 'paymentTag',
+						field: 'paymentTagName',
 						hide:true
 					},
 					{
 						headerName: '상품태그',
-						field: 'productTag',
+						field: 'productTagName',
 						hide:true
 					},
-
 					{
 						headerName: '옵션태그',
-						field: 'optionTag',
+						field: 'optionTagName',
 						hide:true
 					},
-
 					{
 						headerName: '제휴태그',
-						field: 'brandTag',
+						field: 'brandTagName',
 						hide:true
 					},
-
 					{
 						headerName: '차량태그',
-						field: 'carTag',
+						field: 'carTagName',
+						hide:true
+					},
+					{
+						headerName: '주차장유형이름',
+						field: 'siteTypeName',
 						hide:true
 					},
 				]

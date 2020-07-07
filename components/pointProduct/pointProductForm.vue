@@ -2,7 +2,7 @@
 	<div>
 		<Transition name="slide-bottom-medium">
 			<ScCard v-if="!cardFormClosed" style="min-height: 745px">
-				<ScCardHeader>
+				<ScCardHeader separator>
 					<div class="uk-flex uk-flex-middle">
 						<div class="uk-flex-1">
 							<ScCardTitle>

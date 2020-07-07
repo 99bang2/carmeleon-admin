@@ -18,6 +18,12 @@ export const menuEntries = [
 	},
 	{
 		id: uniqueID(),
+		title: "Users",
+		icon: "mdi mdi-account-circle",
+		page: "/users"
+	},
+	{
+		id: uniqueID(),
 		title: "Events",
 		icon: "mdi mdi-calendar-check",
 		page: "/events",
