@@ -65,18 +65,70 @@
 			columnDefs(){
 				return [
 					{
-						headerName: '카드정보',
-						field: 'cardInfo',
-						width: 100
+						headerName: '주차장 유형',
+						field: 'siteType',
+						width: 110,
+						cellRenderer: (obj) => {
+							if (obj.data) {
+								let badge = ''
+								let typeName = ''
+								switch (obj.value) {
+									case 0 :
+										badge = 'md-bg-green-500'
+										typeName = '하이파킹'
+										break
+									case 1 :
+										badge = 'md-bg-blue-500'
+										typeName = '제휴'
+										break
+									case 2 :
+										badge = 'md-bg-gray-500'
+										typeName = '일반'
+										break
+								}
+								return `<span class="uk-badge ${badge}">${typeName}</span>`
+							}
+						}
 					},
 					{
-						headerName: '주사용여부',
-						field: 'isMain',
-						width: 80,
+						headerName: '주차장 이름',
+						field: 'name',
+						width: 120
+					},
+					{
+						headerName: '기준가격',
+						field: 'price',
+						width: 120,
 						cellRenderer: (obj) => {
-							return obj.value?<span>주사용카드</span>:''
+							return obj.value + ' 원'
 						}
-					}
+					},
+					{
+						headerName: '평점',
+						field: 'rate',
+						width: 120,
+						filter: 'agNumberColumnFilter',
+						cellRenderer: (obj) => {
+							if (obj.value) {
+								function roundToTwo(num) {
+									return +(Math.round(num + "e+2") + "e-2");
+								}
+								let temp = ''
+								if (obj.value > 8) {
+									temp = '★★★★★'
+								} else if (obj.value > 6 && obj.value <= 8) {
+									temp = '★★★★'
+								} else if (obj.value > 4 && obj.value <= 6) {
+									temp = '★★★'
+								} else if (obj.value > 2 && obj.value <= 4) {
+									temp = '★★'
+								} else {
+									temp = '★'
+								}
+								return `<span>${temp} ${roundToTwo(obj.value)}</span>`;
+							}
+						}
+					},
 				]
 			}
 		},
@@ -99,8 +151,8 @@
 		},
 		methods:{
 			async fetchData(data){
+				this.cardFormClosed = false
 				let res = await this.$axios.$get(this.config.apiUrl + '/api/userFavorites/' + data)
-				console.log(res.data)
 				this.gridOptions.api.setRowData(res.data)
 			},
 			closeForm(){

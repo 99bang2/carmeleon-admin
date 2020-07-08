@@ -18,29 +18,34 @@
 				</ScCardHeader>
 				<ScCardBody>
 					<div class="uk-accordion-content">
-						<table class="uk-table uk-text-bold">
+						<table class="uk-table uk-table-large uk-text-normal uk-table-middle">
 							<tbody>
 								<tr>
 									<td>
-										<ScAvatar :avatar-id="5" size="lg"></ScAvatar>
+										<div class="uk-display-inline-block">
+											<img
+												:src="this.sendData.profileImage"
+												class="sc-avatar sc-avatar-initials-lg"
+											>
+										</div>
 									</td>
-									<td>유저 닉네임</td>
+									<td><span class="uk-text-bold">닉네임</span> {{this.sendData.nickname}}</td>
 								</tr>
 								<tr>
-									<td>email</td>
-									<td>성별</td>
+									<td><span class="uk-text-bold">이메일</span> {{this.sendData.email}}</td>
+									<td><span class="uk-text-bold">폰번호</span> {{this.sendData.phone}}</td>
 								</tr>
 								<tr>
-									<td>연령대</td>
-									<td>생일</td>
 								</tr>
 								<tr>
-									<td>푸시알림여부</td>
-									<td>포인트</td>
+									<td><span class="uk-text-bold">푸시알림 동의</span> {{this.sendData.push}}</td>
+									<td><span class="uk-text-bold">포인트</span> {{this.sendData.point}}</td>
 								</tr>
 								<tr>
-									<td>차량등록여부</td>
-									<td>카드등록여부</td>
+									<td colspan="2"><span class="uk-text-bold">마케팅 수신동의</span> {{this.sendData.marketing}}</td>
+								</tr>
+								<tr>
+									<td class="uk-table-expand" colspan="2"><div class="uk-text-bold">메모</div>{{this.sendData.memo}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -52,12 +57,7 @@
 </template>
 
 <script>
-	import ScAvatar from '~/components/Avatar'
-
 	export default {
-		components: {
-			ScAvatar
-		},
 		props: {
 			mode: {
 				type: String,
@@ -77,6 +77,7 @@
 					phone: '',
 					profileImage: '',
 					point: '',
+					push:false,
 					marketing: false,
 					memo: '',
 				}
@@ -104,9 +105,6 @@
 				if(props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
 				}
-				// else {
-				// 	this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
-				// }
 				this.cardFormClosed = true
 				setTimeout(()=>{
 					this.cardFormClosed = false

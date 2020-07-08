@@ -18,7 +18,7 @@
 				</ScCardHeader>
 				<ScCardBody>
 					<ag-grid-vue
-						style="width: 100%"
+						style="width: 100%;"
 						class="ag-theme-material"
 						:dom-layout="'autoHeight'"
 						:locale-text="localeText"
@@ -57,8 +57,8 @@
 					rowSelection: 'multiple',
 					onGridReady: this.onGridReady,
 					onFirstDataRendered: this.onFirstDataRendered,
+					getRowStyle: this.getRowStyle,
 					rowHeight: 45,
-					getRowStyle: this.getRowStyle
 				},
 				cardFormClosed: true,
 			}
@@ -68,18 +68,18 @@
 				return [
 					{
 						headerName: '주차장명',
-						field: 'siteUid',
-						width: 100
+						field: 'parkingSite.name',
+						width: 150
 					},
 					{
 						headerName: '평점',
 						field: 'rate',
-						width: 80,
+						width: 70,
 					},
 					{
 						headerName: '리뷰',
 						field: 'review',
-						width: 200
+						width: 250
 					}
 				]
 			}
@@ -103,6 +103,7 @@
 		},
 		methods: {
 			async fetchData(data) {
+				this.cardFormClosed = false
 				let res = await this.$axios.$get(this.config.apiUrl + '/api/userRatings/' + data)
 				this.gridOptions.api.setRowData(res.data)
 			},

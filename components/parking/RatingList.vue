@@ -133,6 +133,7 @@
 		methods: {
 			async fetchData(siteUid) {
 				let res = await this.$axios.$get(this.config.apiUrl + '/api/rates/site/' + siteUid)
+				console.log(this.gridOptions.api)
 				this.gridOptions.api.setRowData(res.data)
 			},
 			deleteDatas() {

@@ -65,17 +65,14 @@
 			columnDefs(){
 				return [
 					{
-						headerName: '카드정보',
-						field: 'cardInfo',
-						width: 100
+						headerName: '결제정보',
+						field: 'payInfo',
+						width: 300
 					},
 					{
-						headerName: '주사용여부',
-						field: 'isMain',
-						width: 80,
-						cellRenderer: (obj) => {
-							return obj.value?<span>주사용카드</span>:''
-						}
+						headerName: '결제상태',
+						field: 'status',
+						width: 170,
 					}
 				]
 			}
@@ -99,8 +96,8 @@
 		},
 		methods:{
 			async fetchData(data){
+				this.cardFormClosed = false
 				let res = await this.$axios.$get(this.config.apiUrl + '/api/userPayLogs/' + data)
-				console.log(res.data)
 				this.gridOptions.api.setRowData(res.data)
 			},
 			closeForm(){

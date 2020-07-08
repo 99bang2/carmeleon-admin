@@ -99,8 +99,8 @@
 		},
 		methods:{
 			async fetchData(data){
+				this.cardFormClosed = false
 				let res = await this.$axios.$get(this.config.apiUrl + '/api/userCards/' + data)
-				console.log(res.data)
 				this.gridOptions.api.setRowData(res.data)
 			},
 			closeForm(){

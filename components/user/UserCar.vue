@@ -65,16 +65,26 @@
 			columnDefs(){
 				return [
 					{
-						headerName: '카드정보',
-						field: 'cardInfo',
-						width: 100
+						headerName: '차종',
+						field: 'carType',
+						width: 120
+					},
+					{
+						headerName: '모델명',
+						field:'carModel',
+						width: 120
+					},
+					{
+						headerName: '차량번호',
+						field:'carPlate',
+						width: 120
 					},
 					{
 						headerName: '주사용여부',
 						field: 'isMain',
-						width: 80,
+						width: 120,
 						cellRenderer: (obj) => {
-							return obj.value?<span>주사용카드</span>:''
+							return obj.value?<span>주사용차량</span>:''
 						}
 					}
 				]
@@ -99,8 +109,8 @@
 		},
 		methods:{
 			async fetchData(data){
+				this.cardFormClosed = false
 				let res = await this.$axios.$get(this.config.apiUrl + '/api/userCars/' + data)
-				console.log(res.data)
 				this.gridOptions.api.setRowData(res.data)
 			},
 			closeForm(){

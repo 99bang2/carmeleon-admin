@@ -17,6 +17,7 @@
 					</div>
 				</ScCardHeader>
 				<ScCardBody>
+					<h4 class="uk-text-right">총 금액: {{this.sumPoint}}</h4>
 					<ag-grid-vue
 						style="width: 100%"
 						class="ag-theme-material"
@@ -49,6 +50,7 @@
 		],
 		data() {
 			return {
+				sumPoint: null,
 				gridOptions: {
 					suppressRowClickSelection: true,
 					suppressMenuHide: true,
@@ -65,16 +67,21 @@
 			columnDefs(){
 				return [
 					{
-						headerName: '카드정보',
-						field: 'cardInfo',
+						headerName: '포인트 기록',
+						field: 'point',
 						width: 100
 					},
 					{
-						headerName: '주사용여부',
-						field: 'isMain',
-						width: 80,
-						cellRenderer: (obj) => {
-							return obj.value?<span>주사용카드</span>:''
+						headerName: '이유',
+						field: 'reason',
+						width: 220,
+					},
+					{
+						headerName: '등록일시',
+						field: 'createdAt',
+						width: 150,
+						valueFormatter: obj => {
+							return this.$moment(obj.value).format('YYYY-MM-DD HH:mm')
 						}
 					}
 				]
@@ -99,9 +106,10 @@
 		},
 		methods:{
 			async fetchData(data){
+				this.cardFormClosed = false
 				let res = await this.$axios.$get(this.config.apiUrl + '/api/userPointLogs/' + data)
-				console.log(res.data)
-				this.gridOptions.api.setRowData(res.data)
+				this.sumPoint =  res.data.sum
+				this.gridOptions.api.setRowData(res.data.row)
 			},
 			closeForm(){
 				this.cardFormClosed =true

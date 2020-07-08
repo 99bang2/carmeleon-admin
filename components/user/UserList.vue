@@ -4,7 +4,7 @@
 			<ScCardHeader class="uk-flex uk-flex-middle sc-theme-bg-dark sc-light" separator>
 				<div class="uk-flex-1">
 					<ScCardTitle>
-						<slot><i class="mdi mdi-parking"/> 주차장 목록</slot>
+						<slot><i class="mdi mdi-account-circle"/> 유저관리</slot>
 					</ScCardTitle>
 				</div>
 				<div class="uk-text-nowrap">
@@ -222,6 +222,7 @@
 			},
 			onRowClicked(props) {
 				this.resetSelection()
+				this.$nuxt.$emit('close-all-list', props)
 				this.$nuxt.$emit('open-user-form', props)
 				props.node.detail = true
 				this.gridOptions.api.redrawRows()
@@ -230,20 +231,22 @@
 				let fake = [
 					{
 						uid: 1,
-						id: "user",
-						snsType: 1,
-						name: "user",
-						nickname: "uuuuser",
-						email: "h9292929@naam.com",
-						phone: "1010100-23232-3232",
-						profileImage: "slfejfle;f.jpg",
-						point: 123,
+						snsType: 0,
+						name: "정정정",
+						nickname: "재재재",
+						email: "12231@ceoekc.com",
+						phone: "010-3254-6666",
+						profileImage: "https://s3.amazonaws.com/uifaces/faces/twitter/vanchesz/128.jpg",
+						point: 1562684,
+						push:false,
+						marketing: false,
+						memo: "..........할 말이 없다. 어디까지 길게써야 이게 늘어나는지 안 늘어나는지 알 수 있을까? " +
+							"이별,,,, 한 지 한 달이 돼 네 생각에 잠못이루었어~ 지친몸을 이끌고 퇴근길에 낯익은 모습에 설레었었어~",
 					}
 				]
 				this.gridOptions.api.setRowData(fake)
-
 				// API 연동
-				// let res = await this.$axios.$get(this.config.apiUrl + '/api/parkings')
+				// let res = await this.$axios.$get(this.config.apiUrl + '/api/users')
 				// this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
@@ -272,7 +275,7 @@
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')
-							this.$nuxt.$emit('close-user-form')
+							this.$nuxt.$emit('close-all-list')
 							this.fetchData()
 						})
 					})
