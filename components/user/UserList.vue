@@ -228,26 +228,9 @@
 				this.gridOptions.api.redrawRows()
 			},
 			async fetchData(selectUid) {
-				let fake = [
-					{
-						uid: 1,
-						snsType: 0,
-						name: "정정정",
-						nickname: "재재재",
-						email: "12231@ceoekc.com",
-						phone: "010-3254-6666",
-						profileImage: "https://s3.amazonaws.com/uifaces/faces/twitter/vanchesz/128.jpg",
-						point: 1562684,
-						push:false,
-						marketing: false,
-						memo: "..........할 말이 없다. 어디까지 길게써야 이게 늘어나는지 안 늘어나는지 알 수 있을까? " +
-							"이별,,,, 한 지 한 달이 돼 네 생각에 잠못이루었어~ 지친몸을 이끌고 퇴근길에 낯익은 모습에 설레었었어~",
-					}
-				]
-				this.gridOptions.api.setRowData(fake)
 				// API 연동
-				// let res = await this.$axios.$get(this.config.apiUrl + '/api/users')
-				// this.gridOptions.api.setRowData(res.data)
+				let res = await this.$axios.$get(this.config.apiUrl + '/api/users')
+				this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
 						if (node.data.uid === selectUid) {
