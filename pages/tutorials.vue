@@ -12,10 +12,10 @@
 							</div>
 						</ScCardHeader>
 						<ScCardBody style="min-height: 745px">
-							<form class="uk-flex uk-flex-center uk-flex-between">
-								<draggable v-model="sendData.stepImages">
-									<transition-group>
-										<div v-for="(stepImage, index) in sendData.stepImages" :key="index" class="uk-card uk-width-1-6" style="min-height: 600px">
+							<form>
+								<draggable tag="ul" v-model="stepImageFiles" v-bind="dragOptions" @start="drag = true" @end="draged">
+									<transition-group class="uk-flex uk-flex-center uk-flex-between" type="transition" :name="!drag ? 'flip-list' : null">
+										<li v-for="(stepImage, index) in sendData.stepImages" :key="index" class="uk-card uk-width-1-6" style="min-height: 600px">
 											<div class="uk-text-center uk-card-header sc-theme-bg-dark sc-light">
 												<h3 class="uk-card-title">
 													step{{index + 1}}
@@ -23,14 +23,14 @@
 											</div>
 											<div class="uk-card-body uk-margin" uk-margin>
 												<div uk-form-custom="target: true">
-													<input type="file" accept="image/*" ref="step5Image" @change="onChangeStepImageFile($event, index)">
+													<input type="file" accept="image/*" @change="onChangeStepImageFile($event, index)">
 													<input class="uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
 													<div class="uk-width-1-1 image-preview" v-if="stepImage">
 														<img class="preview" :src="stepImage"/>
 													</div>
 												</div>
 											</div>
-										</div>
+										</li>
 									</transition-group>
 								</draggable>
 							</form>
@@ -59,7 +59,8 @@
 				sendData: {
 					stepImages: new Array(5)
 				},
-				stepImageFiles: new Array(5)
+				stepImageFiles: new Array(5),
+				drag: false
 			}
 		},
 		async created() {
@@ -84,11 +85,61 @@
 			},
 
 			submit() {
-				console.log(this.sendData.stepImages)
+				// const formData = new FormData()
+				// formData.append("stepImageFiles", this.stepImageFiles)
+				console.log(this.stepImageFiles)
+
+				// this.$axios.$post(this.config.apiUrl + '/api/events', formData, {
+				// 	headers: {
+				// 		'Content-Type': 'multipart/form-data'
+				// 	}
+				// }).then(async res => {
+				// 	this.callNotification('등록하였습니다.')
+				// 	this.$nuxt.$emit('fetch-event-list', res.data.uid)
+				// }).finally(() => {
+				// 	this.submitStatus = 'OK'
+				// })
+			},
+			draged(e){
+				console.log(e)
+				this.drag = false
+				let oldImage = this.sendData.stepImages.slice(e.oldIndex, e.oldIndex+1)
+				let newImage = this.sendData.stepImages.slice(e.newIndex, e.newIndex+1)
+				this.sendData.stepImages.splice(e.newIndex,1,oldImage)
+				this.sendData.stepImages.splice(e.oldIndex,1,newImage)
+			}
+		},
+		computed:{
+			dragOptions() {
+				return {
+					animation: 200,
+					group: "description",
+					disabled: false,
+					ghostClass: "ghost"
+				};
 			}
 		}
 	}
 </script>
 
 <style scoped>
+	ul{
+		list-style:none;
+		padding-left:0px;
+	}
+	.image-preview{
+		text-align: center;
+		vertical-align: middle ;
+		height: auto;
+		padding: 20px;
+	}
+	img.preview {
+		height: auto;
+		width: auto;
+		max-height: 150px;
+		max-width: 150px;
+		background-color:white;
+		border: 1px solid #DDD;
+		padding: 2px;
+	}
 </style>
