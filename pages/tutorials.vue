@@ -13,7 +13,7 @@
 						</ScCardHeader>
 						<ScCardBody style="min-height: 745px">
 							<form>
-								<draggable tag="ul" v-model="stepImageFiles" v-bind="dragOptions" @start="drag = true" @end="draged">
+								<draggable tag="ul" v-model="sendData.stepImages" v-bind="dragOptions" @start="drag = true" @end="drag = false">
 									<transition-group class="uk-flex uk-flex-center uk-flex-between" type="transition" :name="!drag ? 'flip-list' : null">
 										<li v-for="(stepImage, index) in sendData.stepImages" :key="index" class="uk-card uk-width-1-6" style="min-height: 600px">
 											<div class="uk-text-center uk-card-header sc-theme-bg-dark sc-light">
@@ -24,7 +24,7 @@
 											<div class="uk-card-body uk-margin" uk-margin>
 												<div uk-form-custom="target: true">
 													<input type="file" accept="image/*" @change="onChangeStepImageFile($event, index)">
-													<input class="uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
+													<button class="uk-button uk-button-default uk-form-width-medium">Select File</button>
 													<div class="uk-width-1-1 image-preview" v-if="stepImage">
 														<img class="preview" :src="stepImage"/>
 													</div>
@@ -35,8 +35,14 @@
 								</draggable>
 							</form>
 							<div class="uk-margin-top uk-text-center">
-								<button class="sc-button sc-button-primary" @click.prevent="submit">
+								<button v-if="sendData.stepImages[0] === null" class="sc-button sc-button-primary" @click.prevent="postForm">
 									등록
+								</button>
+								<button v-else class="sc-button sc-button-primary" @click.prevent="putForm">
+									수정
+								</button>
+								<button class="sc-button sc-button-secondary" @click.prevent="reset">
+									초기화
 								</button>
 							</div>
 						</ScCardBody>
@@ -59,20 +65,22 @@
 				sendData: {
 					stepImages: new Array(5)
 				},
-				stepImageFiles: new Array(5),
 				drag: false
 			}
 		},
 		async created() {
-			// 	let res= await this.$axios.$get(this.config.apiUrl + '/api/tutorials')
-			//vm.settingForm()
-			console.log(this.sendData.stepImages)
-
-		},
-		async beforeMount() {
+			let vm = this
+			vm.fetchData()
 		},
 		methods: {
+			async fetchData(){
+				let res= await this.$axios.$get(this.config.apiUrl + '/api/tutorials')
+				if(res.data) {
+					this.sendData.stepImages = res.data
+				}
+			},
 			onChangeStepImageFile(event, index) {
+				let formData = new FormData()
 				let input = event.target;
 				if (input.files && input.files[0]) {
 					let reader = new FileReader();
@@ -81,18 +89,26 @@
 					}
 					reader.readAsDataURL(input.files[0]);
 				}
-				this.stepImageFiles[index] = input.files[0]
+				formData.append('file',input.files[0])
+				formData.append('dir', 'tutorial')
+				this.$axios.$post(this.config.apiUrl + '/api/uploads/', formData).then(response => {
+					this.sendData.stepImages[index] = response.data;
+				})
 			},
-
-			submit() {
-				console.log(this.stepImageFiles)
+			async postForm() {
+				await this.$axios.$post(this.config.apiUrl + '/api/tutorials', this.sendData).then( response=> {
+					this.callNotification('튜토리얼을 등록했습니다.')
+					this.fetchData()
+				})
 			},
-			draged(e){
-				this.drag = false
-				let oldImage = this.sendData.stepImages.slice(e.oldIndex, e.oldIndex+1)
-				let newImage = this.sendData.stepImages.slice(e.newIndex, e.newIndex+1)
-				this.sendData.stepImages.splice(e.newIndex,1,oldImage)
-				this.sendData.stepImages.splice(e.oldIndex,1,newImage)
+			async putForm() {
+				await this.$axios.$post(this.config.apiUrl + '/api/tutorials', this.sendData).then( response=> {
+					this.callNotification('튜토리얼을 수정했습니다.')
+					this.fetchData()
+				})
+			},
+			async reset() {
+				this.sendData.stepImages = new Array(5)
 			}
 		},
 		computed:{
