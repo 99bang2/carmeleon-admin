@@ -57,6 +57,7 @@
 		"sass-loader": "^8.0.2",
 		"select2": "^4.0.12",
 		"snazzy-info-window": "^1.1.1",
+		"sortablejs": "^1.10.2",
 		"tui-calendar": "^1.12.9",
 		"tui-grid": "^4.8.1",
 		"uikit": "^3.2.7",
@@ -84,7 +85,7 @@
 		"vue-visible": "^1.0.2",
 		"vue2-google-maps": "^0.10.7",
 		"vue2-perfect-scrollbar": "^1.3.0",
-		"vuedraggable": "^2.23.2",
+		"vuedraggable": "^2.24.0",
 		"vuelidate": "^0.7.5",
 		"xlsx": "^0.15.6"
 	},

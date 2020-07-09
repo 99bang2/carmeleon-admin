@@ -8,10 +8,8 @@
 					</ScCardTitle>
 				</div>
 				<div class="uk-text-nowrap">
-					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-plus" style="display: inline-block"
-					   @click.prevent="openNewForm" data-uk-tooltip="추가"/>
-					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline"
-					   style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="삭제"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-plus" style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="추가"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline" style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="삭제"/>
 				</div>
 			</ScCardHeader>
 			<ScCardBody>

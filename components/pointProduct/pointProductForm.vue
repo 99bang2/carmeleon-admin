@@ -6,14 +6,12 @@
 					<div class="uk-flex uk-flex-middle">
 						<div class="uk-flex-1">
 							<ScCardTitle>
-								<i class="mdi"
-								   :class="{ 'mdi-coin' : sendData.uid, 'mdi-shape-circle-plus': !sendData.uid }"/>
+								<i class="mdi" :class="{ 'mdi-coin' : sendData.uid, 'mdi-shape-circle-plus': !sendData.uid }"/>
 								포인트상품{{ sendData.uid ? '상세': '생성' }}
 							</ScCardTitle>
 						</div>
 						<ScCardActions>
-							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close"
-							   @click.prevent="closeForm"/>
+							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close" @click.prevent="closeForm"/>
 						</ScCardActions>
 					</div>
 				</ScCardHeader>
@@ -55,13 +53,10 @@
 						</form>
 					</div>
 					<div class="uk-margin-top uk-text-center">
-						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
-								@click="submitForm">
+						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="submitForm">
 							{{ sendData.uid ? '수정': '생성' }}
 						</button>
-						<button v-if="sendData.uid" class="sc-button sc-button-primary"
-								:disabled="submitStatus === 'PENDING'"
-								@click="deleteForm">
+						<button v-if="sendData.uid" class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="deleteForm">
 							삭제
 						</button>
 					</div>
@@ -111,6 +106,22 @@
 					integer
 				}
 			}
+		},
+		created() {
+			let vm = this
+			this.$nuxt.$on('open-pointProduct-form', (data) => {
+				vm.settingForm(data)
+			})
+			this.$nuxt.$on('close-pointProduct-form', () => {
+				vm.closeForm()
+			})
+		},
+		async beforeMount() {
+			this.sendData = this.defaultForm
+		},
+		beforeDestroy() {
+			this.$nuxt.$off('open-pointProduct-form')
+			this.$nuxt.$off('close-pointProduct-form')
 		},
 		methods: {
 			settingForm(props) {
@@ -169,22 +180,6 @@
 					this.submitStatus = 'OK'
 				})
 			},
-		},
-		created() {
-			let vm = this
-			this.$nuxt.$on('open-pointProduct-form', (data) => {
-				vm.settingForm(data)
-			})
-			this.$nuxt.$on('close-pointProduct-form', () => {
-				vm.closeForm()
-			})
-		},
-		async beforeMount() {
-			this.sendData = this.defaultForm
-		},
-		beforeDestroy() {
-			this.$nuxt.$off('open-pointProduct-form')
-			this.$nuxt.$off('close-pointProduct-form')
 		}
 	}
 </script>

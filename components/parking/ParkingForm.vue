@@ -11,8 +11,7 @@
 							</ScCardTitle>
 						</div>
 						<ScCardAction v-if="mode !== 'mypage'">
-							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close"
-							   @click.prevent="closeForm"/>
+							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close" @click.prevent="closeForm"/>
 						</ScCardAction>
 					</div>
 				</ScCardHeader>
@@ -42,19 +41,17 @@
 											:error-state="$v.sendData.siteType.$error"
 										/>
 										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.siteType.required">a
+											<li v-if="!$v.sendData.siteType.required">
 												주차장 유형을 선택하세요.
 											</li>
 										</ul>
 									</div>
 									<div class="uk-width-2-5">
-										<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error"
-												 :validator="$v.sendData.name">
+										<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error" :validator="$v.sendData.name">
 											<label>
 												주차장 이름
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-												  data-uk-icon="icon: pencil"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
 											<li v-if="!$v.sendData.name.required">
@@ -63,24 +60,19 @@
 										</ul>
 									</div>
 									<div class="uk-width-1-5">
-										<input id="switch-css" v-model="sendData.isActive" type="checkbox"
-											   class="sc-switch-input">
-										<label for="switch-css" class="sc-switch-label"
-											   style="margin-top:15px;margin-left:15px;">
+										<input id="switch-css" v-model="sendData.isActive" type="checkbox" class="sc-switch-input">
+										<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
 											<span class="sc-switch-toggle-on">운영중</span>
 											<span class="sc-switch-toggle-off">미운영</span>
 										</label>
 									</div>
 									<!--	최대 가용 대수 , 가격  -->
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.parkingLot"
-												 :error-state="$v.sendData.parkingLot.$error"
-												 :validator="$v.sendData.parkingLot">
+										<ScInput v-model="sendData.parkingLot" :error-state="$v.sendData.parkingLot.$error" :validator="$v.sendData.parkingLot">
 											<label>
 												최대가용대수
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-												  data-uk-icon="icon: pencil"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
 											<li v-if="!$v.sendData.parkingLot.required">
@@ -92,13 +84,11 @@
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.price" :error-state="$v.sendData.price.$error"
-												 :validator="$v.sendData.price">
+										<ScInput v-model="sendData.price" :error-state="$v.sendData.price.$error" :validator="$v.sendData.price">
 											<label>
 												기준가격
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-												  data-uk-icon="icon: tag"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
 											<li v-if="!$v.sendData.price.required">
@@ -115,8 +105,7 @@
 											<label>
 												연락처
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-												  data-uk-icon="icon: receiver"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: receiver"/>
 										</ScInput>
 									</div>
 									<div class="uk-width-1-2">
@@ -124,19 +113,16 @@
 											<label>
 												휴대전화
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-												  data-uk-icon="icon: phone"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: phone"/>
 										</ScInput>
 									</div>
 									<!--	이메일, 담당자이름      -->
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.email" :error-state="$v.sendData.email.$error"
-												 :validator="$v.sendData.email">
+										<ScInput v-model="sendData.email" :error-state="$v.sendData.email.$error" :validator="$v.sendData.email">
 											<label>
 												이메일
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-												  data-uk-icon="icon: mail"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: mail"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
 											<li v-if="!$v.sendData.email.email">
@@ -149,17 +135,13 @@
 											<label>
 												담당자
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-												  data-uk-icon="icon: user"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"/>
 										</ScInput>
 									</div>
 									<!--	주소입력 -->
-									<div class="uk-width-1-1 uk-flex"
-										 style="justify-content: space-around; align-items: center">
+									<div class="uk-width-1-1 uk-flex" style="justify-content: space-around; align-items: center">
 										<div class="uk-width-5-6">
-											<ScInput v-model="sendData.address" class="uk-flex-1"
-													 :error-state="$v.sendData.address.$error"
-													 :validator="$v.sendData.address">
+											<ScInput v-model="sendData.address" class="uk-flex-1" :error-state="$v.sendData.address.$error" :validator="$v.sendData.address">
 												<label>
 													주소
 												</label>
@@ -170,17 +152,13 @@
 												</li>
 											</ul>
 										</div>
-										<a href="javascript:void(0)"
-										   class="sc-button sc-button-icon sc-button-outline sc-button-large"
-										   @click.prevent="searchPlace(sendData.address)">
+										<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline sc-button-large" @click.prevent="searchPlace(sendData.address)">
 											<span data-uk-icon="icon: search"></span>
 										</a>
 									</div>
 									<div v-if="searchAddr" class="uk-width-1-1" style="margin: 15px; padding: 0px;">
 										<ul class="uk-list uk-list-divider uk-list-collapse">
-											<li class ="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index
-												style="justify-content: space-between" type="button"
-												@click="selectAddr(item)">
+											<li class ="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index style="justify-content: space-between" type="button" @click="selectAddr(item)">
 												<span v-html="item.title"></span>
 												<span class="selectIcon" data-uk-icon="icon: check"></span>
 											</li>
@@ -215,8 +193,7 @@
 										<ul class="uk-list">
 											<h6>결제태그</h6>
 											<li v-for="tag in paymentTag" :key="tag.id">
-												<PrettyCheck v-model="sendData.paymentTag" :value="tag.value"
-															 class="p-icon">
+												<PrettyCheck v-model="sendData.paymentTag" :value="tag.value" class="p-icon">
 													<i slot="extra" class="icon mdi mdi-check"></i>
 													{{tag.name}}
 												</PrettyCheck>
@@ -224,8 +201,7 @@
 
 											<h6>제휴태그</h6>
 											<li v-for="tag in brandTag" :key="tag.id">
-												<PrettyCheck v-model="sendData.brandTag" :value="tag.value"
-															 class="p-icon">
+												<PrettyCheck v-model="sendData.brandTag" :value="tag.value" class="p-icon">
 													<i slot="extra" class="icon mdi mdi-check"></i>
 													{{tag.name}}
 												</PrettyCheck>
@@ -237,8 +213,7 @@
 										<ul class="uk-list">
 											<h6>상품태그</h6>
 											<li v-for="tag in productTag" :key="tag.id">
-												<PrettyCheck v-model="sendData.productTag" :value="tag.value"
-															 class="p-icon">
+												<PrettyCheck v-model="sendData.productTag" :value="tag.value" class="p-icon">
 													<i slot="extra" class="icon mdi mdi-check"></i>
 													{{tag.name}}
 												</PrettyCheck>
@@ -246,8 +221,7 @@
 
 											<h6>차량태그</h6>
 											<li v-for="tag in carTag" :key="tag.id">
-												<PrettyCheck v-model="sendData.carTag" :value="tag.value"
-															 class="p-icon">
+												<PrettyCheck v-model="sendData.carTag" :value="tag.value" class="p-icon">
 													<i slot="extra" class="icon mdi mdi-check"></i>
 													{{tag.name}}
 												</PrettyCheck>
@@ -259,8 +233,7 @@
 										<ul class="uk-list">
 											<h6>옵션태그</h6>
 											<li v-for="tag in optionTag" :key="tag.id">
-												<PrettyCheck v-model="sendData.optionTag" :value="tag.value"
-															 class="p-icon">
+												<PrettyCheck v-model="sendData.optionTag" :value="tag.value" class="p-icon">
 													<i slot="extra" class="icon mdi mdi-check"></i>
 													{{tag.name}}
 												</PrettyCheck>
@@ -400,6 +373,29 @@
 				}
 			}
 		},
+		created() {
+			let vm = this
+			this.$nuxt.$on('open-parking-form', (data) => {
+				vm.settingForm(data)
+			})
+			this.$nuxt.$on('close-parking-form', () => {
+				vm.closeForm()
+			})
+		},
+		async beforeMount() {
+			this.sendData = this.defaultForm
+			let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
+			this.siteOpts = code.data.site
+			this.paymentTag = code.data.paymentTag
+			this.brandTag = code.data.brandTag
+			this.productTag = code.data.productTag
+			this.optionTag = code.data.optionTag
+			this.carTag = code.data.carTag
+		},
+		beforeDestroy() {
+			this.$nuxt.$off('open-parking-form')
+			this.$nuxt.$off('close-parking-form')
+		},
 		methods: {
 			selectAddr(searchItem) {
 				this.$axios.$post(this.config.apiUrl + '/api/searchLocal', {address: searchItem.address}).then(async res => {
@@ -527,29 +523,6 @@
 					this.submitStatus = 'OK'
 				})
 			}
-		},
-		created() {
-			let vm = this
-			this.$nuxt.$on('open-parking-form', (data) => {
-				vm.settingForm(data)
-			})
-			this.$nuxt.$on('close-parking-form', () => {
-				vm.closeForm()
-			})
-		},
-		async beforeMount() {
-			this.sendData = this.defaultForm
-			let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
-			this.siteOpts = code.data.site
-			this.paymentTag = code.data.paymentTag
-			this.brandTag = code.data.brandTag
-			this.productTag = code.data.productTag
-			this.optionTag = code.data.optionTag
-			this.carTag = code.data.carTag
-		},
-		beforeDestroy() {
-			this.$nuxt.$off('open-parking-form')
-			this.$nuxt.$off('close-parking-form')
 		}
 	}
 </script>

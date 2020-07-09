@@ -11,8 +11,7 @@
 							</ScCardTitle>
 						</div>
 						<ScCardActions v-if="mode !== 'mypage'">
-							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close"
-							   @click.prevent="closeForm"/>
+							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close" @click.prevent="closeForm"/>
 						</ScCardActions>
 					</div>
 				</ScCardHeader>
@@ -20,13 +19,11 @@
 					<div class="uk-accordion-content">
 						<form class="uk-grid-small uk-grid" data-uk-grid>
 							<div class="uk-width-1-1">
-								<ScInput v-model="sendData.title" :error-state="$v.sendData.title.$error"
-										 :validator="$v.sendData.title">
+								<ScInput v-model="sendData.title" :error-state="$v.sendData.title.$error" :validator="$v.sendData.title">
 									<label>
 										제목
 									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
-										  data-uk-icon="icon: pencil"/>
+									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
 								</ScInput>
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.title.required">
@@ -40,8 +37,7 @@
 							<div class="uk-width-1-2">
 								<div data-uk-form-custom="target: true">
 									<input type="file" accept="image/*" ref="bannerImage" @change="onChangeBannerImageFile">
-									<input class="uk-visible@s uk-input uk-form-width-medium" type="text"
-										   placeholder="Select file" disabled>
+									<input class="uk-visible@s uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
 									<div class="uk-width-1-1 image-preview" v-if="sendData.bannerImage">
 										<img class="preview" :src="bannerImageData">
 									</div>
@@ -51,8 +47,7 @@
 							<div class="uk-width-1-2">
 								<div data-uk-form-custom="target: true">
 									<input type="file" accept="image/*" ref="mainImage" @change="onChangeMainImageFile">
-									<input class="uk-visible@s uk-input uk-form-width-medium" type="text"
-										   placeholder="Select file" disabled>
+									<input class="uk-visible@s uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
 									<div class="uk-width-1-1 image-preview" v-if="sendData.mainImage">
 										<img class="preview" :src="mainImageData">
 									</div>
@@ -62,9 +57,7 @@
 							</div>
 							<div class="uk-width-1-1@s">
 								<div class="uk-grid-small uk-grid" data-uk-grid>
-									<ScInput v-model="eventDate" v-flatpickr="dpRange" placeholder="이벤트 기간"
-											 mode="outline" :error-state="$v.sendData.startDate.$error"
-											 :validator="$v.sendData.startDate">
+									<ScInput v-model="eventDate" v-flatpickr="dpRange" placeholder="이벤트 기간" mode="outline" :error-state="$v.sendData.startDate.$error" :validator="$v.sendData.startDate">
 										<span slot="icon" class="uk-form-icon" data-uk-icon="calendar"></span>
 									</ScInput>
 									<ul class="sc-vue-errors">
@@ -78,8 +71,7 @@
 							</div>
 
 							<div class="uk-width-1-2">
-								<Select2 v-model="sendData.eventType" :options="eventOpts" :settings="{ 'width': '100%', 'placeholder': '이벤트 종류' }"
-										 :error-state="$v.sendData.eventType.$error" />
+								<Select2 v-model="sendData.eventType" :options="eventOpts" :settings="{ 'width': '100%', 'placeholder': '이벤트 종류' }" :error-state="$v.sendData.eventType.$error" />
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.eventType.required">
 										이벤트 종류를 선택하세요.
@@ -87,10 +79,8 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-2@s">
-								<input id="switch-css" v-model="sendData.isOpen" type="checkbox"
-									   class="sc-switch-input">
-								<label for="switch-css" class="sc-switch-label"
-									   style="margin-top:15px;margin-left:15px;">
+								<input id="switch-css" v-model="sendData.isOpen" type="checkbox" class="sc-switch-input">
+								<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
 									<span class="sc-switch-toggle-on">공개</span>
 									<span class="sc-switch-toggle-off">비공개</span>
 								</label>
@@ -99,13 +89,10 @@
 					</div>
 
 					<div class="uk-margin-top uk-text-center">
-						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
-								@click="submitForm">
+						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="submitForm">
 							{{ sendData.uid ? '수정': '등록' }}
 						</button>
-						<button v-if="sendData.uid" class="sc-button sc-button-primary"
-								:disabled="submitStatus === 'PENDING'"
-								@click="deleteForm">
+						<button v-if="sendData.uid" class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="deleteForm">
 							삭제
 						</button>
 					</div>

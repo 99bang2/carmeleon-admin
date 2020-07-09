@@ -8,18 +8,15 @@
 					</ScCardTitle>
 				</div>
 				<div class="uk-text-nowrap">
-					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-plus"
-					   style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="주차장추가"/>
-					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline"
-					   style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="주차장삭제"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-plus" style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="주차장추가"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline" style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="주차장삭제"/>
 				</div>
 			</ScCardHeader>
 			<ScCardBody>
 				<div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
 					<div class="uk-width-4-5@s">
 						<div class="uk-grid-small uk-grid" data-uk-grid>
-							<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
-							   style="height:40px;" @click.prevent="refreshFilter">
+							<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline" style="height:40px;" @click.prevent="refreshFilter">
 								<i class="mdi mdi-refresh"></i>
 							</a>
 							<div class="uk-width-1-5@s">
@@ -39,8 +36,7 @@
 							</div>
 							<div style="width: 10px"></div>
 							<div class="uk-width-1-5@s">
-								<IonRangeSlider v-model="searchRating"
-												:settings="{type: 'double',from:0, to:10, values:[0,1,2,3,4,5,6,7,8,9,10], prefix: 'rate '}"></IonRangeSlider>
+								<IonRangeSlider v-model="searchRating" :settings="{type: 'double',from:0, to:10, values:[0,1,2,3,4,5,6,7,8,9,10], prefix: 'rate '}"></IonRangeSlider>
 							</div>
 						</div>
 					</div>

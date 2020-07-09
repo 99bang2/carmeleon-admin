@@ -1,7 +1,6 @@
 <template>
 	<div>
-		<button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-danger uk-width-1-1"
-				@click="deleteDatas">
+		<button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-danger uk-width-1-1" @click="deleteDatas">
 			<span data-uk-icon="icon: trash" class="md-color-red-600 uk-margin-small-right"></span>
 			리뷰 삭제
 		</button>
@@ -130,6 +129,29 @@
 				]
 			}
 		},
+		beforeMount() {
+			this.defaultColDef = {
+				cellClass: 'cell-wrap-text',
+				autoHeight: true,
+				resizable: true,
+			};
+			this.getRowHeight = params => {
+				return (
+					params.api.getSizesForCurrentTheme().rowHeight *
+					Math.floor(params.data.review.length / 50)
+				);
+			};
+		},
+		created() {
+			let vm = this
+			this.$nuxt.$on('open-rate-list', (uid) => {
+				vm.fetchData(uid)
+				vm.siteUid = uid
+			})
+		},
+		beforeDestroy() {
+			this.$nuxt.$off('open-rate-list')
+		},
 		methods: {
 			async fetchData(siteUid) {
 				let res = await this.$axios.$get(this.config.apiUrl + '/api/rates/site/' + siteUid)
@@ -154,29 +176,7 @@
 				}
 			},
 		},
-		beforeMount() {
-			this.defaultColDef = {
-				cellClass: 'cell-wrap-text',
-				autoHeight: true,
-				resizable: true,
-			};
-			this.getRowHeight = params => {
-				return (
-					params.api.getSizesForCurrentTheme().rowHeight *
-					Math.floor(params.data.review.length / 50)
-				);
-			};
-		},
-		created() {
-			let vm = this
-			this.$nuxt.$on('open-rate-list', (uid) => {
-				vm.fetchData(uid)
-				vm.siteUid = uid
-			})
-		},
-		beforeDestroy() {
-			this.$nuxt.$off('open-rate-list')
-		},
+
 	}
 </script>
 
