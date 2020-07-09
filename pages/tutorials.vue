@@ -85,23 +85,9 @@
 			},
 
 			submit() {
-				// const formData = new FormData()
-				// formData.append("stepImageFiles", this.stepImageFiles)
 				console.log(this.stepImageFiles)
-
-				// this.$axios.$post(this.config.apiUrl + '/api/events', formData, {
-				// 	headers: {
-				// 		'Content-Type': 'multipart/form-data'
-				// 	}
-				// }).then(async res => {
-				// 	this.callNotification('등록하였습니다.')
-				// 	this.$nuxt.$emit('fetch-event-list', res.data.uid)
-				// }).finally(() => {
-				// 	this.submitStatus = 'OK'
-				// })
 			},
 			draged(e){
-				console.log(e)
 				this.drag = false
 				let oldImage = this.sendData.stepImages.slice(e.oldIndex, e.oldIndex+1)
 				let newImage = this.sendData.stepImages.slice(e.newIndex, e.newIndex+1)
