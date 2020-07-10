@@ -155,10 +155,7 @@
 			},
 			async refresh(index){
 				this.sendData.stepImages[index] = undefined
-				await this.$axios.$post(this.config.apiUrl + '/api/tutorials', this.sendData).then(response => {
-					this.callNotification('삭제되었습니다.')
-					this.fetchData()
-				})
+				this.$forceUpdate()
 			}
 		},
 		computed: {

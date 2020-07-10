@@ -19,8 +19,8 @@
 							<div class="uk-width-1-5@s">
 								<select v-model="searchSnsType" class="uk-select" required="required">
 									<option value="">SNS 종류</option>
-									<option value="0">카카오</option>
-									<option value="1">네이버</option>
+									<option value="kakao">카카오</option>
+									<option value="naver">네이버</option>
 								</select>
 							</div>
 						</div>

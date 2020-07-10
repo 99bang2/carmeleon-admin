@@ -66,8 +66,8 @@
 				return [
 					{
 						headerName: '주차장 유형',
-						field: 'siteType',
-						width: 110,
+						field: 'parkingSite.siteType',
+						width: 90,
 						cellRenderer: (obj) => {
 							if (obj.data) {
 								let badge = ''
@@ -92,12 +92,12 @@
 					},
 					{
 						headerName: '주차장 이름',
-						field: 'name',
-						width: 120
+						field: 'parkingSite.name',
+						width: 140
 					},
 					{
 						headerName: '기준가격',
-						field: 'price',
+						field: 'parkingSite.price',
 						width: 120,
 						cellRenderer: (obj) => {
 							return obj.value + ' 원'
@@ -105,7 +105,7 @@
 					},
 					{
 						headerName: '평점',
-						field: 'rate',
+						field: 'parkingSite.rate',
 						width: 120,
 						filter: 'agNumberColumnFilter',
 						cellRenderer: (obj) => {
