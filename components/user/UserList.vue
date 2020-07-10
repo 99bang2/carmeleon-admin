@@ -104,9 +104,9 @@
 						onCellClicked: this.onRowClicked,
 						cellRenderer: (obj) =>{
 							let name=''
-							if(obj.value === 0) {
+							if(obj.value === 'kakao') {
 								name = "카카오"
-							}else if(obj.value === 1){
+							}else if(obj.value === 'naver'){
 								name = "네이버"
 							}
 							return `<span>${name}</span>`
