@@ -24,8 +24,8 @@
 													step{{index + 1}}
 												</h3>
 											</div>
-											<div class="uk-card-body uk-margin" style="min-height: 350px" uk-margin>
-												<div uk-form-custom="target: true">
+											<div class="uk-card-body uk-margin" style="min-height: 350px" data-uk-margin>
+												<div data-uk-form-custom="target: true">
 													<input type="file" accept="image/*"
 														   @change="onChangeStepImageFile($event, index)">
 													<button class="uk-button uk-button-default uk-form-width-medium">
@@ -36,9 +36,20 @@
 													</div>
 												</div>
 											</div>
-											<button @click.prevent="refresh(index)" class="uk-button uk-button-danger uk-width-1-2 uk-button-small uk-align-center">
-												삭제
-											</button>
+											<div class="uk-width-1-2 uk-align-center uk-flex">
+												<button @click.prevent="refresh(index)" class="uk-button uk-button-danger uk-width-1-2 uk-button-small">
+													삭제
+												</button>
+												<a class="uk-button uk-button-small uk-width-1-2" href="#modal-media-image" data-uk-toggle>
+													<i class="mdi mdi-arrow-expand-all md-color-light-blue-600"></i>
+												</a>
+											</div>
+											<div id="modal-media-image" class="uk-flex-top uk-modal" data-uk-modal>
+												<div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical">
+													<button class="uk-modal-close-outside" type="button" data-uk-close></button>
+													<img :src="stepImage" alt="">
+												</div>
+											</div>
 										</li>
 									</transition-group>
 								</draggable>
