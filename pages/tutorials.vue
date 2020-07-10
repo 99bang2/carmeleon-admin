@@ -40,15 +40,9 @@
 												<button @click.prevent="refresh(index)" class="uk-button uk-button-danger uk-width-1-2 uk-button-small">
 													삭제
 												</button>
-												<a class="uk-button uk-button-small uk-width-1-2" href="#modal-media-image" data-uk-toggle>
+												<a class="uk-button uk-button-small uk-width-1-2" @click.prevent="showModal(stepImage)">
 													<i class="mdi mdi-arrow-expand-all md-color-light-blue-600"></i>
 												</a>
-											</div>
-											<div id="modal-media-image" class="uk-flex-top uk-modal" data-uk-modal>
-												<div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical">
-													<button class="uk-modal-close-outside" type="button" data-uk-close></button>
-													<img :src="stepImage" alt="">
-												</div>
 											</div>
 										</li>
 									</transition-group>
@@ -71,17 +65,24 @@
 				</div>
 			</div>
 		</div>
+		<!-- modal 팝업	-->
+		<div id="modal-media-image" class="uk-flex-top uk-modal" data-uk-modal>
+			<div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical" >
+				<button class="uk-modal-close-outside" type="button" data-uk-close></button>
+				<img style="max-width: 500px" :src="showImage" alt="">
+			</div>
+		</div>
+		<!-- modal 팝업	-->
 	</div>
 </template>
 <script>
 
 	import ScCard from "@/components/card/components/Card";
-	import draggable from 'vuedraggable'
-
+	import draggable from 'vuedraggable';
 	export default {
 		components: {
 			ScCard,
-			draggable
+			draggable,
 		},
 		data() {
 			return {
@@ -89,7 +90,8 @@
 					stepImages: new Array(5)
 				},
 				drag: false,
-				flag: false
+				flag: false,
+				showImage:''
 			}
 		},
 		async created() {
@@ -97,6 +99,10 @@
 			vm.fetchData()
 		},
 		methods: {
+			showModal(stepImage){
+				this.showImage = stepImage
+				UIkit.modal('#modal-media-image').show()
+			}, //modal 띄우기
 			async fetchData(input) {
 				this.flag=false
 				let res = await this.$axios.$get(this.config.apiUrl + '/api/tutorials')
