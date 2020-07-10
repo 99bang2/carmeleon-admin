@@ -15,6 +15,20 @@
 			<ScCardBody>
 				<div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
 					<div class="uk-width-2-5@s">
+						<div class="uk-grid-small uk-grid" data-uk-grid>
+							<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
+							   style="height:40px;" @click.prevent="refreshFilter">
+								<i class="mdi mdi-refresh"></i>
+							</a>
+							<div class="uk-width-1-3@s">
+							<select v-model="searchType" class="uk-select" required="required">
+								<option value="">공지사항 분류</option>
+								<option value="0">긴급</option>
+								<option value="1">필수</option>
+								<option value="2">일반</option>
+							</select>
+							</div>
+						</div>
 					</div>
 					<div class="uk-width-2-5@s">
 					</div>
@@ -136,6 +150,14 @@
 			}
 		},
 		watch: {
+			'searchType': function (newValue) {
+				let filterComponent = this.gridOptions.api.getFilterInstance('noticeType')
+				filterComponent.setModel({
+					type: 'equals',
+					filter: newValue
+				})
+				this.gridOptions.api.onFilterChanged()
+			},
 			'searchKeyword': function (newValue) {
 				this.gridOptions.api.setQuickFilter(newValue)
 			},
@@ -160,6 +182,11 @@
 			await this.fetchData()
 		},
 		methods: {
+			refreshFilter(){
+				this.searchKeyword = ""
+				this.searchType = ""
+				this.fetchData()
+			},
 			openNewForm() {
 				this.resetSelection()
 				this.$nuxt.$emit('open-notice-form')
