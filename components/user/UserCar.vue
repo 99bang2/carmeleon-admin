@@ -7,7 +7,7 @@
 						<div class="uk-flex-1">
 							<ScCardTitle>
 								<i class="mdi mdi-car"/>
-								차량정보
+								{{ userName ? userName+'님의 차량정보': '차량정보' }}
 							</ScCardTitle>
 						</div>
 						<ScCardActions>
@@ -59,6 +59,7 @@
 					getRowStyle: this.getRowStyle
 				},
 				cardFormClosed: true,
+				userName:''
 			}
 		},
 		computed:{
@@ -94,6 +95,7 @@
 			let vm = this
 			this.$nuxt.$on('open-car-list', (props) => {
 				vm.fetchData(props.data.uid)
+				this.userName = props.data.nickname
 			})
 			this.$nuxt.$on('close-car-list', () =>{
 				vm.closeForm()

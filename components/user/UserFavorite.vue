@@ -7,7 +7,7 @@
 						<div class="uk-flex-1">
 							<ScCardTitle>
 								<i class="mdi mdi-creation"/>
-								즐겨찾기 목록
+								{{ userName ? userName+'님의 즐겨찾기 목록': '즐겨찾기 목록' }}
 							</ScCardTitle>
 						</div>
 						<ScCardActions>
@@ -59,6 +59,7 @@
 					getRowStyle: this.getRowStyle
 				},
 				cardFormClosed: true,
+				userName:''
 			}
 		},
 		computed:{
@@ -136,6 +137,7 @@
 			let vm = this
 			this.$nuxt.$on('open-favorite-list', (props) => {
 				vm.fetchData(props.data.uid)
+				this.userName = props.data.nickname
 			})
 			this.$nuxt.$on('close-favorite-list', () =>{
 				vm.closeForm()
