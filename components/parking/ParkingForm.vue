@@ -345,6 +345,7 @@
 					optionTag: [],
 					carTag: [],
 					picture: [],
+					siteOpts:[]
 				}
 			}
 		},

@@ -33,7 +33,7 @@
 				<div class="uk-width-2-5@s">
 				</div>
 				<div class="uk-width-1-5@s">
-					<ScInput v-model="searchKeyword" placeholder="공지사항명 검색">
+					<ScInput v-model="searchKeyword" placeholder="세차장명 검색">
 						<span slot="icon" class="uk-form-icon" data-uk-icon="search"/>
 					</ScInput>
 				</div>
@@ -79,7 +79,7 @@
 					rowHeight: 45,
 					getRowStyle: this.getRowStyle
 				},
-				searchSiteType: '',
+				searchType: '',
 				searchKeyword: '',
 			}
 		},
@@ -101,34 +101,141 @@
 						}
 					},
 					{
-						headerName: '주차장 유형',
-						field: 'siteType',
-						width: 150,
-						cellRenderer: (obj) => {
-							if (obj.data) {
-								let badge = ''
-								let typeName = ''
-								switch (obj.value) {
-									case 0 :
-										badge = 'md-bg-green-500'
-										typeName = '하이파킹'
-										break
-									case 1 :
-										badge = 'md-bg-blue-500'
-										typeName = '제휴'
-										break
-									case 2 :
-										badge = 'md-bg-gray-500'
-										typeName = '일반'
-										break
-								}
-								return `<span class="uk-badge ${badge}">${typeName}</span>`
-							}
+						headerName: '세차장명',
+						field: 'carwshNm',
+						width: 170,
+					},{
+						headerName: '업종명',
+						field: 'carwshInduty',
+						width: 120,
+					},{
+						headerName: '세차유형',
+						field: 'carwshType',
+						width: 120,
+					},{
+						headerName: '휴무일',
+						field: 'rstde',
+						width: 120,
+					},{
+						headerName: '세차요금정보',
+						field: 'carwshChrgeInfo',
+						width: 120
+					},{
+						headerName: '전화번호',
+						field: 'phoneNumber',
+						width:150
+					},{
+						headerName: '등록일시',
+						field: 'createdAt',
+						width: 160,
+						valueFormatter: obj => {
+							return this.$moment(obj.value).format('YYYY-MM-DD HH:mm')
 						}
 					},
 				]
 			}
 		},
+		watch: {
+			'searchType': function (newValue) {
+				let filterComponent = this.gridOptions.api.getFilterInstance('carwshInduty')
+				filterComponent.setModel({
+					type: 'equals',
+					filter: newValue
+				})
+				this.gridOptions.api.onFilterChanged()
+			},
+			'searchKeyword': function (newValue) {
+				this.gridOptions.api.setQuickFilter(newValue)
+			},
+		},
+		created() {
+			let vm = this
+			this.$nuxt.$on('reset-carWash-list', () => {
+				vm.resetSelection()
+			})
+			this.$nuxt.$on('fetch-carWash-list', (uid) => {
+				vm.fetchData(uid)
+			})
+		},
+		beforeDestroy() {
+			this.$nuxt.$off('reset-carWash-list')
+			this.$nuxt.$off('fetch-carWash-list')
+		},
+		async mounted() {
+			await this.fetchData()
+		},
+		methods:{
+			refreshFilter() {
+				this.searchType = ""
+				this.fetchData()
+			},
+			openNewForm() {
+				this.resetSelection()
+				this.$nuxt.$emit('open-carWash-form')
+			},
+			onRowClicked(props) {
+				this.$nuxt.$emit('open-carWash-form', props)
+				this.resetSelection()
+				props.node.detail = true
+				this.gridOptions.api.redrawRows()
+			},
+			closeForm() {
+				this.gridOptions.api.forEachNode((node) => {
+					node.detail = false
+				})
+				this.cardFormClosed = true
+				this.gridOptions.api.redrawRows()
+			},
+			async fetchData(selectUid) {
+				// API 연동
+				// let res = await this.$axios.$get(this.config.apiUrl + '/api/carWashes')
+				let fake = [
+					{
+						"carwshNm":"관문 충전소",
+						"carwshInduty":"세차업",
+						"carwshType":"세차유형",
+						"rstde" : "목요일",
+						"carwshChrgeInfo":"123400",
+						"phoneNumber":"101-050-8489"
+					}
+				]
+				this.gridOptions.api.setRowData(fake)
+				if (selectUid) {
+					this.gridOptions.api.forEachNode((node) => {
+						if (node.data.uid === selectUid) {
+							this.onRowClicked({
+								node: node,
+								data: node.data
+							})
+						}
+					})
+				}
+			},
+			resetSelection() {
+				this.gridOptions.api.forEachNode((node) => {
+					node.detail = false
+				})
+				this.gridOptions.api.redrawRows()
+			},
+			deleteDatas() {
+				let selected = this.gridOptions.api.getSelectedRows()
+				let selectedUids = selected.map(({uid}) => uid)
+				let seletedCnt = selectedUids.length
+				if (seletedCnt) {
+					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
+						this.$axios.$post(this.config.apiUrl + '/api/carWashes/bulkDelete', {
+							uids: selectedUids
+						}).then(res => {
+							this.callNotification('삭제하였습니다.')
+							this.$nuxt.$emit('close-parking-form')
+							this.fetchData()
+						})
+					})
+				} else {
+					this.callAlertError('삭제할 항목을 선택해주세요.')
+				}
+			},
+		}
     }
 </script>
 
