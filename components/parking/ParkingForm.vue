@@ -385,7 +385,7 @@
 		async beforeMount() {
 			this.sendData = this.defaultForm
 			let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
-			this.siteOpts = code.data.site
+			this.siteOpts = this.convertSelectJson(code.data.site)
 			this.paymentTag = this.convertJson(code.data.paymentTag)
 			this.brandTag = this.convertJson(code.data.brandTag)
 			this.productTag = this.convertJson(code.data.productTag)
@@ -529,6 +529,16 @@
 					let data = {}
 					data.value = obj[0]
 					data.name = obj[1]
+					dataArray.push(data)
+				})
+				return dataArray
+			},
+			convertSelectJson(json){
+				let dataArray = []
+				Object.entries(json).map(function(obj){
+					let data = {}
+					data.id = obj[0]
+					data.text = obj[1]
 					dataArray.push(data)
 				})
 				return dataArray
