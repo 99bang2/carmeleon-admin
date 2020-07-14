@@ -386,11 +386,11 @@
 			this.sendData = this.defaultForm
 			let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
 			this.siteOpts = code.data.site
-			this.paymentTag = code.data.paymentTag
-			this.brandTag = code.data.brandTag
-			this.productTag = code.data.productTag
-			this.optionTag = code.data.optionTag
-			this.carTag = code.data.carTag
+			this.paymentTag = this.convertJson(code.data.paymentTag)
+			this.brandTag = this.convertJson(code.data.brandTag)
+			this.productTag = this.convertJson(code.data.productTag)
+			this.optionTag = this.convertJson(code.data.optionTag)
+			this.carTag = this.convertJson(code.data.carTag)
 		},
 		beforeDestroy() {
 			this.$nuxt.$off('open-parking-form')
@@ -522,6 +522,16 @@
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
+			},
+			convertJson(json){
+				let dataArray = []
+				Object.entries(json).map(function(obj){
+					let data = {}
+					data.value = obj[0]
+					data.name = obj[1]
+					dataArray.push(data)
+				})
+				return dataArray
 			}
 		}
 	}
