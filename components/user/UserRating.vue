@@ -7,7 +7,7 @@
 						<div class="uk-flex-1">
 							<ScCardTitle>
 								<i class="mdi mdi-comment-text-outline"/>
-								리뷰내역
+								{{ userName ? userName+'님의 리뷰내역': '리뷰내역' }}
 							</ScCardTitle>
 						</div>
 						<ScCardActions>
@@ -61,6 +61,7 @@
 					rowHeight: 45,
 				},
 				cardFormClosed: true,
+				userName:''
 			}
 		},
 		computed: {
@@ -88,6 +89,7 @@
 			let vm = this
 			this.$nuxt.$on('open-rating-list', (props) => {
 				vm.fetchData(props.data.uid)
+				this.userName = props.data.nickname
 			})
 			this.$nuxt.$on('close-rating-list', () => {
 				vm.closeForm()

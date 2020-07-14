@@ -13,8 +13,10 @@
 						</ScCardHeader>
 						<ScCardBody style="min-height: 745px">
 							<form>
+								<!-- vuedraggable 사용 -->
 								<draggable tag="ul" v-model="sendData.stepImages" v-bind="dragOptions"
 										   @start="drag = true" @end="drag = false">
+									<!-- transition-group "flip-list" 위치교환 -->
 									<transition-group class="uk-flex uk-flex-center uk-flex-between" type="transition"
 													  :name="!drag ? 'flip-list' : null">
 										<li v-for="(stepImage, index) in sendData.stepImages" :key="index"
@@ -72,7 +74,7 @@
 				<img style="max-width: 500px" :src="showImage" alt="">
 			</div>
 		</div>
-		<!-- modal 팝업	-->
+		<!-- 	-->
 	</div>
 </template>
 <script>

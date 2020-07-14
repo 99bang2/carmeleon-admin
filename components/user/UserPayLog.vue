@@ -7,7 +7,7 @@
 						<div class="uk-flex-1">
 							<ScCardTitle>
 								<i class="mdi mdi-file-powerpoint-box"/>
-								주차장이용내역
+								{{ userName ? userName+'님의 주차장이용내역': '주차장이용내역' }}
 							</ScCardTitle>
 						</div>
 						<ScCardActions>
@@ -59,6 +59,7 @@
 					getRowStyle: this.getRowStyle
 				},
 				cardFormClosed: true,
+				userName:''
 			}
 		},
 		computed:{
@@ -81,6 +82,7 @@
 			let vm = this
 			this.$nuxt.$on('open-payLog-list', (props) => {
 				vm.fetchData(props.data.uid)
+				this.userName = props.data.nickname
 			})
 			this.$nuxt.$on('close-payLog-list', () =>{
 				vm.closeForm()

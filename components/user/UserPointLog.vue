@@ -7,7 +7,7 @@
 						<div class="uk-flex-1">
 							<ScCardTitle>
 								<i class="mdi mdi-coins"/>
-								포인트히스토리
+								{{ userName ? userName+'님의 포인트히스토리': '포인트히스토리' }}
 							</ScCardTitle>
 						</div>
 						<ScCardActions>
@@ -61,6 +61,7 @@
 					getRowStyle: this.getRowStyle
 				},
 				cardFormClosed: true,
+				userName:''
 			}
 		},
 		computed:{
@@ -91,6 +92,7 @@
 			let vm = this
 			this.$nuxt.$on('open-pointLog-list', (props) => {
 				vm.fetchData(props.data.uid)
+				this.userName = props.data.nickname
 			})
 			this.$nuxt.$on('close-pointLog-list', () =>{
 				vm.closeForm()
