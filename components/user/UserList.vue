@@ -67,7 +67,9 @@
 					rowSelection: 'multiple',
 					onGridReady: this.onGridReady,
 					onFirstDataRendered: this.onFirstDataRendered,
-					onCellClicked: false,
+					onCellClicked: (props) => {
+						this.onRowClicked(props, props.column.colId)
+					},
 					rowHeight: 45,
 					getRowStyle: this.getRowStyle
 				},
@@ -121,9 +123,6 @@
 						headerName: "카드관리",
 						field: "card",
 						width: 90,
-						onCellClicked:(props) => {
-							this.openTemplate(props, 'card')
-						},
 						cellRenderer: ()=>{
 							return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">카드관리</button>`
 						}
@@ -132,9 +131,6 @@
 						headerName: "차량관리",
 						field: "car",
 						width: 90,
-						onCellClicked:(props) => {
-							this.openTemplate(props, 'car')
-						},
 						cellRenderer: ()=>{
 							return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">차량관리</button>`
 						}
@@ -142,9 +138,6 @@
 						headerName: "포인트",
 						field: "pointLog",
 						width: 90,
-						onCellClicked:(props) => {
-							this.openTemplate(props, 'pointLog')
-						},
 						cellRenderer: ()=>{
 							return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">포인트</button>`
 						}
@@ -152,9 +145,6 @@
 						headerName: "이용내역",
 						field: "payLog",
 						width: 90,
-						onCellClicked:(props) => {
-							this.openTemplate(props, 'payLog')
-						},
 						cellRenderer: ()=>{
 							return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">이용내역</button>`
 						}
@@ -162,9 +152,6 @@
 						headerName: "즐겨찾기",
 						field: "favorite",
 						width: 90,
-						onCellClicked:(props) => {
-							this.openTemplate(props, 'favorite')
-						},
 						cellRenderer: ()=>{
 							return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">즐겨찾기</button>`
 						}
@@ -172,9 +159,6 @@
 						headerName: "리뷰목록",
 						field: "rating",
 						width: 90,
-						onCellClicked:(props) => {
-							this.openTemplate(props, 'rating')
-						},
 						cellRenderer: ()=>{
 							return this.btnTemplate('리뷰')
 						}
@@ -212,20 +196,22 @@
 			await this.fetchData()
 		},
 		methods: {
-			openTemplate(props, type) {
-				this.resetSelection()
-				this.$nuxt.$emit('close-all-list', props)
-				this.$nuxt.$emit(`open-${type}-list`, props)
-			},
 			btnTemplate(name) {
 				return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">${name}</button>`
 			},
-			onRowClicked(props) {
-				this.resetSelection()
-				this.$nuxt.$emit('close-all-list', props)
-				this.$nuxt.$emit('open-user-form', props)
-				props.node.detail = true
-				this.gridOptions.api.redrawRows()
+			onRowClicked(props, type) {
+				console.log("타입",type)
+				if(type !== undefined){
+					this.resetSelection()
+					this.$nuxt.$emit('close-all-list', props)
+					this.$nuxt.$emit(`open-${type}-list`, props)
+				}else{
+					this.resetSelection()
+					this.$nuxt.$emit('close-all-list', props)
+					this.$nuxt.$emit('open-user-form', props)
+					props.node.detail = true
+					this.gridOptions.api.redrawRows()
+				}
 			},
 			async fetchData(selectUid) {
 				// API 연동
