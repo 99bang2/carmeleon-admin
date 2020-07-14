@@ -50,5 +50,35 @@ export const menuEntries = [
 		title: "Tutorials",
 		icon: "mdi mdi-book-open-page-variant",
 		page: "/tutorials"
+	},
+	{
+		id: uniqueID(),
+		title: "CarWashes",
+		icon: "mdi mdi-car-wash",
+		page: "/carWashes"
 	}
+	// {
+	// 	id: uniqueID(),
+	// 	title: "Statistics",
+	// 	icon: "mdi mdi-chart-bar",
+	// 	page: "/statistics",
+	// 	isOpen: false,
+	// 	submenu: [
+	// 		{
+	// 			id: uniqueID(),
+	// 			title:"ParkingSiteStatistic",
+	// 			page: "/statistics/parkingSiteStatistic"
+	// 		},
+	// 		{
+	// 			id: uniqueID(),
+	// 			title: "CarStatistic",
+	// 			page: "/statistics/carStatistic"
+	// 		},
+	// 		{
+	// 			id: uniqueID(),
+	// 			title: "PointStatistic",
+	// 			page: "/statistics/pointStatistic"
+	// 		}
+	// 	]
+	// }
 ];
