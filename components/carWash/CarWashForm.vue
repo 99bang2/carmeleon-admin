@@ -306,8 +306,8 @@
 		async beforeMount() {
 			this.sendData = this.defaultForm
 			let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
-			this.industryOpts = code.data
-			this.carwshTypeOpts = code.data
+			this.industryOpts = this.convertJson(code.data.industryOpts)
+			this.carwshTypeOpts = this.convertJson(code.data.carwshTypeOpts)
 		},
 		beforeDestroy() {
 			this.$nuxt.$off('open-carWash-form')
@@ -439,6 +439,16 @@
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
+			},
+			convertJson(json){
+				let dataArray = []
+				Object.entries(json).map(function(obj){
+					let data = {}
+					data.value = obj[0]
+					data.name = obj[1]
+					dataArray.push(data)
+				})
+				return dataArray
 			}
 		}
 	}
