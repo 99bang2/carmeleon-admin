@@ -102,15 +102,15 @@
 					},
 					{
 						headerName: '세차장명',
-						field: 'carwshNm',
+						field: 'carWashName',
 						width: 170,
 					},{
 						headerName: '업종명',
-						field: 'carwshInduty',
+						field: 'carWashIndustry',
 						width: 120,
 					},{
 						headerName: '세차유형',
-						field: 'carwshType',
+						field: 'carWashType',
 						width: 120,
 					},{
 						headerName: '휴무일',
@@ -118,7 +118,7 @@
 						width: 120,
 					},{
 						headerName: '세차요금정보',
-						field: 'carwshChrgeInfo',
+						field: 'carWashChargeInfo',
 						width: 120
 					},{
 						headerName: '전화번호',
@@ -137,7 +137,7 @@
 		},
 		watch: {
 			'searchType': function (newValue) {
-				let filterComponent = this.gridOptions.api.getFilterInstance('carwshInduty')
+				let filterComponent = this.gridOptions.api.getFilterInstance('carWashIndustry')
 				filterComponent.setModel({
 					type: 'equals',
 					filter: newValue
@@ -191,11 +191,11 @@
 				// let res = await this.$axios.$get(this.config.apiUrl + '/api/carWashes')
 				let fake = [
 					{
-						"carwshNm":"관문 충전소",
-						"carwshInduty":"세차업",
-						"carwshType":"세차유형",
+						"carWashName":"관문 충전소",
+						"carWashIndustry":"세차업",
+						"carWashType":"세차유형",
 						"rstde" : "목요일",
-						"carwshChrgeInfo":"123400",
+						"carWashChargeInfo":"123400",
 						"phoneNumber":"101-050-8489"
 					}
 				]
@@ -227,7 +227,7 @@
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')
-							this.$nuxt.$emit('close-parking-form')
+							this.$nuxt.$emit('close-carWash-form')
 							this.fetchData()
 						})
 					})

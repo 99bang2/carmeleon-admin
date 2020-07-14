@@ -34,87 +34,85 @@
 								<form class="uk-grid-small uk-grid" data-uk-grid>
 									<!--	최대 가용 대수 , 가격  -->
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.carwshNm" :error-state="$v.sendData.carwshNm.$error" :validator="$v.sendData.carwshNm">
+										<ScInput v-model="sendData.carWashName" :error-state="$v.sendData.carWashName.$error" :validator="$v.sendData.carWashName">
 											<label>
 												사업장명
 											</label>
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.carwshNm.required">
+											<li v-if="!$v.sendData.carWashName.required">
 												사업장명을 입력하세요
 											</li>
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
-										<Select2
-											v-model="sendData.carwshInduty"
-											:options="industryOpts"
-											:settings="{ 'width': '100%', 'placeholder': '사업장 업종명' }"
-											:error-state="$v.sendData.carwshInduty.$error"
-										/>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.carwshInduty.required">
-												사업장 업종명을 선택하세요.
-											</li>
-										</ul>
-									</div>
-									<div class="uk-width-1-2">
-										<Select2
-											v-model="sendData.carwshType"
-											:options="carwshTypeOpts"
-											:settings="{ 'width': '100%', 'placeholder': '세차유형' }"
-											:error-state="$v.sendData.carwshType.$error"
-										/>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.carwshType.required">
-												세차유형을 선택하세요.
-											</li>
-										</ul>
-									</div>
-
-									<!--	휴무일    -->
-									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.rstde">
+										<ScInput v-model="sendData.restDate">
 											<label>
 												휴무일
 											</label>
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: receiver"/>
 										</ScInput>
 									</div>
-
+									<div class="uk-width-1-2">
+										<Select2
+											v-model="sendData.carWashIndustry"
+											:options="industryOpts"
+											:settings="{ 'width': '100%', 'placeholder': '사업장 업종명' }"
+											:error-state="$v.sendData.carWashIndustry.$error"
+										/>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.carWashIndustry.required">
+												사업장 업종명을 선택하세요.
+											</li>
+										</ul>
+									</div>
+									<div class="uk-width-1-2">
+										<Select2
+											v-model="sendData.carWashType"
+											:options="carWashTypeOpts"
+											:settings="{ 'width': '100%', 'placeholder': '세차유형' }"
+											:error-state="$v.sendData.carWashType.$error"
+										/>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.carWashType.required">
+												세차유형을 선택하세요.
+											</li>
+										</ul>
+									</div>
 									<!-- 평일운영시간-->
-									<div class="uk-width-1-1 uk-flex uk-flex-between" style="vertical-align: middle">
-										<div class="uk-width-1-4">평일운영시간</div>
-
+									<div class="uk-width-1-1 uk-flex uk-flex-between">
+										<div style="line-height: 40px">평일운영시간</div>
 										<div class="uk-width-1-3">
 											<ScInput v-model="sendData.weekdayOperOpenHhmm" v-flatpickr="timepicker24" placeholder="평일운영시작시간" mode="outline"></ScInput>
 										</div>
-										<span style="vertical-align: middle">~</span>
+										<span style="line-height: 40px">~</span>
 										<div class="uk-width-1-3">
 											<ScInput v-model="sendData.weekdayOperCloseHhmm" v-flatpickr="timepicker24" placeholder="평일운영종료시간" mode="outline"></ScInput>
 										</div>
 									</div>
 
 									<!--	휴일운영시간      -->
-									<div class="uk-width-1-1">
-										<div class="uk-width-1-2">
+									<div class="uk-width-1-1 uk-flex uk-flex-between">
+										<div style="line-height: 40px">휴일운영시간</div>
+										<div class="uk-width-1-3">
 											<ScInput v-model="sendData.holidayOperOpenHhmm" v-flatpickr="timepicker24" placeholder="휴일운영시작시간" mode="outline"></ScInput>
 										</div>
-										<div class="uk-width-1-2">
+										<span style="line-height: 40px">~</span>
+										<div class="uk-width-1-3">
 											<ScInput v-model="sendData.holidayOperCloseHhmm" v-flatpickr="timepicker24" placeholder="휴일운영종료시간" mode="outline"></ScInput>
 										</div>
 									</div>
 									<!-- 세차 요금정보 , 세차장 전화번호-->
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.carwshChrgeInfo" :error-state="$v.sendData.carwshChrgeInfo.$error" :validator="$v.sendData.carwshChrgeInfo">
+										<ScInput v-model="sendData.carWashChargeInfo" :error-state="$v.sendData.carWashChargeInfo.$error" :validator="$v.sendData.carWashChargeInfo">
 											<label>
 												세차요금정보
 											</label>
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.carwshChrgeInfo.required">
+											<li v-if="!$v.sendData.carWashChargeInfo.required">
 												세차요금정보를 입력하세요
 											</li>
 										</ul>
@@ -134,18 +132,18 @@
 									</div>
 									<div class="uk-width-1-1 uk-flex" style="justify-content: space-around; align-items: center">
 										<div class="uk-width-5-6">
-											<ScInput v-model="sendData.rdnmadr" class="uk-flex-1" :error-state="$v.sendData.rdnmadr.$error" :validator="$v.sendData.rdnmadr">
+											<ScInput v-model="sendData.address" class="uk-flex-1" :error-state="$v.sendData.address.$error" :validator="$v.sendData.address">
 												<label>
 													주소
 												</label>
 											</ScInput>
 											<ul class="sc-vue-errors">
-												<li v-if="!$v.sendData.rdnmadr.required">
+												<li v-if="!$v.sendData.address.required">
 													주소를 입력하세요.
 												</li>
 											</ul>
 										</div>
-										<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline sc-button-large" @click.prevent="searchPlace(sendData.rdnmadr)">
+										<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline sc-button-large" @click.prevent="searchPlace(sendData.address)">
 											<span data-uk-icon="icon: search"></span>
 										</a>
 									</div>
@@ -240,23 +238,23 @@
 				tempImage: [],
 				searchAddr: [],
 				defaultForm: {
-					uid: null,
-					carwshNm: '', //사업장명
-					carwshInduty: '', //사업장업종명
-					carwshType: '', //세차유형
-					rdnmadr:'', //주소
-					rstde:'', //휴무일
+					uid: '',
+					carWashName: '', //사업장명
+					carWashIndustry: '', //사업장업종명
+					carWashType: '', //세차유형
+					address:'', //주소
+					restDate:'', //휴무일
 					weekdayOperOpenHhmm: '', //평일운영시작시간
 					weekdayOperCloseHhmm:'',//평일운영종료시간
 					holidayOperOpenHhmm:'', //주말운영시작시간
 					holidayOperCloseHhmm:'',//주말운영종료시간
-					carwshChrgeInfo:'', //세차요금정보
+					carWashChargeInfo:'', //세차요금정보
 					phoneNumber:'', //전화번호
 					lat: null, //위도
 					lon: null, //경도
 					picture: [],
 					industryOpts:[],
-					carwshTypeOpts:[]
+					carWashTypeOpts:[]
 				}
 			}
 		},
@@ -267,28 +265,27 @@
 					noCalendar: true,
 					dateFormat: "H:i",
 					time_24hr: true,
-					defaultDate: this.$moment().format('HH:mm')
 				}
 			}
 		},
 		validations: {
 			sendData: {
-				carwshNm: {
+				carWashName: {
 					required
 				},
-				carwshInduty: {
+				carWashIndustry: {
 					required
 				},
-				carwshType: {
+				carWashType: {
 					required
 				},
-				carwshChrgeInfo:{
+				carWashChargeInfo:{
 					required
 				},
 				phoneNumber:{
 					required
 				},
-				rdnmadr:{
+				address:{
 					required
 				}
 
@@ -306,8 +303,9 @@
 		async beforeMount() {
 			this.sendData = this.defaultForm
 			let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
-			this.industryOpts = this.convertJson(code.data.industryOpts)
-			this.carwshTypeOpts = this.convertJson(code.data.carwshTypeOpts)
+			console.log(code.data)
+			this.industryOpts = this.convertSelectJson(code.data.industryOpts)
+			this.carWashTypeOpts = this.convertSelectJson(code.data.carWashTypeOpts)
 		},
 		beforeDestroy() {
 			this.$nuxt.$off('open-carWash-form')
@@ -315,9 +313,9 @@
 		},
 		methods: {
 			selectAddr(searchItem) {
-				this.$axios.$post(this.config.apiUrl + '/api/searchLocal', {address: searchItem.rdnmadr}).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/api/searchLocal', {address: searchItem.address}).then(async res => {
 					this.callNotification("검색을 완료하였습니다.")
-					this.sendData.rdnmadr = res.data.addresses[0].jibunAddress
+					this.sendData.address = res.data.addresses[0].jibunAddress
 					this.sendData.lat = res.data.addresses[0].x
 					this.sendData.lon = res.data.addresses[0].y
 					this.searchAddr=[]
@@ -332,6 +330,7 @@
 					this.$axios.$post(this.config.apiUrl + '/api/searchList', {keyword: searchString}).then(async res => {
 						this.callNotification('목록을 가져왔습니다.')
 						this.searchAddr = res.data.items
+						console.log(this.searchAddr)
 					}).finally(() => {
 						this.submitStatus = 'OK'
 					})
@@ -402,7 +401,7 @@
 				this.$nuxt.$emit('reset-carWash-list')
 			},
 			deleteForm() {
-				this.$axios.$delete(this.config.apiUrl + '/api/carWashs/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$delete(this.config.apiUrl + '/api/carWashes/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
 					this.$nuxt.$emit('fetch-carWash-list', res.data.uid)
 				}).finally(() => {
@@ -425,7 +424,8 @@
 				}
 			},
 			postForm() {
-				this.$axios.$post(this.config.apiUrl + '/api/carWashs', this.sendData).then(async res => {
+				console.log(this.sendData)
+				this.$axios.$post(this.config.apiUrl + '/api/carWashes', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
 					this.$nuxt.$emit('fetch-carWash-list', res.data.uid)
 				}).finally(() => {
@@ -433,21 +433,22 @@
 				})
 			},
 			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/api/carWashs/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$put(this.config.apiUrl + '/api/carWashes/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-carWash-list', res.data.uid)
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
 			},
-			convertJson(json){
+			convertSelectJson(json){
 				let dataArray = []
 				Object.entries(json).map(function(obj){
 					let data = {}
-					data.value = obj[0]
-					data.name = obj[1]
+					data.id = obj[0]
+					data.text = obj[1]
 					dataArray.push(data)
 				})
+				console.log(dataArray)
 				return dataArray
 			}
 		}
