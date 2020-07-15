@@ -150,7 +150,7 @@
 			})
 		},
 		beforeDestroy() {
-			this.$nuxt.$off('open-parkingSiteRate-list')
+			this.$nuxt.$off('open-rate-list')
 		},
 		methods: {
 			async fetchData(siteUid) {

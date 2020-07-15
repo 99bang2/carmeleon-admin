@@ -23,7 +23,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid)">
+							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid, 2)">
 								세차장 리뷰보기
 							</a>
 						</li>
@@ -335,8 +335,8 @@
 					})
 				}
 			},
-			openNewForm(siteUid) {
-				this.$nuxt.$emit('open-rate-list', siteUid)
+			openNewForm(siteUid, type) {
+				this.$nuxt.$emit('open-rate-list', siteUid, type)
 			},
 			//multi image upload////////////////////////////////////////////////
 			uploadImageSuccess(formData, index, fileList) {

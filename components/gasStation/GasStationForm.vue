@@ -19,12 +19,12 @@
 					<ul class="uk-child-width-expand" data-uk-tab v-show="sendData.uid">
 						<li class="uk-active">
 							<a href="javascript:void(0)">
-								주차장 정보관리
+								주유소 정보관리
 							</a>
 						</li>
 						<li>
-							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid,1)">
-								주차장 리뷰보기
+							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid, 3)">
+								주유소 리뷰보기
 							</a>
 						</li>
 					</ul>
@@ -32,113 +32,136 @@
 						<li>
 							<div class="uk-accordion-content">
 								<form class="uk-grid-small uk-grid" data-uk-grid>
-									<!--	siteType, name , isActive -->
-									<div class="uk-width-1-3">
-										<Select2
-											v-model="sendData.siteType"
-											:options="siteOpts"
-											:settings="{ 'width': '100%', 'placeholder': '주차장 유형' }"
-											:error-state="$v.sendData.siteType.$error"
-										/>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.siteType.required">
-												주차장 유형을 선택하세요.
-											</li>
-										</ul>
-									</div>
-									<div class="uk-width-2-5">
-										<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error" :validator="$v.sendData.name">
-											<label>
-												주차장 이름
-											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
-										</ScInput>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.name.required">
-												주차장 이름을 입력하세요.
-											</li>
-										</ul>
-									</div>
-									<div class="uk-width-1-5">
-										<input id="switch-css" v-model="sendData.isActive" type="checkbox" class="sc-switch-input">
-										<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
-											<span class="sc-switch-toggle-on">운영중</span>
-											<span class="sc-switch-toggle-off">미운영</span>
-										</label>
-									</div>
 									<!--	최대 가용 대수 , 가격  -->
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.parkingLot" :error-state="$v.sendData.parkingLot.$error" :validator="$v.sendData.parkingLot">
+										<ScInput v-model="sendData.gasStationName" :error-state="$v.sendData.gasStationName.$error" :validator="$v.sendData.gasStationName">
 											<label>
-												최대가용대수
+												주유소명
 											</label>
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.parkingLot.required">
-												최대가용대수를 입력하세요.
-											</li>
-											<li v-if="!$v.sendData.parkingLot.integerFormatCheck">
-												올바른 형식이 아닙니다.
+											<li v-if="!$v.sendData.gasStationName.required">
+												주유소명을 입력하세요
 											</li>
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.price" :error-state="$v.sendData.price.$error" :validator="$v.sendData.price">
+										<ScInput v-model="sendData.gasStationUid" :error-state="$v.sendData.gasStationUid.$error" :validator="$v.sendData.gasStationUid">
 											<label>
-												기준가격
+												주유소 ID
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.price.required">
-												가격을 입력해주세요.
-											</li>
-											<li v-if="!$v.sendData.price.integerFormatCheck">
-												올바른 형식이 아닙니다.
+											<li v-if="!$v.sendData.gasStationUid.required">
+												주유소ID를 입력하세요
 											</li>
 										</ul>
 									</div>
-									<!--	연락처, 휴대전화        -->
-									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.tel">
+									<div class="uk-width-1-1">
+										<ScInput v-model="sendData.tel" :error-state="$v.sendData.tel.$error" :validator="$v.sendData.tel">
 											<label>
-												연락처
+												주유소 전화번호
 											</label>
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: receiver"/>
 										</ScInput>
-									</div>
-									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.phone">
-											<label>
-												휴대전화
-											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: phone"/>
-										</ScInput>
-									</div>
-									<!--	이메일, 담당자이름      -->
-									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.email" :error-state="$v.sendData.email.$error" :validator="$v.sendData.email">
-											<label>
-												이메일
-											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: mail"/>
-										</ScInput>
 										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.email.email">
-												올바른 이메일 형식이 아닙니다.
+											<li v-if="!$v.sendData.tel.required">
+												전화번호를 입력하세요
 											</li>
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.manager">
+										<Select2
+											v-model="sendData.brandCode"
+											:options="brandCodeOpts"
+											:settings="{ 'width': '100%', 'placeholder': '브랜드 코드명' }"
+											:error-state="$v.sendData.brandCode.$error"
+										/>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.brandCode.required">
+												브랜드 코드명을 선택하세요.
+											</li>
+										</ul>
+									</div>
+									<div class="uk-width-1-2">
+										<Select2
+											v-model="sendData.gasStationType"
+											:options="gasStationTypeOpts"
+											:settings="{ 'width': '100%', 'placeholder': '업종구분' }"
+											:error-state="$v.sendData.gasStationType.$error"
+										/>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.gasStationType.required">
+												업종구분을 선택하세요.
+											</li>
+										</ul>
+									</div>
+									<div class="uk-width-1-3@s">
+										<input id="switch-css" v-model="sendData.isCarWash" type="checkbox" class="sc-switch-input">
+										<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
+											<span class="sc-switch-toggle-on">세차장 있음</span>
+											<span class="sc-switch-toggle-off">세차장 없음</span>
+										</label>
+									</div>
+									<div class="uk-width-1-3@s">
+										<input id="switch-css" v-model="sendData.isConvenience" type="checkbox" class="sc-switch-input">
+										<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
+											<span class="sc-switch-toggle-on">편의점 있음</span>
+											<span class="sc-switch-toggle-off">편의점 없음</span>
+										</label>
+									</div>
+									<div class="uk-width-1-3@s">
+										<input id="switch-css" v-model="sendData.isKpetro" type="checkbox" class="sc-switch-input">
+										<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
+											<span class="sc-switch-toggle-on">품질인증</span>
+											<span class="sc-switch-toggle-off">미인증</span>
+										</label>
+									</div>
+									<h5 class="uk-heading-line">
+										Oil Price
+									</h5>
+									<div class="uk-width-1-2">
+										<ScInput v-model="sendData.oilPrice[0].price">
 											<label>
-												담당자
+												휘발유 가격
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
 										</ScInput>
 									</div>
-									<!--	주소입력 -->
+									<div class="uk-width-1-2">
+										<ScInput v-model="sendData.oilPrice[1].price">
+											<label>
+												경유 가격
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+										</ScInput>
+									</div>
+									<div class="uk-width-1-3">
+										<ScInput v-model="sendData.oilPrice[2].price">
+											<label>
+												고급휘발유 가격
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+										</ScInput>
+									</div>
+									<div class="uk-width-1-3">
+										<ScInput v-model="sendData.oilPrice[3].price">
+											<label>
+												실내등유 가격
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+										</ScInput>
+									</div>
+									<div class="uk-width-1-3">
+										<ScInput v-model="sendData.oilPrice[4].price">
+											<label>
+												자동차부탄 가격
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+										</ScInput>
+									</div>
 									<div class="uk-width-1-1 uk-flex" style="justify-content: space-around; align-items: center">
 										<div class="uk-width-5-6">
 											<ScInput v-model="sendData.address" class="uk-flex-1" :error-state="$v.sendData.address.$error" :validator="$v.sendData.address">
@@ -164,85 +187,9 @@
 											</li>
 										</ul>
 									</div>
-									<!--    주차장 안내             -->
+									<!--    주유소 이미지           -->
 									<div class="uk-width-1-1">
-										<ScTextarea
-											v-model="sendData.info"
-											:cols="30"
-											:rows="4"
-											:autosize="true"
-											mode="outline"
-										>
-											<label>주차장 안내 입력</label>
-										</ScTextarea>
-									</div>
-									<!--    요금 안내               -->
-									<div class="uk-width-1-1">
-										<ScTextarea
-											v-model="sendData.priceInfo"
-											:cols="30"
-											:rows="4"
-											:autosize="true"
-											mode="outline"
-										>
-											<label>요금 안내 입력</label>
-										</ScTextarea>
-									</div>
-									<!--    결제태그 제휴태그-->
-									<div class="uk-width-1-3@s">
-										<ul class="uk-list">
-											<h6>결제태그</h6>
-											<li v-for="tag in paymentTag" :key="tag.id">
-												<PrettyCheck v-model="sendData.paymentTag" :value="tag.value" class="p-icon">
-													<i slot="extra" class="icon mdi mdi-check"></i>
-													{{tag.name}}
-												</PrettyCheck>
-											</li>
-
-											<h6>제휴태그</h6>
-											<li v-for="tag in brandTag" :key="tag.id">
-												<PrettyCheck v-model="sendData.brandTag" :value="tag.value" class="p-icon">
-													<i slot="extra" class="icon mdi mdi-check"></i>
-													{{tag.name}}
-												</PrettyCheck>
-											</li>
-										</ul>
-									</div>
-									<!--   	상품태그  차량태그-->
-									<div class="uk-width-1-3@s">
-										<ul class="uk-list">
-											<h6>상품태그</h6>
-											<li v-for="tag in productTag" :key="tag.id">
-												<PrettyCheck v-model="sendData.productTag" :value="tag.value" class="p-icon">
-													<i slot="extra" class="icon mdi mdi-check"></i>
-													{{tag.name}}
-												</PrettyCheck>
-											</li>
-
-											<h6>차량태그</h6>
-											<li v-for="tag in carTag" :key="tag.id">
-												<PrettyCheck v-model="sendData.carTag" :value="tag.value" class="p-icon">
-													<i slot="extra" class="icon mdi mdi-check"></i>
-													{{tag.name}}
-												</PrettyCheck>
-											</li>
-										</ul>
-									</div>
-									<!--    옵션태그-->
-									<div class="uk-width-auto">
-										<ul class="uk-list">
-											<h6>옵션태그</h6>
-											<li v-for="tag in optionTag" :key="tag.id">
-												<PrettyCheck v-model="sendData.optionTag" :value="tag.value" class="p-icon">
-													<i slot="extra" class="icon mdi mdi-check"></i>
-													{{tag.name}}
-												</PrettyCheck>
-											</li>
-										</ul>
-									</div>
-									<!--    주차장 이미지           -->
-									<div class="uk-width-1-1">
-										<h4>주차장 이미지 등록</h4>
+										<h6>주유소 이미지 등록</h6>
 										<div style="display: flex; justify-content: center;">
 											<vue-upload-multiple-image
 												@upload-success="uploadImageSuccess"
@@ -284,29 +231,21 @@
 <script>
 	import ScCard from "@/components/card/components/Card";
 	import ScInput from "@/components/Input";
-	import ScTextarea from '~/components/Textarea'
 	import ScCardAction from "@/components/card/components/CardActions"
 	import VueUploadMultipleImage from 'vue-upload-multiple-image';
 	import {validationMixin} from 'vuelidate'
-	import PrettyCheck from 'pretty-checkbox-vue/check';
-	import {required, email} from 'vuelidate/lib/validators'
+	import {required} from 'vuelidate/lib/validators'
 	import RatingList from "@/components/common/RatingList"
 	import Select2 from "@/components/Select2";
-	import customValidators from "@/plugins/vuelidateValidators";
-
-	if (process.client) {
-		require('~/plugins/inputmask');
-	}
 	export default {
 		components: {
 			Select2,
 			ScInput,
 			ScCard,
-			ScTextarea,
 			VueUploadMultipleImage,
-			PrettyCheck,
 			ScCardAction,
-			RatingList
+			RatingList,
+
 		},
 		mixins: [
 			validationMixin,
@@ -325,78 +264,81 @@
 				tempImage: [],
 				searchAddr: [],
 				defaultForm: {
-					uid: null,
-					siteType: '',
-					name: '',
-					parkingLot: null,
-					lat: null,
-					lon: null,
-					tel: '',
-					phone: '',
-					manager: '',
-					isActive: true,
-					price: null,
-					address: '',
-					info: '',
-					priceInfo: '',
-					paymentTag: [],
-					brandTag: [],
-					productTag: [],
-					optionTag: [],
-					carTag: [],
+					uid: '',
+					gasStationName: '', //주유소명
+					gasStationUid:'', //주유소 Uid
+					brandCode: '', //브랜드코드명
+					gasStationType: '',
+					address:'', //주소
+					tel:'', //전화번호
+					lat: null, //위도
+					lon: null, //경도
+					isCarWash : true,
+					isConvenience: true,
+					isKpetro:true,
 					picture: [],
-					siteOpts:[]
+					oilPrice:[
+						{code:'B027', //휘발유
+						price:''},
+						{code:'D047', //경유
+						price:''},
+						{code:'B034', //고급휘발유
+						price:''},
+						{code:'C004', //실내등유
+						price:''},
+						{code:'K015', //자동차부탄
+						price:''}],
+					brandCodeOpts:[],
+					gasStationTypeOpts:[]
 				}
 			}
 		},
 		validations: {
 			sendData: {
-				siteType: {
-					required
-				}, name: {
-					required
-				}, address: {
+				gasStationName:{
 					required
 				},
-				parkingLot: {
-					required,
-					integerFormatCheck: customValidators.integerFormatCheck()
-				}, price: {
-					required,
-					integerFormatCheck: customValidators.integerFormatCheck()
+				gasStationUid:{
+					required
+				},
+				tel:{
+					required
+				},
+				brandCode:{
+					required
+				},
+				gasStationType:{
+					required
+				},
+				address:{
+					required
 				},
 				lat: {
 					required
 				},
 				lon: {
 					required
-				}, email: {
-					email
 				}
 			}
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('open-parking-form', (data) => {
+			this.$nuxt.$on('open-gasStation-form', (data) => {
 				vm.settingForm(data)
 			})
-			this.$nuxt.$on('close-parking-form', () => {
+			this.$nuxt.$on('close-gasStation-form', () => {
 				vm.closeForm()
 			})
 		},
 		async beforeMount() {
 			this.sendData = this.defaultForm
-			let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
-			this.siteOpts = this.convertSelectJson(code.data.site)
-			this.paymentTag = this.convertJson(code.data.paymentTag)
-			this.brandTag = this.convertJson(code.data.brandTag)
-			this.productTag = this.convertJson(code.data.productTag)
-			this.optionTag = this.convertJson(code.data.optionTag)
-			this.carTag = this.convertJson(code.data.carTag)
+			// let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
+			// this.brandCodeOpts = this.convertSelectJson(code.data.brandCodeOpts)
+			// this.gasStationTypeOpts = this.convertSelectJson(code.data.gasStationTypeOpts)
 		},
 		beforeDestroy() {
-			this.$nuxt.$off('open-parking-form')
-			this.$nuxt.$off('close-parking-form')
+			this.$nuxt.$off('open-gasStation-form')
+			this.$nuxt.$off('close-gasStation-form')
 		},
 		methods: {
 			selectAddr(searchItem) {
@@ -423,7 +365,7 @@
 				}
 			},
 			openNewForm(siteUid, type) {
-				this.$nuxt.$emit(`open-rate-list`, siteUid, type)
+				this.$nuxt.$emit('open-rate-list', siteUid, type)
 			},
 			//multi image upload////////////////////////////////////////////////
 			uploadImageSuccess(formData, index, fileList) {
@@ -484,12 +426,12 @@
 			},
 			closeForm() {
 				this.cardFormClosed = true
-				this.$nuxt.$emit('reset-parking-list')
+				this.$nuxt.$emit('reset-gasStation-list')
 			},
 			deleteForm() {
-				this.$axios.$delete(this.config.apiUrl + '/api/parkings/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$delete(this.config.apiUrl + '/api/gasStations/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
+					this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)
 				}).finally(() => {
 					this.deleteStatus = 'OK'
 					this.cardFormClosed = true
@@ -510,30 +452,20 @@
 				}
 			},
 			postForm() {
-				this.$axios.$post(this.config.apiUrl + '/api/parkings', this.sendData).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/api/gasStations', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
-					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
+					this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
 			},
 			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/api/parkings/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$put(this.config.apiUrl + '/api/gasStations/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
-					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
+					this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
-			},
-			convertJson(json){
-				let dataArray = []
-				Object.entries(json).map(function(obj){
-					let data = {}
-					data.value = obj[0]
-					data.name = obj[1]
-					dataArray.push(data)
-				})
-				return dataArray
 			},
 			convertSelectJson(json){
 				let dataArray = []

@@ -23,6 +23,12 @@ export const menuEntries = [
 				icon: "mdi mdi-car-wash",
 				page: "/spots/carWashes"
 			},
+			{
+				id: uniqueID(),
+				title: "GasStations",
+				icon: "mdi mdi-gas-station",
+				page: "/spots/gasStations"
+			},
 		]
 	},
 	{
