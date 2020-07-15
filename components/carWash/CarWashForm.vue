@@ -47,11 +47,11 @@
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.restDate">
+										<ScInput v-model="sendData.closedDay">
 											<label>
 												휴무일
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: receiver"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: calendar"/>
 										</ScInput>
 									</div>
 									<div class="uk-width-1-2">
@@ -203,7 +203,7 @@
 	import VueUploadMultipleImage from 'vue-upload-multiple-image';
 	import {validationMixin} from 'vuelidate'
 	import {required} from 'vuelidate/lib/validators'
-	import RatingList from "@/components/carWash/RatingList"
+	import RatingList from "@/components/common/RatingList"
 	import Select2 from "@/components/Select2";
 	if(process.client) {
 		require('~/plugins/flatpickr');
@@ -243,7 +243,7 @@
 					carWashIndustry: '', //사업장업종명
 					carWashType: '', //세차유형
 					address:'', //주소
-					restDate:'', //휴무일
+					closedDay:'', //휴무일
 					weekdayOperOpenHhmm: '', //평일운영시작시간
 					weekdayOperCloseHhmm:'',//평일운영종료시간
 					holidayOperOpenHhmm:'', //주말운영시작시간
@@ -303,7 +303,6 @@
 		async beforeMount() {
 			this.sendData = this.defaultForm
 			let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
-			console.log(code.data)
 			this.industryOpts = this.convertSelectJson(code.data.industryOpts)
 			this.carWashTypeOpts = this.convertSelectJson(code.data.carWashTypeOpts)
 		},
@@ -327,7 +326,7 @@
 				if (!searchString) {
 					this.callAlertError("주소가 입력되지 않았습니다.")
 				}else{
-					this.$axios.$post(this.config.apiUrl + '/api/searchList', {keyword: searchString}).then(async res => {
+					this.$axios.$post(this.config.apiUrl + '/api/searchList', {keyword: searchString, count: 5}).then(async res => {
 						this.callNotification('목록을 가져왔습니다.')
 						this.searchAddr = res.data.items
 						console.log(this.searchAddr)
@@ -424,7 +423,6 @@
 				}
 			},
 			postForm() {
-				console.log(this.sendData)
 				this.$axios.$post(this.config.apiUrl + '/api/carWashes', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
 					this.$nuxt.$emit('fetch-carWash-list', res.data.uid)
@@ -448,7 +446,6 @@
 					data.text = obj[1]
 					dataArray.push(data)
 				})
-				console.log(dataArray)
 				return dataArray
 			}
 		}

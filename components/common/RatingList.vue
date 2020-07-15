@@ -144,13 +144,13 @@
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('open-rate-list', (uid) => {
-				vm.fetchData(uid)
+			this.$nuxt.$on('open-rate-list', (uid,type) => {
+				vm.fetchData(uid, type) // parkingSite : 1
 				vm.siteUid = uid
 			})
 		},
 		beforeDestroy() {
-			this.$nuxt.$off('open-rate-list')
+			this.$nuxt.$off('open-parkingSiteRate-list')
 		},
 		methods: {
 			async fetchData(siteUid) {

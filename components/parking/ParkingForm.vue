@@ -23,7 +23,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid)">
+							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid,1)">
 								주차장 리뷰보기
 							</a>
 						</li>
@@ -290,7 +290,7 @@
 	import {validationMixin} from 'vuelidate'
 	import PrettyCheck from 'pretty-checkbox-vue/check';
 	import {required, email} from 'vuelidate/lib/validators'
-	import RatingList from "@/components/parking/RatingList"
+	import RatingList from "@/components/common/RatingList"
 	import Select2 from "@/components/Select2";
 	import customValidators from "@/plugins/vuelidateValidators";
 
@@ -413,7 +413,7 @@
 				if (!searchString) {
 					this.callAlertError("주소가 입력되지 않았습니다.")
 				}else{
-					this.$axios.$post(this.config.apiUrl + '/api/searchList', {keyword: searchString}).then(async res => {
+					this.$axios.$post(this.config.apiUrl + '/api/searchList', {keyword: searchString, count: 5}).then(async res => {
 						this.callNotification('목록을 가져왔습니다.')
 						this.searchAddr = res.data.items
 					}).finally(() => {
@@ -421,8 +421,8 @@
 					})
 				}
 			},
-			openNewForm(siteUid) {
-				this.$nuxt.$emit('open-rate-list', siteUid)
+			openNewForm(siteUid, type) {
+				this.$nuxt.$emit(`open-rate-list`, siteUid, type)
 			},
 			//multi image upload////////////////////////////////////////////////
 			uploadImageSuccess(formData, index, fileList) {

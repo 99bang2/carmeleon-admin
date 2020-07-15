@@ -114,7 +114,7 @@
 						width: 120,
 					},{
 						headerName: '휴무일',
-						field: 'rstde',
+						field: 'closedDay',
 						width: 120,
 					},{
 						headerName: '세차요금정보',
@@ -194,7 +194,7 @@
 						"carWashName":"관문 충전소",
 						"carWashIndustry":"세차업",
 						"carWashType":"세차유형",
-						"rstde" : "목요일",
+						"closedDay" : "목요일",
 						"carWashChargeInfo":"123400",
 						"phoneNumber":"101-050-8489"
 					}
