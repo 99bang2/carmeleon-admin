@@ -33,6 +33,9 @@
 							<div class="uk-accordion-content">
 								<form class="uk-grid-small uk-grid" data-uk-grid>
 									<!--	최대 가용 대수 , 가격  -->
+									<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+										주유소 정보
+									</h5>
 									<div class="uk-width-1-2">
 										<ScInput v-model="sendData.gasStationName" :error-state="$v.sendData.gasStationName.$error" :validator="$v.sendData.gasStationName">
 											<label>
@@ -99,28 +102,22 @@
 										</ul>
 									</div>
 									<div class="uk-width-1-3@s">
-										<input id="switch-css" v-model="sendData.isCarWash" type="checkbox" class="sc-switch-input">
-										<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
-											<span class="sc-switch-toggle-on">세차장 있음</span>
-											<span class="sc-switch-toggle-off">세차장 없음</span>
-										</label>
+										<PrettyCheck v-model="sendData.isCarWash" class="p-switch">
+											{{sendData.isCarWash?"세차장 있음":"세차장 없음"}}
+										</PrettyCheck>
 									</div>
 									<div class="uk-width-1-3@s">
-										<input id="switch-css" v-model="sendData.isConvenience" type="checkbox" class="sc-switch-input">
-										<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
-											<span class="sc-switch-toggle-on">편의점 있음</span>
-											<span class="sc-switch-toggle-off">편의점 없음</span>
-										</label>
+										<PrettyCheck v-model="sendData.isConvenience" class="p-switch">
+											{{sendData.isConvenience?"편의점 있음":"편의점 없음"}}
+										</PrettyCheck>
 									</div>
 									<div class="uk-width-1-3@s">
-										<input id="switch-css" v-model="sendData.isKpetro" type="checkbox" class="sc-switch-input">
-										<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
-											<span class="sc-switch-toggle-on">품질인증</span>
-											<span class="sc-switch-toggle-off">미인증</span>
-										</label>
+										<PrettyCheck v-model="sendData.isKpetro" class="p-switch">
+											{{sendData.isKpetro?"품질인증":"미인증"}}
+										</PrettyCheck>
 									</div>
-									<h5 class="uk-heading-line">
-										Oil Price
+									<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+										유가 정보
 									</h5>
 									<div class="uk-width-1-2">
 										<ScInput v-model="sendData.oilPrice[0].price">
@@ -162,6 +159,9 @@
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
 										</ScInput>
 									</div>
+									<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+										주소 입력
+									</h5>
 									<div class="uk-width-1-1 uk-flex" style="justify-content: space-around; align-items: center">
 										<div class="uk-width-5-6">
 											<ScInput v-model="sendData.address" class="uk-flex-1" :error-state="$v.sendData.address.$error" :validator="$v.sendData.address">
@@ -189,7 +189,7 @@
 									</div>
 									<!--    주유소 이미지           -->
 									<div class="uk-width-1-1">
-										<h6>주유소 이미지 등록</h6>
+										<h5 class="uk-heading-bullet uk-margin-top">주유소 이미지 등록</h5>
 										<div style="display: flex; justify-content: center;">
 											<vue-upload-multiple-image
 												@upload-success="uploadImageSuccess"
@@ -237,6 +237,7 @@
 	import {required} from 'vuelidate/lib/validators'
 	import RatingList from "@/components/common/RatingList"
 	import Select2 from "@/components/Select2";
+	import PrettyCheck from 'pretty-checkbox-vue/check';
 	export default {
 		components: {
 			Select2,
@@ -245,7 +246,7 @@
 			VueUploadMultipleImage,
 			ScCardAction,
 			RatingList,
-
+			PrettyCheck
 		},
 		mixins: [
 			validationMixin,
@@ -332,9 +333,9 @@
 		},
 		async beforeMount() {
 			this.sendData = this.defaultForm
-			// let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
-			// this.brandCodeOpts = this.convertSelectJson(code.data.brandCodeOpts)
-			// this.gasStationTypeOpts = this.convertSelectJson(code.data.gasStationTypeOpts)
+			let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
+			this.brandCodeOpts = this.convertSelectJson(code.data.brandCodeOpts)
+			this.gasStationTypeOpts = this.convertSelectJson(code.data.gasStationTypeOpts)
 		},
 		beforeDestroy() {
 			this.$nuxt.$off('open-gasStation-form')
@@ -483,7 +484,6 @@
 
 <style lang="scss">
 	@import 'assets/scss/vue/_pretty_checkboxes';
-
 	.selectAddr {
 		float: right !important;
 	}
