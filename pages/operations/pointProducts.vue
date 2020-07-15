@@ -14,8 +14,8 @@
 </template>
 
 <script>
-	import PointProductList from "@/components/pointProduct/PointProductList"
-	import PointProductForm from "@/components/pointProduct/PointProductForm"
+	import PointProductList from "@/components/pointProduct/pointProductList"
+	import PointProductForm from "@/components/pointProduct/pointProductForm"
 	export default {
 		middleware: ['auth'],
 		components: {

@@ -6,15 +6,24 @@ const {uniqueID} = scHelpers;
 export const menuEntries = [
 	{
 		id: uniqueID(),
-		title: "Parkings",
-		icon: "mdi mdi-parking",
-		page: "/parkings"
-	},
-	{
-		id: uniqueID(),
-		title: "Accounts",
-		icon: "mdi mdi-account-supervisor",
-		page: "/accounts",
+		title: "Spots",
+		icon: "mdi mdi-map-marker-multiple",
+		page: "/spots",
+		isOpen: false,
+		submenu: [
+			{
+				id: uniqueID(),
+				title: "Parkings",
+				icon: "mdi mdi-parking",
+				page: "/spots/parkings"
+			},
+			{
+				id: uniqueID(),
+				title: "CarWashes",
+				icon: "mdi mdi-car-wash",
+				page: "/spots/carWashes"
+			},
+		]
 	},
 	{
 		id: uniqueID(),
@@ -24,38 +33,47 @@ export const menuEntries = [
 	},
 	{
 		id: uniqueID(),
-		title: "Events",
-		icon: "mdi mdi-calendar-check",
-		page: "/events",
-	}, {
-		id: uniqueID(),
-		title: "Notices",
-		icon: "mdi mdi-alarm-light",
-		page: "/notices",
-	},
-	{
-		id: uniqueID(),
-		title: "ReviewTemplates",
-		icon: "mdi mdi-file-document",
-		page: "/reviewTemplates"
-	},
-	{
-		id: uniqueID(),
-		title: "PointProducts",
-		icon: "mdi mdi-coin",
-		page: "/pointProducts"
-	},
-	{
-		id: uniqueID(),
-		title: "Tutorials",
-		icon: "mdi mdi-book-open-page-variant",
-		page: "/tutorials"
-	},
-	{
-		id: uniqueID(),
-		title: "CarWashes",
-		icon: "mdi mdi-car-wash",
-		page: "/carWashes"
+		title: "Operations",
+		icon: "mdi mdi-settings",
+		page: "/operations",
+		isOpen: false,
+		submenu: [
+			{
+				id: uniqueID(),
+				title: "Accounts",
+				icon: "mdi mdi-account-supervisor",
+				page: "/operations/accounts",
+			},
+			{
+				id: uniqueID(),
+				title: "Events",
+				icon: "mdi mdi-calendar-check",
+				page: "/operations/events",
+			}, {
+				id: uniqueID(),
+				title: "Notices",
+				icon: "mdi mdi-alarm-light",
+				page: "/operations/notices",
+			},
+			{
+				id: uniqueID(),
+				title: "ReviewTemplates",
+				icon: "mdi mdi-file-document",
+				page: "/operations/reviewTemplates"
+			},
+			{
+				id: uniqueID(),
+				title: "PointProducts",
+				icon: "mdi mdi-coin",
+				page: "/operations/pointProducts"
+			},
+			{
+				id: uniqueID(),
+				title: "Tutorials",
+				icon: "mdi mdi-book-open-page-variant",
+				page: "/operations/tutorials"
+			},
+		]
 	}
 	// {
 	// 	id: uniqueID(),

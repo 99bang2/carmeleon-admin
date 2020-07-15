@@ -7,5 +7,7 @@ export default {
 	'ReviewTemplates' : '리뷰템플릿관리',
 	'PointProducts':'포인트상품관리',
 	'Tutorials':'튜토리얼관리',
-	'CarWashes':'세차장관리'
+	'CarWashes':'세차장관리',
+	'Operations':'운영관리',
+	'Spots':'장소관리'
 }
