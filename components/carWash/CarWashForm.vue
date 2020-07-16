@@ -33,6 +33,9 @@
 							<div class="uk-accordion-content">
 								<form class="uk-grid-small uk-grid" data-uk-grid>
 									<!--	최대 가용 대수 , 가격  -->
+									<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+										세차장 정보
+									</h5>
 									<div class="uk-width-1-2">
 										<ScInput v-model="sendData.carWashName" :error-state="$v.sendData.carWashName.$error" :validator="$v.sendData.carWashName">
 											<label>
@@ -47,12 +50,17 @@
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.closedDay">
+										<ScInput v-model="sendData.closedDay" :error-state="$v.sendData.closedDay.$error" :validator="$v.sendData.closedDay">
 											<label>
 												휴무일
 											</label>
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: calendar"/>
 										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.closedDay.required">
+												휴무일을 입력하세요
+											</li>
+										</ul>
 									</div>
 									<div class="uk-width-1-2">
 										<Select2
@@ -115,6 +123,9 @@
 											<li v-if="!$v.sendData.carWashChargeInfo.required">
 												세차요금정보를 입력하세요
 											</li>
+											<li v-if="!$v.sendData.carWashChargeInfo.integer">
+												올바른 형식이 아닙니다.
+											</li>
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
@@ -128,8 +139,14 @@
 											<li v-if="!$v.sendData.phoneNumber.required">
 												전화번호를 입력하세요
 											</li>
+											<li v-if="!$v.sendData.phoneNumber.integer">
+												올바른 형식이 아닙니다.
+											</li>
 										</ul>
 									</div>
+									<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+										주소 입력
+									</h5>
 									<div class="uk-width-1-1 uk-flex" style="justify-content: space-around; align-items: center">
 										<div class="uk-width-5-6">
 											<ScInput v-model="sendData.address" class="uk-flex-1" :error-state="$v.sendData.address.$error" :validator="$v.sendData.address">
@@ -157,7 +174,7 @@
 									</div>
 									<!--    세차장 이미지           -->
 									<div class="uk-width-1-1">
-										<h6>세차장 이미지 등록</h6>
+										<h5 class="uk-heading-bullet uk-margin-top">세차장 이미지 등록</h5>
 										<div style="display: flex; justify-content: center;">
 											<vue-upload-multiple-image
 												@upload-success="uploadImageSuccess"
@@ -202,7 +219,7 @@
 	import ScCardAction from "@/components/card/components/CardActions"
 	import VueUploadMultipleImage from 'vue-upload-multiple-image';
 	import {validationMixin} from 'vuelidate'
-	import {required} from 'vuelidate/lib/validators'
+	import {required,integer} from 'vuelidate/lib/validators'
 	import RatingList from "@/components/common/RatingList"
 	import Select2 from "@/components/Select2";
 	if(process.client) {
@@ -272,6 +289,9 @@
 		},
 		validations: {
 			sendData: {
+				closedDay:{
+					required
+				},
 				carWashName: {
 					required
 				},
@@ -282,10 +302,12 @@
 					required
 				},
 				carWashChargeInfo:{
-					required
+					required,
+					integer
 				},
 				phoneNumber:{
-					required
+					required,
+					integer
 				},
 				address:{
 					required

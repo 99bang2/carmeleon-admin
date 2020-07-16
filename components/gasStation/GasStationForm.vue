@@ -73,6 +73,9 @@
 											<li v-if="!$v.sendData.tel.required">
 												전화번호를 입력하세요
 											</li>
+											<li v-if="!$v.sendData.tel.integer">
+												올바른 형식이 아닙니다.
+											</li>
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
@@ -234,7 +237,7 @@
 	import ScCardAction from "@/components/card/components/CardActions"
 	import VueUploadMultipleImage from 'vue-upload-multiple-image';
 	import {validationMixin} from 'vuelidate'
-	import {required} from 'vuelidate/lib/validators'
+	import {required, integer} from 'vuelidate/lib/validators'
 	import RatingList from "@/components/common/RatingList"
 	import Select2 from "@/components/Select2";
 	import PrettyCheck from 'pretty-checkbox-vue/check';
@@ -305,7 +308,8 @@
 					required
 				},
 				tel:{
-					required
+					required,
+					integer
 				},
 				brandCode:{
 					required

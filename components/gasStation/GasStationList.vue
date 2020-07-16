@@ -130,20 +130,30 @@
 						width: 180,
 					},{
 						headerName: '브랜드',
-						field: 'brandCode',
-						width: 130,
+						field: 'brandCodeName',
+						width: 150,
 					},{
 						headerName: '업종구분',
-						field: 'gasStationType',
-						width: 130,
+						field: 'gasStationTypeName',
+						width: 150,
 					},{
+						field: 'brandCode',
+						hide:true
+					},{
+						field: 'gasStationType',
+						hide:true
+					}
+					,{
 						headerName: '품질인증여부',
 						field: 'isKpetro',
-						width: 130
+						width: 150,
+						cellRenderer: (obj) => {
+							return obj.value ? '<span>인증</span>' : '<span>미인증</span>'
+						}
 					},{
 						headerName: '전화번호',
 						field: 'tel',
-						width:160
+						width:170
 					},{
 						headerName: '등록일시',
 						field: 'createdAt',
@@ -172,7 +182,7 @@
 				})
 				this.gridOptions.api.onFilterChanged()
 			},
-			'searchKpetro': function () {
+			'searchKpetro': function (newValue) {
 				let filterComponent = this.gridOptions.api.getFilterInstance('isKpetro')
 				filterComponent.setModel({
 					type: 'equals',

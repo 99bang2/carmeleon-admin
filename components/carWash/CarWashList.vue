@@ -23,9 +23,9 @@
 						<div class="uk-width-1-3@s">
 							<select v-model="searchType" class="uk-select" required="required">
 								<option value="">업종명 분류</option>
-								<option value="0">세차장</option>
-								<option value="1">주유소</option>
-								<option value="2">정비업소</option>
+								<option value="carWash">세차장</option>
+								<option value="gasStation">주유소</option>
+								<option value="carCenter">정비업소</option>
 							</select>
 						</div>
 					</div>
@@ -108,9 +108,31 @@
 						headerName: '업종명',
 						field: 'carWashIndustry',
 						width: 120,
+						cellRenderer: (obj) => {
+							if(obj.data){
+								let icon = ''
+								let typeName = ''
+								console.log(obj.value)
+								switch (obj.value) {
+									case 'carWash' :
+										icon = 'mdi-car-wash'
+										typeName = '세차장'
+										break
+									case 'gasStation' :
+										icon = 'mdi-gas-station'
+										typeName = '주유소'
+										break
+									case 'carCenter' :
+										icon = 'mdi-screwdriver'
+										typeName = '정비업소'
+										break
+								}
+								return `<i class="mdi ${icon}"/>${typeName}`
+							}
+						}
 					},{
 						headerName: '세차유형',
-						field: 'carWashType',
+						field: 'carWashTypeName',
 						width: 120,
 					},{
 						headerName: '휴무일',
