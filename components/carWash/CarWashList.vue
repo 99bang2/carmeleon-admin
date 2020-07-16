@@ -188,18 +188,8 @@
 			},
 			async fetchData(selectUid) {
 				// API 연동
-				// let res = await this.$axios.$get(this.config.apiUrl + '/api/carWashes')
-				let fake = [
-					{
-						"carWashName":"관문 충전소",
-						"carWashIndustry":"세차업",
-						"carWashType":"세차유형",
-						"closedDay" : "목요일",
-						"carWashChargeInfo":"123400",
-						"phoneNumber":"101-050-8489"
-					}
-				]
-				this.gridOptions.api.setRowData(fake)
+				let res = await this.$axios.$get(this.config.apiUrl + '/api/carWashes')
+				this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
 						if (node.data.uid === selectUid) {

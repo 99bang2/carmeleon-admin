@@ -226,18 +226,8 @@
 			},
 			async fetchData(selectUid) {
 				// API 연동
-				// let res = await this.$axios.$get(this.config.apiUrl + '/api/gasStations')
-				let fake = [
-					{
-						"gasStationName":"주유주유주유소오옹",
-						"brandCode":"SKE",
-						"address":"주소는 바로여기 이곳그곳저곳",
-						"gasStationType" : "N",
-						"gasStationChargeInfo":"123400",
-						"tel":"101-050-8489"
-					}
-				]
-				this.gridOptions.api.setRowData(fake)
+				let res = await this.$axios.$get(this.config.apiUrl + '/api/gasStations')
+				this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
 						if (node.data.uid === selectUid) {
