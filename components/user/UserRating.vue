@@ -68,14 +68,38 @@
 			columnDefs() {
 				return [
 					{
-						headerName: '주차장명',
+						headerName: '구분',
+						field:'targetType',
+						width: 80,
+						cellRenderer: (obj)=>{
+							let icon=''
+							console.log
+							switch (obj.value) {
+								case 0:
+									icon='mdi-parking'
+									break;
+								case 1:
+									icon='mdi-car-wash'
+									break;
+								case 2:
+									icon='mdi-gas-station'
+									break;
+								case 3:
+									icon='mdi-battery-charging'
+									break
+							}
+							return `<i class="mdi ${icon}"/>`
+						}
+					},
+					{
+						headerName: '장소명',
 						field: 'parkingSite.name',
-						width: 150
+						width: 120
 					},
 					{
 						headerName: '평점',
 						field: 'rate',
-						width: 70,
+						width: 50,
 					},
 					{
 						headerName: '리뷰',

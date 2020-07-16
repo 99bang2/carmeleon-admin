@@ -200,7 +200,6 @@
 				return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">${name}</button>`
 			},
 			onRowClicked(props, type) {
-				console.log("타입",type)
 				if(type !== undefined){
 					this.resetSelection()
 					this.$nuxt.$emit('close-all-list', props)
