@@ -137,7 +137,7 @@
 				this.$nuxt.$emit('reset-reviewTemplate-list')
 			},
 			deleteForm() {
-				this.$axios.$delete(this.config.apiUrl + '/api/reviewTemplates/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$delete(this.config.apiUrl + '/reviewTemplates/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
 					this.$nuxt.$emit('fetch-reviewTemplate-list', res.data.uid)
 				}).finally(() => {
@@ -161,7 +161,7 @@
 				}
 			},
 			postForm() {
-				this.$axios.$post(this.config.apiUrl + '/api/reviewTemplates', this.sendData).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/reviewTemplates', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
 					this.$nuxt.$emit('fetch-reviewTemplate-list', res.data.uid)
 				}).finally(() => {
@@ -169,7 +169,7 @@
 				})
 			},
 			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/api/reviewTemplates/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$put(this.config.apiUrl + '/reviewTemplates/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-reviewTemplate-list', res.data.uid)
 				}).finally(() => {

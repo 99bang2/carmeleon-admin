@@ -97,7 +97,7 @@ export default {
 	},
 	methods: {
 		async fetchData(selectUid) {
-			let user = await this.$axios.$get(this.config.apiUrl + '/api/accounts/'+selectUid )
+			let user = await this.$axios.$get(this.config.apiUrl + '/accounts/'+selectUid )
 
 			this.userData = user.data
 		},
@@ -109,7 +109,7 @@ export default {
 				this.submitStatus = 'ERROR'
 			} else {
 				this.submitStatus = 'PENDING'
-				this.$axios.$put(this.config.apiUrl + '/api/accounts/'+this.userData.uid, this.userData).then(res => {
+				this.$axios.$put(this.config.apiUrl + '/accounts/'+this.userData.uid, this.userData).then(res => {
 					this.callNotification('수정하였습니다.')
 				}).finally(() => {
 					this.submitStatus = 'OK'

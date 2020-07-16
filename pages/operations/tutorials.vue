@@ -107,7 +107,7 @@
 			}, //modal 띄우기
 			async fetchData(input) {
 				this.flag=false
-				let res = await this.$axios.$get(this.config.apiUrl + '/api/tutorials')
+				let res = await this.$axios.$get(this.config.apiUrl + '/tutorials')
 				if (res.data) {
 					this.sendData.stepImages = res.data
 				}
@@ -128,7 +128,7 @@
 					reader.readAsDataURL(input.files[0]);
 					formData.append('file', input.files[0])
 					formData.append('dir', 'tutorial')
-					this.$axios.$post(this.config.apiUrl + '/api/uploads/', formData).then(response => {
+					this.$axios.$post(this.config.apiUrl + '/uploads/', formData).then(response => {
 						this.sendData.stepImages[index] = response.data;
 					})
 				}
@@ -141,7 +141,7 @@
 					}
 				}
 				if (!flag) {
-					await this.$axios.$post(this.config.apiUrl + '/api/tutorials', this.sendData).then(response => {
+					await this.$axios.$post(this.config.apiUrl + '/tutorials', this.sendData).then(response => {
 						this.callNotification('튜토리얼을 등록했습니다.')
 						this.fetchData("eeeee")
 					})
@@ -157,7 +157,7 @@
 					}
 				}
 				if (!flag) {
-					await this.$axios.$post(this.config.apiUrl + '/api/tutorials', this.sendData).then(response => {
+					await this.$axios.$post(this.config.apiUrl + '/tutorials', this.sendData).then(response => {
 						this.callNotification('튜토리얼을 수정했습니다.')
 						this.fetchData()
 					})
@@ -167,7 +167,7 @@
 			},
 			async reset() {
 				this.sendData.stepImages = new Array(5)
-				await this.$axios.$post(this.config.apiUrl + '/api/tutorials', this.sendData).then(response => {
+				await this.$axios.$post(this.config.apiUrl + '/tutorials', this.sendData).then(response => {
 					this.callNotification('튜토리얼을 초기화했습니다.')
 					this.fetchData()
 				})

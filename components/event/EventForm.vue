@@ -238,7 +238,7 @@
 				this.$nuxt.$emit('reset-event-list')
 			},
 			deleteForm() {
-				this.$axios.$delete(this.config.apiUrl + '/api/events/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$delete(this.config.apiUrl + '/events/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
 					this.$nuxt.$emit('fetch-event-list', res.data.uid)
 				}).finally(() => {
@@ -275,7 +275,7 @@
 				formData.append("eventType", this.sendData.eventType)
 				formData.append("isOpen", this.sendData.isOpen)
 
-				this.$axios.$post(this.config.apiUrl + '/api/events', formData, {
+				this.$axios.$post(this.config.apiUrl + '/events', formData, {
 					headers: {
 						'Content-Type': 'multipart/form-data'
 					}
@@ -299,7 +299,7 @@
 				formData.append("eventType", this.sendData.eventType)
 				formData.append("isOpen", this.sendData.isOpen)
 
-				this.$axios.$put(this.config.apiUrl + '/api/events/' + this.sendData.uid, formData).then(async res => {
+				this.$axios.$put(this.config.apiUrl + '/events/' + this.sendData.uid, formData).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-event-list', res.data.uid)
 				}).finally(() => {

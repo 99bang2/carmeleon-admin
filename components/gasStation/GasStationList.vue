@@ -236,7 +236,7 @@
 			},
 			async fetchData(selectUid) {
 				// API 연동
-				let res = await this.$axios.$get(this.config.apiUrl + '/api/gasStations')
+				let res = await this.$axios.$get(this.config.apiUrl + '/gasStations')
 				this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
@@ -261,7 +261,7 @@
 				let seletedCnt = selectedUids.length
 				if (seletedCnt) {
 					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-						this.$axios.$post(this.config.apiUrl + '/api/gasStations/bulkDelete', {
+						this.$axios.$post(this.config.apiUrl + '/gasStations/bulkDelete', {
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')

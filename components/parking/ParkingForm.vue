@@ -23,7 +23,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid,1)">
+							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid,0)">
 								주차장 리뷰보기
 							</a>
 						</li>
@@ -386,7 +386,7 @@
 		},
 		async beforeMount() {
 			this.sendData = this.defaultForm
-			let code = await this.$axios.$post(this.config.apiUrl + '/api/codes')
+			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
 			this.siteOpts = this.convertSelectJson(code.data.site)
 			this.paymentTag = this.convertJson(code.data.paymentTag)
 			this.brandTag = this.convertJson(code.data.brandTag)
@@ -400,7 +400,7 @@
 		},
 		methods: {
 			selectAddr(searchItem) {
-				this.$axios.$post(this.config.apiUrl + '/api/searchLocal', {address: searchItem.address}).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/searchLocal', {address: searchItem.address}).then(async res => {
 					this.callNotification("검색을 완료하였습니다.")
 					this.sendData.address = res.data.addresses[0].jibunAddress
 					this.sendData.lat = res.data.addresses[0].x
@@ -414,7 +414,7 @@
 				if (!searchString) {
 					this.callAlertError("주소가 입력되지 않았습니다.")
 				}else{
-					this.$axios.$post(this.config.apiUrl + '/api/searchList', {keyword: searchString, count: 5}).then(async res => {
+					this.$axios.$post(this.config.apiUrl + '/searchList', {keyword: searchString, count: 5}).then(async res => {
 						this.callNotification('목록을 가져왔습니다.')
 						this.searchAddr = res.data.items
 					}).finally(() => {
@@ -428,7 +428,7 @@
 			//multi image upload////////////////////////////////////////////////
 			uploadImageSuccess(formData, index, fileList) {
 				formData.append('dir', 'site')
-				this.$axios.$post(this.config.apiUrl + '/api/uploads/', formData).then(response => {
+				this.$axios.$post(this.config.apiUrl + '/uploads/', formData).then(response => {
 					this.sendData.picture[index] = response.data;
 				})
 			},
@@ -442,7 +442,7 @@
 			},
 			editImage(formData, index, fileList) {
 				formData.append('dir', 'site')
-				this.$axios.$post(this.config.apiUrl + '/api/uploads/', formData).then(response => {
+				this.$axios.$post(this.config.apiUrl + '/uploads/', formData).then(response => {
 					this.sendData.picture[index] = response.data;
 				})
 			},
@@ -487,7 +487,7 @@
 				this.$nuxt.$emit('reset-parking-list')
 			},
 			deleteForm() {
-				this.$axios.$delete(this.config.apiUrl + '/api/parkings/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$delete(this.config.apiUrl + '/parkings/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
 					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
 				}).finally(() => {
@@ -510,7 +510,7 @@
 				}
 			},
 			postForm() {
-				this.$axios.$post(this.config.apiUrl + '/api/parkings', this.sendData).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/parkings', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
 					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
 				}).finally(() => {
@@ -518,7 +518,7 @@
 				})
 			},
 			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/api/parkings/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$put(this.config.apiUrl + '/parkings/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
 				}).finally(() => {

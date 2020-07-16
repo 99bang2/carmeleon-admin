@@ -164,7 +164,7 @@
 					async isUnique(value) {
 						if (value === '') return true
 						if (this.sendData.uid) return true
-						let res = await this.$axios.$get(`/api/account/unique/${value}`)
+						let res = await this.$axios.$get(this.config.apiUrl +`/account/unique/${value}`)
 						return Boolean(res.data)
 					}
 				},
@@ -203,7 +203,7 @@
 				this.$nuxt.$emit('reset-account-list')
 			},
 			deleteForm() {
-				this.$axios.$delete(this.config.apiUrl + '/api/accounts/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$delete(this.config.apiUrl + '/accounts/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
 					this.$nuxt.$emit('fetch-account-list', res.data.uid)
 				}).finally(() => {
@@ -227,7 +227,7 @@
 				}
 			},
 			postForm() {
-				this.$axios.$post(this.config.apiUrl + '/api/accounts', this.sendData).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/accounts', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
 					this.$nuxt.$emit('fetch-account-list', res.data.uid)
 				}).finally(() => {
@@ -235,7 +235,7 @@
 				})
 			},
 			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/api/accounts/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$put(this.config.apiUrl + '/accounts/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-account-list', res.data.uid)
 				}).finally(() => {

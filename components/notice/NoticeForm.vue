@@ -178,7 +178,7 @@
 				this.$nuxt.$emit('reset-notice-list')
 			},
 			deleteForm() {
-				this.$axios.$delete(this.config.apiUrl + '/api/notices/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$delete(this.config.apiUrl + '/notices/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
 					this.$nuxt.$emit('fetch-notice-list', res.data.uid)
 				}).finally(() => {
@@ -202,7 +202,7 @@
 			},
 			postForm() {
 				this.sendData.accountUid = this.$auth.user.uid;
-				this.$axios.$post(this.config.apiUrl + '/api/notices', this.sendData).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/notices', this.sendData).then(async res => {
 					this.callNotification('등록하였습니다.')
 					this.$nuxt.$emit('fetch-notice-list', res.data.uid)
 				}).finally(() => {
@@ -211,7 +211,7 @@
 				})
 			},
 			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/api/notices/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$put(this.config.apiUrl + '/notices/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-notice-list', res.data.uid)
 				}).finally(() => {

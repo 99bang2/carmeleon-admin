@@ -172,7 +172,7 @@
 			},
 			async fetchData(selectUid) {
 				// API 연동
-				let res = await this.$axios.$get(this.config.apiUrl + '/api/pointProducts')
+				let res = await this.$axios.$get(this.config.apiUrl + '/pointProducts')
 				this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
@@ -197,7 +197,7 @@
 				let seletedCnt = selectedUids.length
 				if (seletedCnt) {
 					UIkit.modal.prompt(`적용할 추가포인트(%)를 입력해주세요`, this.addPoint).then((pointPercent) => {
-						this.$axios.$post(this.config.apiUrl + '/api/pointProducts/addPoint', {
+						this.$axios.$post(this.config.apiUrl + '/pointProducts/addPoint', {
 							addPoint: pointPercent,
 							uids: selectedUids
 						}).then(res => {
@@ -216,7 +216,7 @@
 				let seletedCnt = selectedUids.length
 				if (seletedCnt) {
 					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-						this.$axios.$post(this.config.apiUrl + '/api/pointProducts/bulkDelete', {
+						this.$axios.$post(this.config.apiUrl + '/pointProducts/bulkDelete', {
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')

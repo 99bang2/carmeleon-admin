@@ -141,7 +141,7 @@
 				this.$nuxt.$emit('reset-pointProduct-list')
 			},
 			deleteForm() {
-				this.$axios.$delete(this.config.apiUrl + '/api/pointProducts/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$delete(this.config.apiUrl + '/pointProducts/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
 					this.$nuxt.$emit('fetch-pointProduct-list', res.data.uid)
 				}).finally(() => {
@@ -165,7 +165,7 @@
 				}
 			},
 			postForm() {
-				this.$axios.$post(this.config.apiUrl + '/api/pointProducts', this.sendData).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/pointProducts', this.sendData).then(async res => {
 					this.callNotification('상품을 생성하였습니다.')
 					this.$nuxt.$emit('fetch-pointProduct-list', res.data.uid)
 				}).finally(() => {
@@ -173,7 +173,7 @@
 				})
 			},
 			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/api/pointProducts/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$put(this.config.apiUrl + '/pointProducts/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
 					this.$nuxt.$emit('fetch-pointProduct-list', res.data.uid)
 				}).finally(() => {

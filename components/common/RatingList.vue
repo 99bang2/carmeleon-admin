@@ -153,22 +153,22 @@
 			this.$nuxt.$off('open-rate-list')
 		},
 		methods: {
-			async fetchData(siteUid) {
-				let res = await this.$axios.$get(this.config.apiUrl + '/api/rates/site/' + siteUid)
-				console.log(this.gridOptions.api)
+			async fetchData(siteUid,type) {
+				let res = await this.$axios.$get(this.config.apiUrl + '/rates/'+type+'/'+ siteUid)
 				this.gridOptions.api.setRowData(res.data)
 			},
 			deleteDatas() {
 				let selected = this.gridOptions.api.getSelectedRows()
 				let selectedUids = selected.map(({uid}) => uid)
+				let selectedTargetType = selected[0].targetType
 				let seletedCnt = selectedUids.length
 				if (seletedCnt) {
 					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-						this.$axios.$post(this.config.apiUrl + '/api/rates/bulkDelete', {
+						this.$axios.$post(this.config.apiUrl + '/rates/bulkDelete', {
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')
-							this.fetchData(this.siteUid)
+							this.fetchData(this.siteUid, selectedTargetType)
 						})
 					})
 				} else {

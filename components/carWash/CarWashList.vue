@@ -112,7 +112,6 @@
 							if(obj.data){
 								let icon = ''
 								let typeName = ''
-								console.log(obj.value)
 								switch (obj.value) {
 									case 'carWash' :
 										icon = 'mdi-car-wash'
@@ -210,7 +209,7 @@
 			},
 			async fetchData(selectUid) {
 				// API 연동
-				let res = await this.$axios.$get(this.config.apiUrl + '/api/carWashes')
+				let res = await this.$axios.$get(this.config.apiUrl + '/carWashes')
 				this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
@@ -235,7 +234,7 @@
 				let seletedCnt = selectedUids.length
 				if (seletedCnt) {
 					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-						this.$axios.$post(this.config.apiUrl + '/api/carWashes/bulkDelete', {
+						this.$axios.$post(this.config.apiUrl + '/carWashes/bulkDelete', {
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')
