@@ -16,20 +16,55 @@
 						</ScCardActions>
 					</div>
 				</ScCardHeader>
-				<ScCardBody>
-					<ag-grid-vue
-						style="width: 100%;"
-						class="ag-theme-material"
-						:dom-layout="'autoHeight'"
-						:locale-text="localeText"
-						:default-col-def="defaultColDef"
-						:column-defs="columnDefs"
-						:grid-options="gridOptions"
-						:pagination="true"
-						:pagination-page-size="10"
-						:framework-components="frameworkComponents"
-					>
-					</ag-grid-vue>
+				<ScCardBody style="padding-top:0px">
+					<ul class="uk-child-width-expand" data-uk-tab>
+						<li class="uk-active">
+							<a href="javascript:void(0)">
+								주차장 리뷰
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,1)">
+								세차장 리뷰
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,2)">
+								주유소 리뷰
+							</a>
+						</li>
+<!--						<li>-->
+<!--							<a href="javascript:void(0)" @click.prevent="switchNewList(sendData.uid,3)">-->
+<!--								전기충전소 리뷰-->
+<!--							</a>-->
+<!--						</li>-->
+					</ul>
+					<ul class="uk-switcher">
+						<li>
+							<ag-grid-vue
+								style="width: 100%;"
+								class="ag-theme-material"
+								:dom-layout="'autoHeight'"
+								:locale-text="localeText"
+								:default-col-def="defaultColDef"
+								:column-defs="columnDefs"
+								:grid-options="gridOptions"
+								:pagination="true"
+								:pagination-page-size="10"
+								:framework-components="frameworkComponents"
+							>
+							</ag-grid-vue>
+						</li>
+						<li>
+							<car-wash-rating></car-wash-rating>
+						</li>
+						<li>
+							<gas-station-rating></gas-station-rating>
+						</li>
+<!--						<li>-->
+<!--							<ev-charge-rating></ev-charge-rating>-->
+<!--						</li>-->
+					</ul>
 				</ScCardBody>
 			</ScCard>
 		</Transition>
@@ -38,8 +73,11 @@
 
 <script>
 	import {agGridMixin} from "~/plugins/ag-grid.mixin"
-
+	// import EvChargeRating from "@/components/user/UserRatingView/EvChargeRating"
+	import CarWashRating from "@/components/user/UserRatingView/CarWashRating";
+	import GasStationRating from "@/components/user/UserRatingView/GasStationRating";
 	export default {
+		components: {GasStationRating, CarWashRating},
 		props: {
 			mode: {
 				type: String,
@@ -61,45 +99,23 @@
 					rowHeight: 45,
 				},
 				cardFormClosed: true,
-				userName:''
+				userName:'',
+				targetUid:'',
+				targetType:''
 			}
 		},
 		computed: {
 			columnDefs() {
 				return [
 					{
-						headerName: '구분',
-						field:'targetType',
-						width: 80,
-						cellRenderer: (obj)=>{
-							let icon=''
-							console.log
-							switch (obj.value) {
-								case 0:
-									icon='mdi-parking'
-									break;
-								case 1:
-									icon='mdi-car-wash'
-									break;
-								case 2:
-									icon='mdi-gas-station'
-									break;
-								case 3:
-									icon='mdi-battery-charging'
-									break
-							}
-							return `<i class="mdi ${icon}"/>`
-						}
-					},
-					{
 						headerName: '장소명',
 						field: 'parkingSite.name',
-						width: 120
+						width: 140
 					},
 					{
 						headerName: '평점',
 						field: 'rate',
-						width: 50,
+						width: 80,
 					},
 					{
 						headerName: '리뷰',
@@ -113,6 +129,7 @@
 			let vm = this
 			this.$nuxt.$on('open-rating-list', (props) => {
 				vm.fetchData(props.data.uid)
+				this.targetUid = props.data.uid
 				this.userName = props.data.nickname
 			})
 			this.$nuxt.$on('close-rating-list', () => {
@@ -131,11 +148,25 @@
 			async fetchData(data) {
 				this.cardFormClosed = false
 				let res = await this.$axios.$get(this.config.apiUrl + '/rates/' + data)
-				this.gridOptions.api.setRowData(res.data)
+				let result = res.data.filter(data => data.targetType === 0)
+				this.gridOptions.api.setRowData(result)
 			},
 			closeForm() {
 				this.cardFormClosed = true
 				this.$nuxt.$emit('reset-user-list')
+			},
+			switchNewList(targetUid, targetType){
+				switch (targetType) {
+					case 1:
+						this.$nuxt.$emit('open-carWash-rating', targetUid,targetType)
+						break;
+					case 2:
+						this.$nuxt.$emit('open-gasStation-rating', targetUid ,targetType)
+						break;
+					// case 3:
+					// 	this.$nuxt.$emit('open-evCharge-rating', data)
+					// 	break;
+				}
 			}
 		}
 	}
