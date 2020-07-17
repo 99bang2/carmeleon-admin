@@ -16,20 +16,59 @@
 						</ScCardActions>
 					</div>
 				</ScCardHeader>
-				<ScCardBody>
-					<ag-grid-vue
-						style="width: 100%"
-						class="ag-theme-material"
-						:dom-layout="'autoHeight'"
-						:locale-text="localeText"
-						:default-col-def="defaultColDef"
-						:column-defs="columnDefs"
-						:grid-options="gridOptions"
-						:pagination="true"
-						:pagination-page-size="10"
-					>
-					</ag-grid-vue>
+				<ScCardBody style="padding-top:0px">
+					<ul class="uk-child-width-expand" data-uk-tab>
+						<li class="uk-active">
+							<a href="javascript:void(0)">
+								주차장 즐겨찾기
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,1)">
+								세차장 즐겨찾기
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,2)">
+								주유소 즐겨찾기
+							</a>
+						</li>
+						<!--						<li>-->
+						<!--							<a href="javascript:void(0)" @click.prevent="switchNewList(sendData.uid,3)">-->
+						<!--								전기충전소 즐겨찾기-->
+						<!--							</a>-->
+						<!--						</li>-->
+					</ul>
+					<ul class="uk-switcher">
+						<li>
+							<ag-grid-vue
+								style="width: 100%;"
+								class="ag-theme-material"
+								:dom-layout="'autoHeight'"
+								:locale-text="localeText"
+								:default-col-def="defaultColDef"
+								:column-defs="columnDefs"
+								:grid-options="gridOptions"
+								:pagination="true"
+								:pagination-page-size="10"
+								:framework-components="frameworkComponents"
+							>
+							</ag-grid-vue>
+						</li>
+						<li>
+							<car-wash-favorite></car-wash-favorite>
+						</li>
+						<li>
+							<gas-station-favorite></gas-station-favorite>
+						</li>
+						<!--						<li>-->
+						<!--							<ev-charge-favorite></ev-charge-favorite>-->
+						<!--						</li>-->
+					</ul>
 				</ScCardBody>
+
+
+
 			</ScCard>
 		</Transition>
 	</div>
@@ -37,7 +76,11 @@
 
 <script>
 	import {agGridMixin} from "~/plugins/ag-grid.mixin"
+	// import EvChargeFavorite from "@/components/user/UserFavoriteView/EvChargeFavorite"
+	import CarWashFavorite from "@/components/user/UserFavoriteView/CarWashFavorite";
+	import GasStationFavorite from "@/components/user/UserFavoriteView/GasStationFavorite";
 	export default {
+		components: {CarWashFavorite,GasStationFavorite},
 		props: {
 			mode: {
 				type: String,
@@ -59,7 +102,9 @@
 					getRowStyle: this.getRowStyle
 				},
 				cardFormClosed: true,
-				userName:''
+				userName:'',
+				targetUid:'',
+				targetType:''
 			}
 		},
 		computed:{
@@ -137,6 +182,7 @@
 			let vm = this
 			this.$nuxt.$on('open-favorite-list', (props) => {
 				vm.fetchData(props.data.uid)
+				this.targetUid = props.data.uid
 				this.userName = props.data.nickname
 			})
 			this.$nuxt.$on('close-favorite-list', () =>{
@@ -155,11 +201,25 @@
 			async fetchData(data){
 				this.cardFormClosed = false
 				let res = await this.$axios.$get(this.config.apiUrl + '/favorites/' + data)
+				let result = res.data.filter(data => data.targetType === 0)
 				this.gridOptions.api.setRowData(res.data)
 			},
 			closeForm(){
 				this.cardFormClosed =true
 				this.$nuxt.$emit('reset-user-list')
+			},
+			switchNewList(targetUid, targetType){
+				switch (targetType) {
+					case 1:
+						this.$nuxt.$emit('open-carWash-favorite', targetUid,targetType)
+						break;
+					case 2:
+						this.$nuxt.$emit('open-gasStation-favorite', targetUid ,targetType)
+						break;
+					// case 3:
+					// 	this.$nuxt.$emit('open-evCharge-favorite', data)
+					// 	break;
+				}
 			}
 		}
 	}
