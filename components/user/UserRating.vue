@@ -25,12 +25,12 @@
 						</li>
 						<li>
 							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,1)">
-								세차장 리뷰
+								주유소 리뷰
 							</a>
 						</li>
 						<li>
 							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,2)">
-								주유소 리뷰
+								세차장 리뷰
 							</a>
 						</li>
 <!--						<li>-->
@@ -158,10 +158,10 @@
 			switchNewList(targetUid, targetType){
 				switch (targetType) {
 					case 1:
-						this.$nuxt.$emit('open-carWash-rating', targetUid,targetType)
+						this.$nuxt.$emit('open-gasStation-rating', targetUid,targetType)
 						break;
 					case 2:
-						this.$nuxt.$emit('open-gasStation-rating', targetUid ,targetType)
+						this.$nuxt.$emit('open-carWash-rating', targetUid ,targetType)
 						break;
 					// case 3:
 					// 	this.$nuxt.$emit('open-evCharge-rating', data)
