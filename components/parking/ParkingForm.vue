@@ -158,11 +158,22 @@
 									</div>
 									<div v-if="searchAddr" class="uk-width-1-1" style="margin: 15px; padding: 0px;">
 										<ul class="uk-list uk-list-divider uk-list-collapse">
-											<li class ="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index style="justify-content: space-between" type="button" @click="selectAddr(item)">
+											<li class="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index style="justify-content: space-between" type="button" @click="selectAddr(item)">
 												<span v-html="item.title"></span>
 												<span class="selectIcon" data-uk-icon="icon: check"></span>
 											</li>
 										</ul>
+									</div>
+									<!--    운영 시간               -->
+									<div class="uk-width-1-1 uk-flex uk-flex-between">
+										<div style="line-height: 40px">운영시간</div>
+										<div class="uk-width-1-3">
+											<ScInput v-model="openTime" v-flatpickr="timepicker24" placeholder="운영시작시간" mode="outline"></ScInput>
+										</div>
+										<span style="line-height: 40px">~</span>
+										<div class="uk-width-1-3">
+											<ScInput v-model="closeTime" v-flatpickr="timepicker24" placeholder="운영종료시간" mode="outline"></ScInput>
+										</div>
 									</div>
 									<!--    주차장 안내             -->
 									<div class="uk-width-1-1">
@@ -282,271 +293,292 @@
 </template>
 
 <script>
-	import ScCard from "@/components/card/components/Card";
-	import ScInput from "@/components/Input";
-	import ScTextarea from '~/components/Textarea'
-	import ScCardAction from "@/components/card/components/CardActions"
-	import VueUploadMultipleImage from 'vue-upload-multiple-image';
-	import {validationMixin} from 'vuelidate'
-	import PrettyCheck from 'pretty-checkbox-vue/check';
-	import {required, email} from 'vuelidate/lib/validators'
-	import RatingList from "@/components/common/RatingList"
-	import Select2 from "@/components/Select2";
-	import customValidators from "@/plugins/vuelidateValidators";
+import ScCard from "@/components/card/components/Card"
+import ScInput from "@/components/Input"
+import ScTextarea from '~/components/Textarea'
+import ScCardAction from "@/components/card/components/CardActions"
+import VueUploadMultipleImage from 'vue-upload-multiple-image'
+import {validationMixin} from 'vuelidate'
+import PrettyCheck from 'pretty-checkbox-vue/check'
+import {required, email} from 'vuelidate/lib/validators'
+import RatingList from "@/components/common/RatingList"
+import Select2 from "@/components/Select2"
+import customValidators from "@/plugins/vuelidateValidators"
+import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate"
 
-	if (process.client) {
-		require('~/plugins/inputmask');
-	}
-	export default {
-		components: {
-			Select2,
-			ScInput,
-			ScCard,
-			ScTextarea,
-			VueUploadMultipleImage,
-			PrettyCheck,
-			ScCardAction,
-			RatingList
-		},
-		mixins: [
-			validationMixin,
-		],
-		props: {
-			mode: {
-				type: String,
-				default: 'list'
-			}
-		},
-		data() {
-			return {
-				cardFormClosed: true,
-				submitStatus: null,
-				sendData: {},
-				tempImage: [],
-				searchAddr: [],
-				defaultForm: {
-					uid: null,
-					siteType: '',
-					name: '',
-					parkingLot: null,
-					lat: null,
-					lon: null,
-					tel: '',
-					phone: '',
-					manager: '',
-					isActive: true,
-					price: null,
-					address: '',
-					info: '',
-					priceInfo: '',
-					paymentTag: [],
-					brandTag: [],
-					productTag: [],
-					optionTag: [],
-					carTag: [],
-					picture: [],
-					siteOpts:[]
-				}
-			}
-		},
-		validations: {
-			sendData: {
-				siteType: {
-					required
-				}, name: {
-					required
-				}, address: {
-					required
-				},
-				parkingLot: {
-					required,
-					integerFormatCheck: customValidators.integerFormatCheck()
-				}, price: {
-					required,
-					integerFormatCheck: customValidators.integerFormatCheck()
-				},
-				lat: {
-					required
-				},
-				lon: {
-					required
-				}, email: {
-					email
-				}
-			}
-		},
-		created() {
-			let vm = this
-			this.$nuxt.$on('open-parking-form', (data) => {
-				vm.settingForm(data)
-			})
-			this.$nuxt.$on('close-parking-form', () => {
-				vm.closeForm()
-			})
-		},
-		async beforeMount() {
-			this.sendData = this.defaultForm
-			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-			this.siteOpts = this.convertSelectJson(code.data.site)
-			this.paymentTag = this.convertJson(code.data.paymentTag)
-			this.brandTag = this.convertJson(code.data.brandTag)
-			this.productTag = this.convertJson(code.data.productTag)
-			this.optionTag = this.convertJson(code.data.optionTag)
-			this.carTag = this.convertJson(code.data.carTag)
-		},
-		beforeDestroy() {
-			this.$nuxt.$off('open-parking-form')
-			this.$nuxt.$off('close-parking-form')
-		},
-		methods: {
-			selectAddr(searchItem) {
-				this.$axios.$post(this.config.apiUrl + '/searchLocal', {address: searchItem.address}).then(async res => {
-					this.callNotification("검색을 완료하였습니다.")
-					this.sendData.address = res.data.addresses[0].jibunAddress
-					this.sendData.lat = res.data.addresses[0].x
-					this.sendData.lon = res.data.addresses[0].y
-					this.searchAddr=[]
-				}).finally(() => {
-					this.submitStatus = 'OK'
-				})
-			},
-			searchPlace(searchString) {
-				if (!searchString) {
-					this.callAlertError("주소가 입력되지 않았습니다.")
-				}else{
-					this.$axios.$post(this.config.apiUrl + '/searchList', {keyword: searchString, count: 5}).then(async res => {
-						this.callNotification('목록을 가져왔습니다.')
-						this.searchAddr = res.data.items
-					}).finally(() => {
-						this.submitStatus = 'OK'
-					})
-				}
-			},
-			openNewForm(siteUid, type) {
-				this.$nuxt.$emit(`open-rate-list`, siteUid, type)
-			},
-			//multi image upload////////////////////////////////////////////////
-			uploadImageSuccess(formData, index, fileList) {
-				formData.append('dir', 'site')
-				this.$axios.$post(this.config.apiUrl + '/uploads/', formData).then(response => {
-					this.sendData.picture[index] = response.data;
-				})
-			},
-			beforeRemove(index, done, fileList) {
-				let r = confirm("remove image")
-				if (r == true) {
-					done()
-					this.sendData.picture.splice(index, 1);
-				} else {
-				}
-			},
-			editImage(formData, index, fileList) {
-				formData.append('dir', 'site')
-				this.$axios.$post(this.config.apiUrl + '/uploads/', formData).then(response => {
-					this.sendData.picture[index] = response.data;
-				})
-			},
-			markIsPrimary(index, fileList){
-				let temp = this.sendData.picture[0]
-				this.sendData.picture[0] = this.sendData.picture[index]
-				this.sendData.picture[index] = temp
-			},
-			//multi image upload////////////////////////////////////////////////
-
-			settingForm(props) {
-				this.$v.$reset()
-				this.tempImage = []
-				if (props) {
-					this.sendData = JSON.parse(JSON.stringify(props.data))
-					// vue-upload-multiple-image 패키지 사용
-					// 주차장 상세보기 할 때, upload된 영역 불러올때 사용
-					if (this.sendData.picture !== null) {
-						for (let i = 0; i < this.sendData.picture.length; i++) {
-							let img = {}
-							if(i === 0){
-								img.default = 1
-								img.highlight=1
-							}else{
-								img.default = 0
-								img.highlight=0
-							}
-							img.path = this.sendData.picture[i]
-							this.tempImage[i] = img
-						}
-					}
-				} else {
-					this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
-				}
-				this.cardFormClosed = true
-				setTimeout(() => {
-					this.cardFormClosed = false
-				}, 100)
-			},
-			closeForm() {
-				this.cardFormClosed = true
-				this.$nuxt.$emit('reset-parking-list')
-			},
-			deleteForm() {
-				this.$axios.$delete(this.config.apiUrl + '/parkings/' + this.sendData.uid, this.sendData).then(async res => {
-					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
-				}).finally(() => {
-					this.deleteStatus = 'OK'
-					this.cardFormClosed = true
-				})
-			},
-			submitForm(e) {
-				e.preventDefault()
-				this.$v.$touch()
-				if (this.$v.$invalid) {
-					this.submitStatus = 'ERROR'
-				} else {
-					this.submitStatus = 'PENDING'
-					if (this.sendData.uid) {
-						this.putForm()
-					} else {
-						this.postForm()
-					}
-				}
-			},
-			postForm() {
-				this.$axios.$post(this.config.apiUrl + '/parkings', this.sendData).then(async res => {
-					this.callNotification('계정을 생성하였습니다.')
-					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
-				}).finally(() => {
-					this.submitStatus = 'OK'
-				})
-			},
-			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/parkings/' + this.sendData.uid, this.sendData).then(async res => {
-					this.callNotification('수정하였습니다.')
-					this.$nuxt.$emit('fetch-parking-list', res.data.uid)
-				}).finally(() => {
-					this.submitStatus = 'OK'
-				})
-			},
-			convertJson(json){
-				let dataArray = []
-				Object.entries(json).map(function(obj){
-					let data = {}
-					data.value = obj[0]
-					data.name = obj[1]
-					dataArray.push(data)
-				})
-				return dataArray
-			},
-			convertSelectJson(json){
-				let dataArray = []
-				Object.entries(json).map(function(obj){
-					let data = {}
-					data.id = obj[0]
-					data.text = obj[1]
-					dataArray.push(data)
-				})
-				return dataArray
+if (process.client) {
+	require('~/plugins/inputmask')
+}
+export default {
+	components: {
+		Select2,
+		ScInput,
+		ScCard,
+		ScTextarea,
+		VueUploadMultipleImage,
+		PrettyCheck,
+		ScCardAction,
+		RatingList
+	},
+	mixins: [
+		validationMixin,
+	],
+	props: {
+		mode: {
+			type: String,
+			default: 'list'
+		}
+	},
+	data() {
+		return {
+			cardFormClosed: true,
+			submitStatus: null,
+			sendData: {},
+			tempImage: [],
+			searchAddr: [],
+			openTime: '',
+			closeTime: '',
+			defaultForm: {
+				uid: null,
+				siteType: '',
+				name: '',
+				parkingLot: null,
+				lat: null,
+				lon: null,
+				tel: '',
+				phone: '',
+				manager: '',
+				isActive: true,
+				price: null,
+				address: '',
+				info: '',
+				priceInfo: '',
+				paymentTag: [],
+				brandTag: [],
+				productTag: [],
+				optionTag: [],
+				carTag: [],
+				picture: [],
+				siteOpts: [],
+				operationTime: ''
 			}
 		}
+	},
+	validations: {
+		sendData: {
+			siteType: {
+				required
+			}, name: {
+				required
+			}, address: {
+				required
+			},
+			parkingLot: {
+				required,
+				integerFormatCheck: customValidators.integerFormatCheck()
+			}, price: {
+				required,
+				integerFormatCheck: customValidators.integerFormatCheck()
+			},
+			lat: {
+				required
+			},
+			lon: {
+				required
+			}, email: {
+				email
+			}
+		}
+	},
+	created() {
+		let vm = this
+		this.$nuxt.$on('open-parking-form', (data) => {
+			vm.settingForm(data)
+		})
+		this.$nuxt.$on('close-parking-form', () => {
+			vm.closeForm()
+		})
+	},
+	async beforeMount() {
+		this.sendData = this.defaultForm
+		let code = await this.$axios.$post(this.config.apiUrl + '/codes')
+		this.siteOpts = this.convertSelectJson(code.data.site)
+		this.paymentTag = this.convertJson(code.data.paymentTag)
+		this.brandTag = this.convertJson(code.data.brandTag)
+		this.productTag = this.convertJson(code.data.productTag)
+		this.optionTag = this.convertJson(code.data.optionTag)
+		this.carTag = this.convertJson(code.data.carTag)
+	},
+	beforeDestroy() {
+		this.$nuxt.$off('open-parking-form')
+		this.$nuxt.$off('close-parking-form')
+	},
+	computed: {
+		timepicker24 () {
+			return {
+				enableTime: true,
+				noCalendar: true,
+				dateFormat: "H:i",
+				time_24hr: true,
+			}
+		}
+	},
+	methods: {
+		selectAddr(searchItem) {
+			this.$axios.$post(this.config.apiUrl + '/searchLocal', {address: searchItem.address}).then(async res => {
+				this.callNotification("검색을 완료하였습니다.")
+				this.sendData.address = res.data.addresses[0].jibunAddress
+				this.sendData.lat = res.data.addresses[0].x
+				this.sendData.lon = res.data.addresses[0].y
+				this.searchAddr = []
+			}).finally(() => {
+				this.submitStatus = 'OK'
+			})
+		},
+		searchPlace(searchString) {
+			if (!searchString) {
+				this.callAlertError("주소가 입력되지 않았습니다.")
+			} else {
+				this.$axios.$post(this.config.apiUrl + '/searchList', {
+					keyword: searchString,
+					count: 5
+				}).then(async res => {
+					this.callNotification('목록을 가져왔습니다.')
+					this.searchAddr = res.data.items
+				}).finally(() => {
+					this.submitStatus = 'OK'
+				})
+			}
+		},
+		openNewForm(siteUid, type) {
+			this.$nuxt.$emit(`open-rate-list`, siteUid, type)
+		},
+		//multi image upload////////////////////////////////////////////////
+		uploadImageSuccess(formData, index, fileList) {
+			formData.append('dir', 'site')
+			this.$axios.$post(this.config.apiUrl + '/uploads/', formData).then(response => {
+				this.sendData.picture[index] = response.data
+			})
+		},
+		beforeRemove(index, done, fileList) {
+			let r = confirm("remove image")
+			if (r == true) {
+				done()
+				this.sendData.picture.splice(index, 1)
+			} else {
+			}
+		},
+		editImage(formData, index, fileList) {
+			formData.append('dir', 'site')
+			this.$axios.$post(this.config.apiUrl + '/uploads/', formData).then(response => {
+				this.sendData.picture[index] = response.data
+			})
+		},
+		markIsPrimary(index, fileList) {
+			let temp = this.sendData.picture[0]
+			this.sendData.picture[0] = this.sendData.picture[index]
+			this.sendData.picture[index] = temp
+		},
+		//multi image upload////////////////////////////////////////////////
+
+		settingForm(props) {
+			this.$v.$reset()
+			this.tempImage = []
+			if (props) {
+				this.sendData = JSON.parse(JSON.stringify(props.data))
+				// vue-upload-multiple-image 패키지 사용
+				// 주차장 상세보기 할 때, upload된 영역 불러올때 사용
+				if (this.sendData.picture !== null) {
+					for (let i = 0; i < this.sendData.picture.length; i++) {
+						let img = {}
+						if (i === 0) {
+							img.default = 1
+							img.highlight = 1
+						} else {
+							img.default = 0
+							img.highlight = 0
+						}
+						img.path = this.sendData.picture[i]
+						this.tempImage[i] = img
+					}
+				}
+				let opTime = this.sendData.operationTime.split('~')
+				this.openTime = opTime[0]
+				this.closeTime = opTime[1]
+			} else {
+				this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
+			}
+			this.cardFormClosed = true
+			setTimeout(() => {
+				this.cardFormClosed = false
+			}, 100)
+		},
+		closeForm() {
+			this.cardFormClosed = true
+			this.$nuxt.$emit('reset-parking-list')
+		},
+		deleteForm() {
+			this.$axios.$delete(this.config.apiUrl + '/parkings/' + this.sendData.uid, this.sendData).then(async res => {
+				this.callNotification('삭제하였습니다.')
+				this.$nuxt.$emit('fetch-parking-list', res.data.uid)
+			}).finally(() => {
+				this.deleteStatus = 'OK'
+				this.cardFormClosed = true
+			})
+		},
+		submitForm(e) {
+			e.preventDefault()
+			this.$v.$touch()
+			if (this.$v.$invalid) {
+				this.submitStatus = 'ERROR'
+			} else {
+				this.submitStatus = 'PENDING'
+				this.sendData.operationTime = this.openTime+'~'+this.closeTime
+				if (this.sendData.uid) {
+					this.putForm()
+				} else {
+					this.postForm()
+				}
+			}
+		},
+		postForm() {
+			this.$axios.$post(this.config.apiUrl + '/parkings', this.sendData).then(async res => {
+				this.callNotification('계정을 생성하였습니다.')
+				this.$nuxt.$emit('fetch-parking-list', res.data.uid)
+			}).finally(() => {
+				this.submitStatus = 'OK'
+			})
+		},
+		putForm() {
+			this.$axios.$put(this.config.apiUrl + '/parkings/' + this.sendData.uid, this.sendData).then(async res => {
+				this.callNotification('수정하였습니다.')
+				this.$nuxt.$emit('fetch-parking-list', res.data.uid)
+			}).finally(() => {
+				this.submitStatus = 'OK'
+			})
+		},
+		convertJson(json) {
+			let dataArray = []
+			Object.entries(json).map(function (obj) {
+				let data = {}
+				data.value = obj[0]
+				data.name = obj[1]
+				dataArray.push(data)
+			})
+			return dataArray
+		},
+		convertSelectJson(json) {
+			let dataArray = []
+			Object.entries(json).map(function (obj) {
+				let data = {}
+				data.id = obj[0]
+				data.text = obj[1]
+				dataArray.push(data)
+			})
+			return dataArray
+		}
 	}
+}
 </script>
 
 <style lang="scss">
@@ -555,16 +587,20 @@
 	.selectAddr {
 		float: right !important;
 	}
-	.selectIcon{
+
+	.selectIcon {
 		display: none;
 	}
-	.selectAddr:hover{
-		cursor:pointer;
+
+	.selectAddr:hover {
+		cursor: pointer;
 		background-color: #4db6ac;
 	}
-	.selectAddr:hover > .selectIcon{
+
+	.selectAddr:hover > .selectIcon {
 		display: block;
 	}
+
 	.sc-vue-errors li {
 		font-size: 12px;
 	}
