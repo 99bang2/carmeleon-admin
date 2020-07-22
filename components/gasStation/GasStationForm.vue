@@ -23,7 +23,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid, 3)">
+							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid, 1)">
 								주유소 리뷰보기
 							</a>
 						</li>
