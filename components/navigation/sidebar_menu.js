@@ -19,15 +19,15 @@ export const menuEntries = [
 			},
 			{
 				id: uniqueID(),
-				title: "CarWashes",
-				icon: "mdi mdi-car-wash",
-				page: "/spots/carWashes"
-			},
-			{
-				id: uniqueID(),
 				title: "GasStations",
 				icon: "mdi mdi-gas-station",
 				page: "/spots/gasStations"
+			},
+			{
+				id: uniqueID(),
+				title: "CarWashes",
+				icon: "mdi mdi-car-wash",
+				page: "/spots/carWashes"
 			},
 			{
 				id: uniqueID(),

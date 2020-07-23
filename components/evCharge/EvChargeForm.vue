@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<Transition name="slide-bottom-medium">
-			<ScCard v-if="!cardFormClosed" style="min-height: 745px">
+			<ScCard style="min-height: 745px">
 				<ScCardHeader separator>
 					<div class="uk-flex uk-flex-middle">
 						<div class="uk-flex-1">
@@ -19,12 +19,12 @@
 					<ul class="uk-child-width-expand" data-uk-tab v-show="sendData.uid">
 						<li class="uk-active">
 							<a href="javascript:void(0)">
-								세차장 정보관리
+								전기차충전소 정보관리
 							</a>
 						</li>
 						<li>
-							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid, 2)">
-								세차장 리뷰보기
+							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid, 3)">
+								전기차충전소 리뷰보기
 							</a>
 						</li>
 					</ul>
@@ -34,133 +34,80 @@
 								<form class="uk-grid-small uk-grid" data-uk-grid>
 									<!--	최대 가용 대수 , 가격  -->
 									<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
-										세차장 정보
+										전기차충전소 정보
 									</h5>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.carWashName" :error-state="$v.sendData.carWashName.$error" :validator="$v.sendData.carWashName">
+										<ScInput v-model="sendData.statNm" :error-state="$v.sendData.statNm.$error" :validator="$v.sendData.statNm">
 											<label>
-												사업장명
+												충전소명
 											</label>
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.carWashName.required">
-												사업장명을 입력하세요
+											<li v-if="!$v.sendData.statNm.required">
+												충전소명을 입력하세요
 											</li>
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.closedDay" :error-state="$v.sendData.closedDay.$error" :validator="$v.sendData.closedDay">
+										<ScInput v-model="sendData.statId" :error-state="$v.sendData.statId.$error" :validator="$v.sendData.statId">
 											<label>
-												휴무일
+												충전소ID
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: calendar"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.closedDay.required">
-												휴무일을 입력하세요
+											<li v-if="!$v.sendData.statId.required">
+												충전소ID를 입력하세요
+											</li>
+										</ul>
+									</div>
+									<div class="uk-width-1-2">
+										<ScInput v-model="sendData.chgerId" :error-state="$v.sendData.chgerId.$error" :validator="$v.sendData.chgerId">
+											<label>
+												충전기ID
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
+										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.chgerId.required">
+												충전기ID를 입력하세요
 											</li>
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
 										<Select2
-											v-model="sendData.carWashIndustry"
-											:options="industryOpts"
-											:settings="{ 'width': '100%', 'placeholder': '사업장 업종명' }"
-											:error-state="$v.sendData.carWashIndustry.$error"
+											v-model="sendData.chgerType"
+											:options="chgerTypeOpts"
+											:settings="{ 'width': '100%', 'placeholder': '충전기타입' }"
+											:error-state="$v.sendData.chgerType.$error"
 										/>
 										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.carWashIndustry.required">
-												사업장 업종명을 선택하세요.
+											<li v-if="!$v.sendData.chgerType.required">
+												충전기타입을 선택하세요.
 											</li>
 										</ul>
 									</div>
-									<div class="uk-width-1-2">
-										<Select2
-											v-model="sendData.carWashType"
-											:options="carWashTypeOpts"
-											:settings="{ 'width': '100%', 'placeholder': '세차유형' }"
-											:error-state="$v.sendData.carWashType.$error"
-										/>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.carWashType.required">
-												세차유형을 선택하세요.
-											</li>
-										</ul>
-									</div>
-									<!-- 평일운영시간-->
-									<div class="uk-width-1-1 uk-flex uk-flex-between">
-										<div style="line-height: 40px">평일운영시간</div>
-										<div class="uk-width-1-3">
-											<ScInput v-model="sendData.weekdayOperOpenHhmm" v-flatpickr="timepicker24" placeholder="평일운영시작시간" mode="outline"></ScInput>
-										</div>
-										<span style="line-height: 40px">~</span>
-										<div class="uk-width-1-3">
-											<ScInput v-model="sendData.weekdayOperCloseHhmm" v-flatpickr="timepicker24" placeholder="평일운영종료시간" mode="outline"></ScInput>
-										</div>
-									</div>
-
-									<!--	휴일운영시간      -->
-									<div class="uk-width-1-1 uk-flex uk-flex-between">
-										<div style="line-height: 40px">휴일운영시간</div>
-										<div class="uk-width-1-3">
-											<ScInput v-model="sendData.holidayOperOpenHhmm" v-flatpickr="timepicker24" placeholder="휴일운영시작시간" mode="outline"></ScInput>
-										</div>
-										<span style="line-height: 40px">~</span>
-										<div class="uk-width-1-3">
-											<ScInput v-model="sendData.holidayOperCloseHhmm" v-flatpickr="timepicker24" placeholder="휴일운영종료시간" mode="outline"></ScInput>
-										</div>
-									</div>
-									<!-- 세차 요금정보 , 세차장 전화번호-->
-									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.carWashChargeInfo" :error-state="$v.sendData.carWashChargeInfo.$error" :validator="$v.sendData.carWashChargeInfo">
-											<label>
-												세차요금정보
-											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
-										</ScInput>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.carWashChargeInfo.required">
-												세차요금정보를 입력하세요
-											</li>
-											<li v-if="!$v.sendData.carWashChargeInfo.integer">
-												올바른 형식이 아닙니다.
-											</li>
-										</ul>
-									</div>
-									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.phoneNumber" :error-state="$v.sendData.phoneNumber.$error" :validator="$v.sendData.phoneNumber">
-											<label>
-												세차장 전화번호
-											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: receiver"/>
-										</ScInput>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.phoneNumber.required">
-												전화번호를 입력하세요
-											</li>
-											<li v-if="!$v.sendData.phoneNumber.integer">
-												올바른 형식이 아닙니다.
-											</li>
-										</ul>
-									</div>
+									<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+										상세정보 입력
+									</h5>
 									<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
 										주소 입력
 									</h5>
 									<div class="uk-width-1-1 uk-flex" style="justify-content: space-around; align-items: center">
 										<div class="uk-width-5-6">
-											<ScInput v-model="sendData.address" class="uk-flex-1" :error-state="$v.sendData.address.$error" :validator="$v.sendData.address">
+											<ScInput v-model="sendData.addr" class="uk-flex-1" :error-state="$v.sendData.addr.$error" :validator="$v.sendData.addr">
 												<label>
 													주소
 												</label>
 											</ScInput>
 											<ul class="sc-vue-errors">
-												<li v-if="!$v.sendData.address.required">
+												<li v-if="!$v.sendData.addr.required">
 													주소를 입력하세요.
 												</li>
 											</ul>
 										</div>
-										<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline sc-button-large" @click.prevent="searchPlace(sendData.address)">
+										<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline sc-button-large" @click.prevent="searchPlace(sendData.addr)">
 											<span data-uk-icon="icon: search"></span>
 										</a>
 									</div>
@@ -174,7 +121,7 @@
 									</div>
 									<!--    세차장 이미지           -->
 									<div class="uk-width-1-1">
-										<h5 class="uk-heading-bullet uk-margin-top">세차장 이미지 등록</h5>
+										<h5 class="uk-heading-bullet uk-margin-top">전기차충전소 이미지 등록</h5>
 										<div style="display: flex; justify-content: center;">
 											<vue-upload-multiple-image
 												@upload-success="uploadImageSuccess"
@@ -222,9 +169,6 @@
 	import {required,integer} from 'vuelidate/lib/validators'
 	import RatingList from "@/components/common/RatingList"
 	import Select2 from "@/components/Select2";
-	if(process.client) {
-		require('~/plugins/flatpickr');
-	}
 	if (process.client) {
 		require('~/plugins/inputmask');
 	}
@@ -256,89 +200,67 @@
 				searchAddr: [],
 				defaultForm: {
 					uid: '',
-					carWashName: '', //사업장명
-					carWashIndustry: '', //사업장업종명
-					carWashType: '', //세차유형
-					address:'', //주소
-					sido:'',
-					sigungu:'',
-					closedDay:'', //휴무일
-					weekdayOperOpenHhmm: '', //평일운영시작시간
-					weekdayOperCloseHhmm:'',//평일운영종료시간
-					holidayOperOpenHhmm:'', //주말운영시작시간
-					holidayOperCloseHhmm:'',//주말운영종료시간
-					carWashChargeInfo:'', //세차요금정보
-					phoneNumber:'', //전화번호
+					statNm: '', //사업장명
+					statId: '', //사업장ID
+					chgerId:'', //충전기ID
+					chgerType:'', // 충전기타입
+					addr:'', //주소
 					lat: null, //위도
 					lon: null, //경도
+					sido: '', //시도
+					sigungu:'', //시군구
+					useTime: '', // 이용시간
+					busiId:'', 		// 기관아이디
+					busiNm:'',		// 운영기관명
+					busiCall:'', //연락처
+					stat: null, // 충전기타입
+					statUpdDt: '', // 상태갱신일시
+					powerType: '' , // 충전량
 					picture: [],
-					industryOpts:[],
-					carWashTypeOpts:[]
-				}
-			}
-		},
-		computed: {
-			timepicker24 () {
-				return {
-					enableTime: true,
-					noCalendar: true,
-					dateFormat: "H:i",
-					time_24hr: true,
+					chgerTypeOpts:[]
 				}
 			}
 		},
 		validations: {
 			sendData: {
-				closedDay:{
+				statNm:{
 					required
 				},
-				carWashName: {
+				statId:{
 					required
 				},
-				carWashIndustry: {
+				chgerId:{
 					required
 				},
-				carWashType: {
-					required
-				},
-				carWashChargeInfo:{
-					required,
-					integer
-				},
-				phoneNumber:{
-					required,
-					integer
-				},
-				address:{
+				chgerType:{
 					required
 				}
-
 			}
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('open-carWash-form', (data) => {
+			this.$nuxt.$on('open-evCharge-form', (data) => {
 				vm.settingForm(data)
 			})
-			this.$nuxt.$on('close-carWash-form', () => {
+			this.$nuxt.$on('close-evCharge-form', () => {
 				vm.closeForm()
 			})
 		},
 		async beforeMount() {
 			this.sendData = this.defaultForm
 			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-			this.industryOpts = this.convertSelectJson(code.data.industryOpts)
-			this.carWashTypeOpts = this.convertSelectJson(code.data.carWashTypeOpts)
+			this.chgerTypeOpts = this.convertSelectJson(code.data.chgerTypeOpts)
+			// this.evChargeTypeOpts = this.convertSelectJson(code.data.evChargeTypeOpts)
 		},
 		beforeDestroy() {
-			this.$nuxt.$off('open-carWash-form')
-			this.$nuxt.$off('close-carWash-form')
+			this.$nuxt.$off('open-evCharge-form')
+			this.$nuxt.$off('close-evCharge-form')
 		},
 		methods: {
 			selectAddr(searchItem) {
-				this.$axios.$post(this.config.apiUrl + '/searchLocal', {address: searchItem.address}).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/searchLocal', {address: searchItem.addr}).then(async res => {
 					this.callNotification("검색을 완료하였습니다.")
-					this.sendData.address = res.data.addresses[0].jibunAddress
+					this.sendData.addr = res.data.addresses[0].jibunAddress
 					this.sendData.lat = res.data.addresses[0].x
 					this.sendData.lon = res.data.addresses[0].y
 					let tmpAddr = res.data.addresses[0].jibunAddress.split(" ")
@@ -428,12 +350,12 @@
 			},
 			closeForm() {
 				this.cardFormClosed = true
-				this.$nuxt.$emit('reset-carWash-list')
+				this.$nuxt.$emit('reset-evCharge-list')
 			},
 			deleteForm() {
-				this.$axios.$delete(this.config.apiUrl + '/carWashes/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$delete(this.config.apiUrl + '/evCharges/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('fetch-carWash-list', res.data.uid)
+					this.$nuxt.$emit('fetch-evCharge-list', res.data.uid)
 				}).finally(() => {
 					this.deleteStatus = 'OK'
 					this.cardFormClosed = true
@@ -454,17 +376,17 @@
 				}
 			},
 			postForm() {
-				this.$axios.$post(this.config.apiUrl + '/carWashes', this.sendData).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/evCharges', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
-					this.$nuxt.$emit('fetch-carWash-list', res.data.uid)
+					this.$nuxt.$emit('fetch-evCharge-list', res.data.uid)
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
 			},
 			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/carWashes/' + this.sendData.uid, this.sendData).then(async res => {
+				this.$axios.$put(this.config.apiUrl + '/evCharges/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
-					this.$nuxt.$emit('fetch-carWash-list', res.data.uid)
+					this.$nuxt.$emit('fetch-evCharge-list', res.data.uid)
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})

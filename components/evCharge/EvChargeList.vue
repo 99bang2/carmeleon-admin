@@ -14,26 +14,41 @@
 		</ScCardHeader>
 		<ScCardBody>
 			<div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
-				<div class="uk-width-2-5@s">
+				<div class="uk-width-3-5@s">
 					<div class="uk-grid-small uk-grid" data-uk-grid>
 						<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
 						   style="height:40px;" @click.prevent="refreshFilter">
 							<i class="mdi mdi-refresh"></i>
 						</a>
-						<div class="uk-width-1-3@s">
-							<select v-model="searchType" class="uk-select" required="required">
-								<option value="">업종명 분류</option>
-								<option value="carWash">세차장</option>
-								<option value="gasStation">주유소</option>
-								<option value="carCenter">정비업소</option>
+						<div class="uk-width-1-4@s">
+							<select v-model="searchChargeType" class="uk-select" required="required">
+								<option value="">충전기타입</option>
+								<option value="01">DC 차데모</option>
+								<option value="02">AC 완속</option>
+								<option value="03">DC 차데모+AC 3상</option>
+								<option value="04">DC 콤보</option>
+								<option value="05">DC 차데모+DC 콤보</option>
+								<option value="06">DC 차데모+AC 3상+DC 콤보</option>
+								<option value="07">AC3상</option>
+							</select>
+						</div>
+						<div class="uk-width-1-4@s">
+							<select v-model="searchStat" class="uk-select" required="required">
+								<option value="">충전기상태</option>
+								<option value=1>통신이상</option>
+								<option value=2>충전대기</option>
+								<option value=3>충전중</option>
+								<option value=4>운영중지</option>
+								<option value=5>점검중</option>
+								<option value=9>상태미확인</option>
 							</select>
 						</div>
 					</div>
 				</div>
-				<div class="uk-width-2-5@s">
+				<div class="uk-width-1-5@s">
 				</div>
 				<div class="uk-width-1-5@s">
-					<ScInput v-model="searchKeyword" placeholder="세차장명 검색">
+					<ScInput v-model="searchKeyword" placeholder="충전소명 검색">
 						<span slot="icon" class="uk-form-icon" data-uk-icon="search"/>
 					</ScInput>
 				</div>
@@ -79,7 +94,8 @@
 					rowHeight: 45,
 					getRowStyle: this.getRowStyle
 				},
-				searchType: '',
+				searchChargeType: '',
+				searchStat: '',
 				searchKeyword: '',
 			}
 		},
@@ -101,50 +117,84 @@
 						}
 					},
 					{
-						headerName: '세차장명',
-						field: 'carWashName',
+						headerName: '전기차충전소명',
+						field: 'statNm',
 						width: 170,
 					},{
-						headerName: '업종명',
-						field: 'carWashIndustry',
+						headerName: '충전기상태',
+						field: 'stat',
 						width: 120,
 						cellRenderer: (obj) => {
 							if(obj.data){
-								let icon = ''
-								let typeName = ''
+								let text = ''
 								switch (obj.value) {
-									case 'carWash' :
-										icon = 'mdi-car-wash'
-										typeName = '세차장'
+									case 1 :
+										text = '통신이상'
 										break
-									case 'gasStation' :
-										icon = 'mdi-gas-station'
-										typeName = '주유소'
+									case 2 :
+										text = '충전대기'
 										break
-									case 'carCenter' :
-										icon = 'mdi-screwdriver'
-										typeName = '정비업소'
+									case 3 :
+										text = '충전중'
+										break
+									case 4 :
+										text = '운영중지'
+										break
+									case 5:
+										text = '점검중'
+										break
+									case 9:
+										text = '상태미확인'
 										break
 								}
-								return `<i class="mdi ${icon}"/>${typeName}`
+								return text
 							}
 						}
 					},{
-						headerName: '세차유형',
-						field: 'carWashTypeName',
+						headerName: '충전기타입',
+						field: 'chgerType',
 						width: 120,
+						cellRenderer: (obj) =>{
+							if(obj.data){
+								let text = ''
+								switch (obj.value) {
+									case '01':
+										text = 'DC 차데모'
+										break
+									case '02':
+										text='AC 완속'
+										break
+									case '03':
+										text='DC 차데모+AC 3상'
+										break
+									case '04':
+										text='DC 콤보'
+										break
+									case '05':
+										text='DC 차데모+DC 콤보'
+										break
+									case '06':
+										text='DC 차데모+AC 3상\n' +
+											'+DC 콤보'
+										break
+									case '07':
+										text='AC 3상'
+										break
+								}
+								return text
+							}
+						}
 					},{
-						headerName: '휴무일',
-						field: 'closedDay',
+						headerName: '이용가능시간',
+						field: 'useTime',
 						width: 120,
+						cellRenderer: (obj)=> {
+							return obj.data ? obj.data : '미표기'
+						}
 					},{
-						headerName: '세차요금정보',
-						field: 'carWashChargeInfo',
+						headerName: '연락처',
+						field: 'busiCall',
 						width: 120
-					},{
-						headerName: '전화번호',
-						field: 'phoneNumber',
-						width:150
 					},{
 						headerName: '등록일시',
 						field: 'createdAt',
@@ -157,8 +207,16 @@
 			}
 		},
 		watch: {
-			'searchType': function (newValue) {
-				let filterComponent = this.gridOptions.api.getFilterInstance('carWashIndustry')
+			'searchChargeType': function (newValue) {
+				let filterComponent = this.gridOptions.api.getFilterInstance('chgerType')
+				filterComponent.setModel({
+					type: 'equals',
+					filter: newValue
+				})
+				this.gridOptions.api.onFilterChanged()
+			},
+			'searchStat': function (newValue) {
+				let filterComponent = this.gridOptions.api.getFilterInstance('stat')
 				filterComponent.setModel({
 					type: 'equals',
 					filter: newValue
@@ -171,31 +229,33 @@
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('reset-carWash-list', () => {
+			this.$nuxt.$on('reset-evCharge-list', () => {
 				vm.resetSelection()
 			})
-			this.$nuxt.$on('fetch-carWash-list', (uid) => {
+			this.$nuxt.$on('fetch-evCharge-list', (uid) => {
 				vm.fetchData(uid)
 			})
 		},
 		beforeDestroy() {
-			this.$nuxt.$off('reset-carWash-list')
-			this.$nuxt.$off('fetch-carWash-list')
+			this.$nuxt.$off('reset-evCharge-list')
+			this.$nuxt.$off('fetch-evCharge-list')
 		},
 		async mounted() {
 			await this.fetchData()
 		},
 		methods:{
 			refreshFilter() {
-				this.searchType = ""
+				this.searchChargeType = ''
+				this.searchStat = ''
+				this.searchKeyword = ""
 				this.fetchData()
 			},
 			openNewForm() {
 				this.resetSelection()
-				this.$nuxt.$emit('open-carWash-form')
+				this.$nuxt.$emit('open-evCharge-form')
 			},
 			onRowClicked(props) {
-				this.$nuxt.$emit('open-carWash-form', props)
+				this.$nuxt.$emit('open-evCharge-form', props)
 				this.resetSelection()
 				props.node.detail = true
 				this.gridOptions.api.redrawRows()
@@ -209,7 +269,7 @@
 			},
 			async fetchData(selectUid) {
 				// API 연동
-				let res = await this.$axios.$get(this.config.apiUrl + '/carWashes')
+				let res = await this.$axios.$get(this.config.apiUrl + '/evCharges')
 				this.gridOptions.api.setRowData(res.data)
 				if (selectUid) {
 					this.gridOptions.api.forEachNode((node) => {
@@ -234,11 +294,11 @@
 				let seletedCnt = selectedUids.length
 				if (seletedCnt) {
 					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-						this.$axios.$post(this.config.apiUrl + '/carWashes/bulkDelete', {
+						this.$axios.$post(this.config.apiUrl + '/evCharges/bulkDelete', {
 							uids: selectedUids
 						}).then(res => {
 							this.callNotification('삭제하였습니다.')
-							this.$nuxt.$emit('close-carWash-form')
+							this.$nuxt.$emit('close-evCharge-form')
 							this.fetchData()
 						})
 					})
