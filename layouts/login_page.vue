@@ -19,7 +19,7 @@ export default {
 		body {
 			overflow: auto;
 			padding: 24px;
-			background: material-color('grey', '400');
+			background: material-color('carmeleon', '100');
 		}
 		body,
 		#__nuxt,

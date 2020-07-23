@@ -5,7 +5,7 @@
 				<ScCardBody>
 					<div class="sc-login-page-logo">
 						<img :src="appLogo" alt="">
-						<p>CarmeleOn Admin</p>
+						<p style="color:#121b2e">CarmeleOn Admin</p>
 					</div>
 					<div id="sc-login-form" class="sc-toggle-login-register sc-toggle-login-password">
 						<div class="sc-login-page-inner">
@@ -24,8 +24,8 @@
 								</ScInput>
 							</div>
 							<div class="uk-margin-large-top">
-								<a href="javascript:void(0)" class="sc-button sc-button-large sc-button-block sc-button-primary" @click="login">
-									로그인
+								<a href="javascript:void(0)" class="sc-button sc-button-large sc-button-block" style="background-color: #87b2ff" @click="login">
+									<span style="color:#121b2e">로그인</span>
 								</a>
 							</div>
 						</div>
@@ -53,7 +53,7 @@ export default {
 	}),
 	computed: {
 		appLogo() {
-			return require('~/assets/img/logo-symbol.png')
+			return require('~/assets/img/carmeleon-symbol.png')
 		}
 	},
 	methods: {

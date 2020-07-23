@@ -307,7 +307,23 @@ $material-colors: (
         '700': #455a64,
         '800': #37474f,
         '900': #263238
-    )
+    ),
+	'carmeleon':(
+		'50': #EAF0FA,
+		'100': #CBD9F4,
+		'200': #A9C0EC,
+		'300': #87A7E4,
+		'400': #6D94DF,
+		'500': #5381D9,
+		'600': #4C79D5,
+		'700': #426ECF,
+		'800': #3964CA,
+		'900': #2951C0,
+		'a100': #FFFFFF,
+		'a200': #CDD9FF,
+		'a400': #9AB2FF,
+		'a700': #809FFF
+	)
 );
 
 @function material-color($color-name, $color-variant: '500') {

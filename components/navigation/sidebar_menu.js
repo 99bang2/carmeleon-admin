@@ -29,6 +29,12 @@ export const menuEntries = [
 				icon: "mdi mdi-gas-station",
 				page: "/spots/gasStations"
 			},
+			{
+				id: uniqueID(),
+				title: "EvCharges",
+				icon: "mdi mdi-battery-charging",
+				page: "/spots/evCharges"
+			},
 		]
 	},
 	{
