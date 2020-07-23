@@ -91,6 +91,32 @@
 									<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
 										상세정보 입력
 									</h5>
+									<div class="uk-width-1-2">
+										<ScInput v-model="sendData.useTime" :error-state="$v.sendData.useTime.$error" :validator="$v.sendData.useTime">
+											<label>
+												이용시간
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
+										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.useTime.required">
+												이용가능 시간을 입력하세요
+											</li>
+										</ul>
+									</div>
+									<div class="uk-width-1-2">
+										<Select2
+											v-model="sendData.powerType"
+											:options="powerTypeOpts"
+											:settings="{ 'width': '100%', 'placeholder': '충전기상태' }"
+											:error-state="$v.sendData.powerType.$error"
+										/>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.powerType.required">
+												충전기상태를 변경하세요.
+											</li>
+										</ul>
+									</div>
 									<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
 										주소 입력
 									</h5>
@@ -217,7 +243,8 @@
 					statUpdDt: '', // 상태갱신일시
 					powerType: '' , // 충전량
 					picture: [],
-					chgerTypeOpts:[]
+					chgerTypeOpts:[],
+					powerTypeOpts:[]
 				}
 			}
 		},
@@ -233,6 +260,15 @@
 					required
 				},
 				chgerType:{
+					required
+				},
+				useTime: {
+					required
+				},
+				powerType:{
+					required
+				},
+				addr:{
 					required
 				}
 			}
@@ -250,7 +286,7 @@
 			this.sendData = this.defaultForm
 			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
 			this.chgerTypeOpts = this.convertSelectJson(code.data.chgerTypeOpts)
-			// this.evChargeTypeOpts = this.convertSelectJson(code.data.evChargeTypeOpts)
+			this.powerTypeOpts = this.convertSelectJson(code.data.powerTypeOpts)
 		},
 		beforeDestroy() {
 			this.$nuxt.$off('open-evCharge-form')
