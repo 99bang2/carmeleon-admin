@@ -27,6 +27,11 @@
 								주차장 리뷰보기
 							</a>
 						</li>
+						<li>
+							<a href="javascript:void(0)" @click.prevent="openProductForm(sendData.uid)">
+								주차장 상품관리
+							</a>
+						</li>
 					</ul>
 					<ul class="uk-switcher">
 						<li>
@@ -285,6 +290,9 @@
 						<li>
 							<rating-list></rating-list>
 						</li>
+						<li>
+							<product-list></product-list>
+						</li>
 					</ul>
 				</ScCardBody>
 			</ScCard>
@@ -302,6 +310,7 @@ import {validationMixin} from 'vuelidate'
 import PrettyCheck from 'pretty-checkbox-vue/check'
 import {required, email} from 'vuelidate/lib/validators'
 import RatingList from "@/components/common/RatingList"
+import ProductList from "@/components/common/ProductList"
 import Select2 from "@/components/Select2"
 import customValidators from "@/plugins/vuelidateValidators"
 import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate"
@@ -318,7 +327,8 @@ export default {
 		VueUploadMultipleImage,
 		PrettyCheck,
 		ScCardAction,
-		RatingList
+		RatingList,
+		ProductList
 	},
 	mixins: [
 		validationMixin,
@@ -452,6 +462,9 @@ export default {
 		},
 		openNewForm(siteUid, type) {
 			this.$nuxt.$emit(`open-rate-list`, siteUid, type)
+		},
+		openProductForm(siteUid){
+			this.$nuxt.$emit('open-product-list',siteUid)
 		},
 		//multi image upload////////////////////////////////////////////////
 		uploadImageSuccess(formData, index, fileList) {

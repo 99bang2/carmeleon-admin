@@ -1,0 +1,228 @@
+<template>
+	<div>
+		<div class="uk-accordion-content">
+			<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+				상품등록
+			</h5>
+			<form class="uk-grid-small uk-grid" data-uk-grid>
+				<div class="uk-width-1-2">
+					<Select2
+						v-model="sendData.ticketType"
+						:options="ticketTypeOpts"
+						:settings="{ 'width': '100%', 'placeholder': '상품 유형' }"
+						:error-state="$v.sendData.ticketType.$error"
+					/>
+					<ul class="sc-vue-errors">
+						<li v-if="!$v.sendData.ticketType.required">
+							상품 유형을 선택하세요.
+						</li>
+					</ul>
+				</div>
+				<div class="uk-width-1-2">
+					<Select2
+						v-model="sendData.ticketDayType"
+						:options="ticketDayTypeOpts"
+						:settings="{ 'width': '100%', 'placeholder': '상품날짜 유형' }"
+						:error-state="$v.sendData.ticketDayType.$error"
+					/>
+					<ul class="sc-vue-errors">
+						<li v-if="!$v.sendData.ticketDayType.required">
+							상품날짜 유형을 선택하세요.
+						</li>
+					</ul>
+				</div>
+				<div v-if="sendData.ticketType==='1'" class="uk-width-1-2">
+					<ScInput v-model="sendData.ticketTime">
+						<label>
+							시간권 시간
+						</label>
+						<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
+					</ScInput>
+				</div>
+				<div class="uk-width-1-2">
+					<ScInput v-model="sendData.ticketPrice" :error-state="$v.sendData.ticketPrice.$error" :validator="$v.sendData.ticketPrice">
+						<label>
+							상품가격
+						</label>
+						<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+					</ScInput>
+					<ul class="sc-vue-errors">
+						<li v-if="!$v.sendData.ticketPrice.required">
+							가격을 입력하세요.
+						</li>
+						<li v-if="!$v.sendData.ticketPrice.integer">
+							올바르지 않은 형식입니다.
+						</li>
+					</ul>
+				</div>
+				<div :class="sendData.ticketType==='1'?'uk-width-1-1':'uk-width-1-2'" style="text-align: center; line-height: 50px">
+					<PrettyCheck v-model="sendData.isActive" class="p-switch">
+						{{sendData.isActive?"활성":"비활성"}}
+					</PrettyCheck>
+				</div>
+			</form>
+		</div>
+		<div class="uk-margin-top uk-text-center">
+			<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="submitForm">
+				{{ sendData.uid ? '수정': '생성' }}
+			</button>
+			<button v-if="sendData.uid" class="sc-button sc-button-secondary"
+					:disabled="submitStatus === 'PENDING'"
+					@click="deleteForm">
+				삭제
+			</button>
+		</div>
+		<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+			상품 리스트
+		</h5>
+		<div>
+			<div class="uk-grid-small uk-child-width-1-4 uk-flex uk-text-small" uk-grid>
+				<div  v-for="(product,index) in productList" :key="index">
+					<a href="javascript:void(0)" @click.prevent="openInfo(product.uid)">
+						<div class="uk-card uk-card-default uk-card-body">{{product.ticketTitle}}</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	import {validationMixin} from 'vuelidate'
+	import {required, integer} from 'vuelidate/lib/validators'
+	import Select2 from "@/components/Select2"
+	import ScInput from "@/components/Input"
+	import PrettyCheck from 'pretty-checkbox-vue/check'
+    export default {
+		components:{
+			Select2,
+			ScInput,
+			PrettyCheck
+		},
+		mixins: [
+			validationMixin,
+		],
+		props: {
+			mode: {
+				type: String,
+				default: 'list'
+			}
+		},
+    	data() {
+			return{
+				submitStatus: null,
+				siteUid:'',
+				sendData: {},
+				defaultForm:{
+					uid: null,
+					siteUid: null,
+					ticketType: null,
+					ticketDayType:null,
+					ticketTime:null,
+					ticketPrice:null,
+					isActive: true,
+				},
+				ticketDayTypeOpts:[],
+				ticketTypeOpts:[],
+				productList:[]
+			}
+		},
+		validations:{
+			sendData: {
+				ticketType:{
+					required
+				},
+				ticketDayType:{
+					required
+				},
+				ticketPrice:{
+					required,
+					integer
+				},
+			}
+		},
+		created() {
+			let vm = this
+			this.$nuxt.$on('open-product-list', (uid) => {
+				vm.sendData = {}
+				vm.siteUid = null
+				vm.fetchData()
+				vm.siteUid = uid
+			})
+		},
+		async beforeMount() {
+			this.sendData = this.defaultForm
+			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
+			this.ticketTypeOpts = this.convertSelectJson(code.data.ticketTypeOpts)
+			this.ticketDayTypeOpts = this.convertSelectJson(code.data.ticketDayTypeOpts)
+		},
+		beforeDestroy() {
+			this.$nuxt.$off('open-product-list')
+		},
+		methods:{
+			async openInfo(selectUid){
+				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets/'+selectUid)
+				this.sendData = res.data
+			},
+			async fetchData(){
+				this.productList = []
+				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets')
+				for(let i of res.data){
+					this.productList.push(i)
+				}
+			},
+			submitForm(e) {
+				e.preventDefault()
+				this.$v.$touch()
+				if (this.$v.$invalid) {
+					this.submitStatus = 'ERROR'
+				} else {
+					this.submitStatus = 'PENDING'
+					if (this.sendData.uid) {
+						this.putForm()
+					} else {
+						this.postForm()
+					}
+				}
+			},
+			postForm() {
+				this.$axios.$post(this.config.apiUrl + '/discountTickets', this.sendData).then(async res => {
+					this.callNotification('상품을 생성했습니다.')
+					this.$nuxt.$emit('open-product-list', this.siteUid)
+				}).finally(() => {
+					this.submitStatus = 'OK'
+				})
+			},
+			putForm() {
+				this.$axios.$put(this.config.apiUrl + '/discountTickets/' + this.sendData.uid, this.sendData).then(async res => {
+					this.callNotification('수정하였습니다.')
+					this.$nuxt.$emit('open-product-list', this.siteUid)
+				}).finally(() => {
+					this.submitStatus = 'OK'
+				})
+			},
+			deleteForm() {
+				this.$axios.$delete(this.config.apiUrl + '/discountTickets/' + this.sendData.uid, this.sendData).then(async res => {
+					this.callNotification('삭제하였습니다.')
+					this.$nuxt.$emit('open-product-list', this.siteUid)
+				}).finally(() => {
+					this.deleteStatus = 'OK'
+				})
+			},
+			convertSelectJson(json) {
+				let dataArray = []
+				Object.entries(json).map(function (obj) {
+					let data = {}
+					data.id = obj[0]
+					data.text = obj[1]
+					dataArray.push(data)
+				})
+				return dataArray
+			}
+		}
+    }
+</script>
+
+<style lang="scss" scoped>
+
+</style>
