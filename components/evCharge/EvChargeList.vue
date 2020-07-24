@@ -153,7 +153,7 @@
 					},{
 						headerName: '충전기타입',
 						field: 'chgerType',
-						width: 120,
+						width: 200,
 						cellRenderer: (obj) =>{
 							if(obj.data){
 								let text = ''
@@ -185,16 +185,9 @@
 							}
 						}
 					},{
-						headerName: '이용가능시간',
-						field: 'useTime',
-						width: 120,
-						cellRenderer: (obj)=> {
-							return obj.data ? obj.data : '미표기'
-						}
-					},{
-						headerName: '연락처',
-						field: 'busiCall',
-						width: 120
+						headerName: '위치정보',
+						field: 'addr',
+						width: 300
 					},{
 						headerName: '등록일시',
 						field: 'createdAt',
@@ -245,8 +238,8 @@
 		},
 		methods:{
 			refreshFilter() {
-				this.searchChargeType = ''
-				this.searchStat = ''
+				this.searchChargeType = ""
+				this.searchStat = ""
 				this.searchKeyword = ""
 				this.fetchData()
 			},

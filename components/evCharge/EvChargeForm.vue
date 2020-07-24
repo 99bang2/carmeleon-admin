@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<Transition name="slide-bottom-medium">
-			<ScCard style="min-height: 745px">
+			<ScCard  v-if="!cardFormClosed" style="min-height: 745px">
 				<ScCardHeader separator>
 					<div class="uk-flex uk-flex-middle">
 						<div class="uk-flex-1">
@@ -50,7 +50,7 @@
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.statId" :error-state="$v.sendData.statId.$error" :validator="$v.sendData.statId">
+										<ScInput v-model="sendData.statId" :error-state="$v.sendData.statId.$error" :validator="$v.sendData.statId" :read-only="sendData.uid > 0">
 											<label>
 												충전소ID
 											</label>
@@ -63,7 +63,7 @@
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.chgerId" :error-state="$v.sendData.chgerId.$error" :validator="$v.sendData.chgerId">
+										<ScInput v-model="sendData.chgerId" :error-state="$v.sendData.chgerId.$error" :validator="$v.sendData.chgerId" :read-only="sendData.uid > 0">
 											<label>
 												충전기ID
 											</label>
@@ -92,28 +92,37 @@
 										상세정보 입력
 									</h5>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.useTime" :error-state="$v.sendData.useTime.$error" :validator="$v.sendData.useTime">
+										<ScInput v-model="sendData.useTime">
 											<label>
 												이용시간
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: clock"/>
 										</ScInput>
+
+									</div>
+									<div class="uk-width-1-2">
+										<Select2
+											v-model="sendData.stat"
+											:options="statTypeOpts"
+											:settings="{ 'width': '100%', 'placeholder': '충전기상태' }"
+											:error-state="$v.sendData.stat.$error"
+										/>
 										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.useTime.required">
-												이용가능 시간을 입력하세요
+											<li v-if="!$v.sendData.stat.required">
+												충전기상태를 변경하세요.
 											</li>
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
-										<Select2
-											v-model="sendData.powerType"
-											:options="powerTypeOpts"
-											:settings="{ 'width': '100%', 'placeholder': '충전기상태' }"
-											:error-state="$v.sendData.powerType.$error"
-										/>
+										<ScInput v-model="sendData.powerType" :error-state="$v.sendData.powerType.$error" :validator="$v.sendData.powerType">
+											<label>
+												충전량 유형
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: bolt"/>
+										</ScInput>
 										<ul class="sc-vue-errors">
 											<li v-if="!$v.sendData.powerType.required">
-												충전기상태를 변경하세요.
+												충전량 유형을 입력하세요
 											</li>
 										</ul>
 									</div>
@@ -244,7 +253,7 @@
 					powerType: '' , // 충전량
 					picture: [],
 					chgerTypeOpts:[],
-					powerTypeOpts:[]
+					statTypeOpts:[]
 				}
 			}
 		},
@@ -262,13 +271,13 @@
 				chgerType:{
 					required
 				},
-				useTime: {
-					required
-				},
-				powerType:{
+				stat:{
 					required
 				},
 				addr:{
+					required
+				},
+				powerType: {
 					required
 				}
 			}
@@ -286,7 +295,7 @@
 			this.sendData = this.defaultForm
 			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
 			this.chgerTypeOpts = this.convertSelectJson(code.data.chgerTypeOpts)
-			this.powerTypeOpts = this.convertSelectJson(code.data.powerTypeOpts)
+			this.statTypeOpts = this.convertSelectJson(code.data.statTypeOpts)
 		},
 		beforeDestroy() {
 			this.$nuxt.$off('open-evCharge-form')
@@ -294,7 +303,7 @@
 		},
 		methods: {
 			selectAddr(searchItem) {
-				this.$axios.$post(this.config.apiUrl + '/searchLocal', {address: searchItem.addr}).then(async res => {
+				this.$axios.$post(this.config.apiUrl + '/searchLocal', {address: searchItem.address}).then(async res => {
 					this.callNotification("검색을 완료하였습니다.")
 					this.sendData.addr = res.data.addresses[0].jibunAddress
 					this.sendData.lat = res.data.addresses[0].x
@@ -362,7 +371,8 @@
 					this.sendData = JSON.parse(JSON.stringify(props.data))
 					// vue-upload-multiple-image 패키지 사용
 					// 주차장 상세보기 할 때, upload된 영역 불러올때 사용
-					if (this.sendData.picture !== null) {
+					console.log(this.sendData.picture)
+					if (typeof this.sendData.picture !== "undefined") {
 						for (let i = 0; i < this.sendData.picture.length; i++) {
 							let img = {}
 							if(i === 0){
