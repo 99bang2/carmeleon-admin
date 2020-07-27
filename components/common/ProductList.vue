@@ -146,8 +146,9 @@
 			this.$nuxt.$on('open-product-list', (uid) => {
 				vm.sendData = {}
 				vm.siteUid = null
-				vm.fetchData()
-				vm.siteUid = uid
+				vm.$v.$reset()
+				vm.fetchData(uid)
+				vm.sendData.siteUid = uid
 			})
 		},
 		async beforeMount() {
@@ -164,9 +165,13 @@
 				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets/'+selectUid)
 				this.sendData = res.data
 			},
-			async fetchData(){
+			async fetchData(siteUid){
 				this.productList = []
-				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets')
+				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets', {
+					params:{
+						siteUid: siteUid
+					}
+				})
 				for(let i of res.data){
 					this.productList.push(i)
 				}
@@ -186,9 +191,10 @@
 				}
 			},
 			postForm() {
+				console.log(this.sendData)
 				this.$axios.$post(this.config.apiUrl + '/discountTickets', this.sendData).then(async res => {
 					this.callNotification('상품을 생성했습니다.')
-					this.$nuxt.$emit('open-product-list', this.siteUid)
+					this.$nuxt.$emit('open-product-list', this.sendData.siteUid)
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
@@ -196,7 +202,7 @@
 			putForm() {
 				this.$axios.$put(this.config.apiUrl + '/discountTickets/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
-					this.$nuxt.$emit('open-product-list', this.siteUid)
+					this.$nuxt.$emit('open-product-list', this.sendData.siteUid)
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})

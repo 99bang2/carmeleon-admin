@@ -86,6 +86,12 @@ export const menuEntries = [
 				page: "/operations/tutorials"
 			},
 		]
+	},
+	{
+		id: uniqueID(),
+		title: "Settlements",
+		icon: "mdi mdi-file-chart",
+		page: "/settlements"
 	}
 	// {
 	// 	id: uniqueID(),
