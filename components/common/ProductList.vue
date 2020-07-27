@@ -77,9 +77,14 @@
 		</h5>
 		<div>
 			<div class="uk-grid-small uk-child-width-1-4 uk-flex uk-text-small" uk-grid>
-				<div  v-for="(product,index) in productList" :key="index">
+				<div v-for="(product,index) in productList" :key="index">
 					<a href="javascript:void(0)" @click.prevent="openInfo(product.uid)">
-						<div class="uk-card uk-card-default uk-card-body">{{product.ticketTitle}}</div>
+						<div class="uk-card uk-card-default uk-card-body">
+							<div v-if="product.ticketDayTypeName==='주말'" class="uk-text-bold uk-text-primary">{{product.ticketDayTypeName}}</div>
+							<div v-else-if="product.ticketDayTypeName==='평일'" class="uk-text-bold" style="color: #66bb6a">{{product.ticketDayTypeName}}</div>
+							<div v-else="" class="uk-text-bold uk-text-secondary">{{product.ticketDayTypeName}}</div>
+							<p>{{product.ticketTypeName === '시간권'?product.ticketTime +' '+product.ticketTypeName: product.ticketTypeName}}</p>
+						</div>
 					</a>
 				</div>
 			</div>
@@ -164,6 +169,7 @@
 			async openInfo(selectUid){
 				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets/'+selectUid)
 				this.sendData = res.data
+				this.sendData.ticketType = String(res.data.ticketType)
 			},
 			async fetchData(siteUid){
 				this.productList = []
@@ -191,7 +197,6 @@
 				}
 			},
 			postForm() {
-				console.log(this.sendData)
 				this.$axios.$post(this.config.apiUrl + '/discountTickets', this.sendData).then(async res => {
 					this.callNotification('상품을 생성했습니다.')
 					this.$nuxt.$emit('open-product-list', this.sendData.siteUid)
