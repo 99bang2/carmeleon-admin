@@ -175,7 +175,7 @@ module.exports = {
 	build: {
 		// analyze: true,
 		progress: true,
-		babel: {
+		/*babel: {
 			babelrc: true,
 			presets({isServer}) {
 				return [
@@ -187,7 +187,7 @@ module.exports = {
 					}]
 				]
 			}
-		},
+		},*/
 		vendor: [
 			'ag-grid-vue',
 		],
