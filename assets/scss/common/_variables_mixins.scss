@@ -47,8 +47,8 @@ $border-radius:							3px;
 $_theme-color:							'carmeleon';
 $_theme-complementary-color:			'pink';
 
-$theme-color:							material-color($_theme-color,'600') !default;
-$theme-color-dark:						material-color($_theme-color,'800') !default;
+$theme-color:							material-color($_theme-color,'400') !default;
+$theme-color-dark:						material-color($_theme-color,'600') !default;
 $theme-color-bg:						material-color($_theme-color,'50') !default;
 $theme-color-bg-dark:					material-color($_theme-color,'100') !default;
 $theme-color-bg-darker:					material-color($_theme-color,'200') !default;
