@@ -210,7 +210,7 @@
 			deleteForm() {
 				this.$axios.$delete(this.config.apiUrl + '/discountTickets/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('open-product-list', this.siteUid)
+					this.$nuxt.$emit('open-product-list', this.sendData.siteUid)
 				}).finally(() => {
 					this.deleteStatus = 'OK'
 				})
