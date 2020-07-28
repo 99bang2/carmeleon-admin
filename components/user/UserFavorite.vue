@@ -200,7 +200,7 @@
 		methods:{
 			async fetchData(data){
 				this.cardFormClosed = false
-				let res = await this.$axios.$get(this.config.apiUrl + '/favorites/' + data)
+				let res = await this.$axios.$get(this.config.apiUrl + '/userFavorites/' + data)
 				let result = res.data.filter(data => data.targetType === 0)
 				this.gridOptions.api.setRowData(res.data)
 			},

@@ -66,14 +66,44 @@
 			columnDefs(){
 				return [
 					{
+						headerName: '주차장명',
+						field: 'parkingSite.name',
+						width:150
+					},
+					{
 						headerName: '결제정보',
-						field: 'payInfo',
-						width: 300
+						field: 'discountTicket.ticketTitle',
+						width: 150
+					},
+					{
+						headerName: '가격',
+						field: 'discountTicket.ticketPrice',
+						width: 80
 					},
 					{
 						headerName: '결제상태',
 						field: 'status',
-						width: 170,
+						width: 90,
+						cellRenderer: (obj) => {
+							if (obj.data) {
+								let badge = ''
+								let status = ''
+								switch (obj.value) {
+									case 0 :
+										badge = 'md-bg-green-500'
+										status = '결제완료'
+										break
+									case 1 :
+										badge = 'md-bg-red-500'
+										status = '결제취소'
+										break
+									default :
+										badge = 'md-bg-gray-500'
+										status = '기타'
+								}
+								return `<span class="uk-badge ${badge}">${status}</span>`
+							}
+						}
 					}
 				]
 			}
@@ -99,7 +129,7 @@
 		methods:{
 			async fetchData(data){
 				this.cardFormClosed = false
-				let res = await this.$axios.$get(this.config.apiUrl + '/payLogs/' + data)
+				let res = await this.$axios.$get(this.config.apiUrl + '/userPayLogs/' + data)
 				this.gridOptions.api.setRowData(res.data)
 			},
 			closeForm(){

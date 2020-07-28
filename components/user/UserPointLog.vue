@@ -109,7 +109,7 @@
 		methods:{
 			async fetchData(data){
 				this.cardFormClosed = false
-				let res = await this.$axios.$get(this.config.apiUrl + '/pointLogs/' + data)
+				let res = await this.$axios.$get(this.config.apiUrl + '/userPointLogs/' + data)
 				this.sumPoint =  res.data.sum
 				this.gridOptions.api.setRowData(res.data.row)
 			},
