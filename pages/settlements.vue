@@ -282,6 +282,24 @@
 					])
 				})
 				let sheet = XLSX.utils.aoa_to_sheet(aoaData)
+				// 엑셀 column width 설정 /////////////////////////////////////////////////////////////////////////////////
+				let objectMaxLength= []
+				aoaData.map(arr => {
+					Object.keys(arr).map(key => {
+						let value = arr[key] === null ? '' : arr[key]
+						if(typeof value === 'number'){
+							return objectMaxLength[key] = 10
+						}
+						objectMaxLength[key] = objectMaxLength[key] >= value.length ? objectMaxLength[key] : value.length
+					})
+				})
+				let worksheetCols = objectMaxLength.map(width => {
+					return{
+						width
+					}
+				})
+				sheet["!cols"] = worksheetCols;
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////
 				let wb = XLSX.utils.book_new()
 				XLSX.utils.book_append_sheet(wb, sheet, `(할인) 차량별 통계 목록`)
 				XLSX.writeFile(wb, `주차 정산관리 목록.xlsx`)
