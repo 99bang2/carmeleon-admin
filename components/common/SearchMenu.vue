@@ -1,6 +1,6 @@
 <template>
 	<div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
-		<div class="uk-width-3-4@s">
+		<div class="uk-width-1-1@s">
 			<div class="uk-grid-small uk-grid" v-if="searchType==''" data-uk-grid>
 				<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline" style="height:40px;" @click.prevent="fetchData">
 					<i class="mdi mdi-refresh"></i>
@@ -44,11 +44,6 @@
 				</a>
 			</div>
 		</div>
-		<div class="uk-width-1-4@s">
-			<ScInput v-model="searchData.searchKeyword" v-if="searchKeyword" placeholder="검색">
-				<span slot="icon" class="uk-form-icon" data-uk-icon="search"></span>
-			</ScInput>
-		</div>
 	</div>
 </template>
 
@@ -77,10 +72,6 @@ export default {
 			type: String,
 			default: ''
 		},
-		searchKeyword: {
-			type: Boolean,
-			default: false
-		}
 	},
 	data() {
 		return {
@@ -116,9 +107,6 @@ export default {
 		},
 	},
 	watch: {
-		'searchData.searchKeyword': function(new_value, old_value) {
-			this.$emit('search')
-		},
 		'searchData.searchDate': function(new_value, old_value) {
 			this.$emit('search')
 		}

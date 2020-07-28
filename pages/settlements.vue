@@ -15,7 +15,14 @@
 						<ScCardBody>
 							<!-- 검색필터 -->
 							<div class="sc-padding-medium sc-round sc-border md-bg-grey-100 uk-grid-small uk-grid" data-uk-grid>
-								<SearchMenu :search-data="searchData" :search-keyword="true" @search="search"></SearchMenu>
+								<div class="uk-width-2-5">
+									<SearchMenu :search-data="searchData" :search-keyword="true" @search="search"></SearchMenu>
+								</div>
+								<div class="uk-width-1-5@s">
+									<ScInput v-model="searchKeyword" placeholder="주차장 이름, 구매상품">
+										<span slot="icon" class="uk-form-icon" data-uk-icon="search"/>
+									</ScInput>
+								</div>
 							</div>
 							<!-- -->
 
@@ -23,7 +30,7 @@
 
 							<!-- 검색기간 및 엑셀 버튼 버튼으로 바꾸기!!!! -->
 							<div style="display: flex; justify-content: space-between;">
-								<span class="uk-text-small"> 검색기간 : 2020-06-01 ~ 2020-06-07 </span>
+								<span class="uk-text-small"> 검색기간 : {{searchData.searchDate}} </span>
 								<div>
 									<a href="javascript:void(0)" class="sc-button sc-button-flex" @click.prevent="exportData()">
 										<i class="mdi mdi-file-excel sc-icon-28 uk-margin-mini-right"></i>
@@ -50,15 +57,15 @@
 									<tbody>
 										<tr>
 											<td>금액</td>
-											<td>51,593,150원</td>
-											<td>2,124,800원</td>
-											<td>53,717,950원</td>
+											<td>{{completeSum ? completeSum : "0"}}원</td>
+											<td>{{cancelSum ? cancelSum : "0"}}원</td>
+											<td>{{totalSum ? totalSum : "0"}}원</td>
 										</tr>
 										<tr>
 											<td>건수</td>
-											<td>6,959건</td>
-											<td>325건</td>
-											<td>7,284건</td>
+											<td>{{completeCnt? completeCnt :"0" }}건</td>
+											<td>{{cancelCnt? cancelCnt : "0"}}건</td>
+											<td>{{totalCnt? totalCnt : "0"}}건</td>
 										</tr>
 									</tbody>
 								</table>
@@ -96,11 +103,11 @@
 
 <script>
 	import {agGridMixin} from "@/plugins/ag-grid.mixin";
-	// import Select2 from "@/components/Select2";
+	import ScInput from '~/components/Input'
 	import SearchMenu from "~/components/common/SearchMenu";
 	import XLSX from 'xlsx'
     export default {
-		components: {SearchMenu},
+		components: {SearchMenu, ScInput},
 		mixins: [
 			agGridMixin
 		],
@@ -108,10 +115,6 @@
 			return {
 				searchData: {
 					searchDate: this.$moment(new Date()).add(-7, 'days').format('YYYY-MM-DD')+' ~ '+this.$moment(new Date()).format('YYYY-MM-DD'),
-					searchKeyword: '',
-					searchStatus: '',
-					searchParkingType: '',
-					searchSite: '',
 				},
 				totalCount: null,
 				gridOptions: {
@@ -124,6 +127,13 @@
 					rowHeight: 45,
 					getRowStyle: this.getRowStyle
 				},
+				searchKeyword:'',
+				completeSum:null,
+				completeCnt:null,
+				cancelSum:null,
+				cancelCnt:null,
+				totalSum:null,
+				totalCnt:null,
 			}
 		},
 		computed: {
@@ -170,10 +180,37 @@
 					{
 						headerName: '결제상태',
 						field: 'status',
-						width: 190
+						width: 190,
+						cellRenderer: (obj) => {
+							if (obj.data) {
+								let badge = ''
+								let status = ''
+								switch (obj.value) {
+									case 0 :
+										badge = 'md-bg-green-500'
+										status = '결제완료'
+										break
+									case 1 :
+										badge = 'md-bg-red-500'
+										status = '결제취소'
+										break
+									default :
+										badge = 'md-bg-gray-500'
+										status = '기타'
+								}
+								return `<span class="uk-badge ${badge}">${status}</span>`
+							}
+						}
 					}
 				]
 			}
+		},
+		watch: {
+			'searchKeyword': function (newValue) {
+				this.gridOptions.api.setQuickFilter(newValue)
+				this.totalCount = this.gridOptions.api.getDisplayedRowCount()
+				this.computeValue()
+			},
 		},
 		async mounted() {
 			await this.fetchData()
@@ -189,7 +226,8 @@
 					}
 				})
 				this.gridOptions.api.setRowData(res.data.rows)
-				this.totalCount = res.data.count
+				this.totalCount = this.gridOptions.api.getDisplayedRowCount()
+				this.computeValue()
 			},
 			exportData(){
 				let aoaData = [
@@ -211,6 +249,30 @@
 				let wb = XLSX.utils.book_new()
 				XLSX.utils.book_append_sheet(wb, sheet, `(할인) 차량별 통계 목록`)
 				XLSX.writeFile(wb, `주차 정산관리 목록.xlsx`)
+			},
+			computeValue(){
+				this.completeSum = null
+				this.completeCnt = null
+				this.cancelSum = null
+				this.cancelCnt = null
+				this.totalSum = null
+				this.totalCnt = null
+				this.gridOptions.api.forEachNodeAfterFilter((node) => {
+					if(node.data.status === 0){
+						this.completeSum += node.data.discountPrice
+						this.completeCnt++
+						this.totalSum += node.data.discountPrice
+						this.totalCnt++
+					}else if(node.data.status === 1){
+						this.cancelSum += node.data.discountPrice
+						this.cancelCnt++
+						this.totalSum += node.data.discountPrice
+						this.totalCnt++
+					}else{
+						this.totalSum += node.data.discountPrice
+						this.totalCnt++
+					}
+				})
 			}
 		}
     }
