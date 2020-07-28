@@ -2,9 +2,7 @@
 	<div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
 		<div class="uk-width-1-1@s">
 			<div class="uk-grid-small uk-grid" v-if="searchType==''" data-uk-grid>
-				<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline" style="height:40px;" @click.prevent="fetchData">
-					<i class="mdi mdi-refresh"></i>
-				</a>
+
 				<div class="uk-width-1-2@s">
 					<ScInput id="sel_date" v-model="searchData.searchDate" v-flatpickr="dpRange" ref="rangePicker" placeholder="날짜 검색" mode="outline">
 						<span slot="icon" class="uk-form-icon" data-uk-icon="calendar"></span>

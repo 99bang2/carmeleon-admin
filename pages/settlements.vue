@@ -15,11 +15,22 @@
 						<ScCardBody>
 							<!-- 검색필터 -->
 							<div class="sc-padding-medium sc-round sc-border md-bg-grey-100 uk-grid-small uk-grid" data-uk-grid>
+								<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline" style="height:40px;" @click.prevent="refreshFilter">
+									<i class="mdi mdi-refresh"></i>
+								</a>
 								<div class="uk-width-2-5">
 									<SearchMenu :search-data="searchData" :search-keyword="true" @search="search"></SearchMenu>
 								</div>
 								<div class="uk-width-1-5@s">
-									<ScInput v-model="searchKeyword" placeholder="주차장 이름, 구매상품">
+									<Select2 style="padding-top: 0px"
+										v-model="searchParkingSite"
+										:options="siteOpts"
+										:settings="{ 'width': '100%', 'placeholder': '주차장 명' }"
+									/>
+								</div>
+								<div class="uk-width-1-6@s"></div>
+								<div class="uk-width-1-5@s">
+									<ScInput v-model="searchKeyword" placeholder="검색">
 										<span slot="icon" class="uk-form-icon" data-uk-icon="search"/>
 									</ScInput>
 								</div>
@@ -104,10 +115,11 @@
 <script>
 	import {agGridMixin} from "@/plugins/ag-grid.mixin";
 	import ScInput from '~/components/Input'
+	import Select2 from "@/components/Select2"
 	import SearchMenu from "~/components/common/SearchMenu";
 	import XLSX from 'xlsx'
     export default {
-		components: {SearchMenu, ScInput},
+		components: {SearchMenu, ScInput, Select2},
 		mixins: [
 			agGridMixin
 		],
@@ -127,7 +139,9 @@
 					rowHeight: 45,
 					getRowStyle: this.getRowStyle
 				},
+				siteOpts:[],
 				searchKeyword:'',
+				searchParkingSite:'',
 				completeSum:null,
 				completeCnt:null,
 				cancelSum:null,
@@ -211,11 +225,26 @@
 				this.totalCount = this.gridOptions.api.getDisplayedRowCount()
 				this.computeValue()
 			},
+			'searchParkingSite' :function (newValue) {
+				let filterComponent = this.gridOptions.api.getFilterInstance('parkingSite.name')
+				filterComponent.setModel({
+					type: 'equals',
+					filter: newValue
+				})
+				this.gridOptions.api.onFilterChanged()
+				this.computeValue()
+			}
 		},
 		async mounted() {
 			await this.fetchData()
 		},
 		methods: {
+			refreshFilter() {
+				this.searchKeyword = ""
+				this.searchParkingSite = ""
+				this.searchData.searchDate= this.$moment(new Date()).add(-7, 'days').format('YYYY-MM-DD')+' ~ '+this.$moment(new Date()).format('YYYY-MM-DD')
+				this.fetchData()
+			},
 			search() {
 				this.fetchData(this.searchData)
 			},
@@ -226,6 +255,9 @@
 					}
 				})
 				this.gridOptions.api.setRowData(res.data.rows)
+				this.gridOptions.api.forEachNode((node)=>{
+					this.siteOpts.push(node.data.parkingSite.name)
+				})
 				this.totalCount = this.gridOptions.api.getDisplayedRowCount()
 				this.computeValue()
 			},
