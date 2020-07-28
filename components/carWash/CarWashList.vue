@@ -210,16 +210,18 @@
 			async fetchData(selectUid) {
 				// API 연동
 				let res = await this.$axios.$get(this.config.apiUrl + '/carWashes')
-				this.gridOptions.api.setRowData(res.data)
-				if (selectUid) {
-					this.gridOptions.api.forEachNode((node) => {
-						if (node.data.uid === selectUid) {
-							this.onRowClicked({
-								node: node,
-								data: node.data
-							})
-						}
-					})
+				if(this.gridOptions.api) {
+					this.gridOptions.api.setRowData(res.data)
+					if (selectUid) {
+						this.gridOptions.api.forEachNode((node) => {
+							if (node.data.uid === selectUid) {
+								this.onRowClicked({
+									node: node,
+									data: node.data
+								})
+							}
+						})
+					}
 				}
 			},
 			resetSelection() {

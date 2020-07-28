@@ -250,6 +250,7 @@ export const agGridMixin = {
 			let pageSize = params.api.gridOptionsWrapper.gridOptions.paginationPageSize
 			let rowHeight = params.api.gridOptionsWrapper.gridOptions.rowHeight
 			params.api.rowRenderer.rowContainers.body.eWrapper.style.minHeight = pageSize * rowHeight + 'px'
+			console.log('gridReady', this.gridOptions.api)
 		},
 		onFirstDataRendered(params) {
 			this.gridOptions.api.sizeColumnsToFit()

@@ -155,7 +155,9 @@
 		methods: {
 			async fetchData(siteUid,type) {
 				let res = await this.$axios.$get(this.config.apiUrl + '/rates/'+type+'/'+ siteUid)
-				this.gridOptions.api.setRowData(res.data)
+				if(this.gridOptions.api) {
+					this.gridOptions.api.setRowData(res.data)
+				}
 			},
 			deleteDatas() {
 				let selected = this.gridOptions.api.getSelectedRows()
