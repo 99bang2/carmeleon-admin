@@ -185,11 +185,7 @@
 									<div class="uk-width-1-1 uk-flex uk-flex-between">
 										<div style="line-height: 40px">운영시간</div>
 										<div class="uk-width-1-3">
-											<ScInput v-model="openTime" v-flatpickr="timepicker24" placeholder="운영시작시간" mode="outline"></ScInput>
-										</div>
-										<span style="line-height: 40px">~</span>
-										<div class="uk-width-1-3">
-											<ScInput v-model="closeTime" v-flatpickr="timepicker24" placeholder="운영종료시간" mode="outline"></ScInput>
+											<ScInput v-model="sendData.operationTime" placeholder="운영시간" mode="outline"></ScInput>
 										</div>
 									</div>
 									<!--    주차장 안내             -->
@@ -537,9 +533,7 @@ export default {
 						this.tempImage[i] = img
 					}
 				}
-				let opTime = this.sendData.operationTime.split('~')
-				this.openTime = opTime[0]
-				this.closeTime = opTime[1]
+				let opTime = this.sendData.operationTime
 			} else {
 				this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
 			}
@@ -568,7 +562,6 @@ export default {
 				this.submitStatus = 'ERROR'
 			} else {
 				this.submitStatus = 'PENDING'
-				this.sendData.operationTime = this.openTime+'~'+this.closeTime
 				if (this.sendData.uid) {
 					this.putForm()
 				} else {
