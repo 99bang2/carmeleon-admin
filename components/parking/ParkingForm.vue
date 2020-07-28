@@ -38,20 +38,7 @@
 							<div class="uk-accordion-content">
 								<form class="uk-grid-small uk-grid" data-uk-grid>
 									<!--	siteType, name , isActive -->
-									<div class="uk-width-1-3">
-										<Select2
-											v-model="sendData.siteType"
-											:options="siteOpts"
-											:settings="{ 'width': '100%', 'placeholder': '주차장 유형' }"
-											:error-state="$v.sendData.siteType.$error"
-										/>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.siteType.required">
-												주차장 유형을 선택하세요.
-											</li>
-										</ul>
-									</div>
-									<div class="uk-width-2-5">
+									<div class="uk-width-4-5">
 										<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error" :validator="$v.sendData.name">
 											<label>
 												주차장 이름
@@ -143,6 +130,20 @@
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"/>
 										</ScInput>
 									</div>
+									<!--    운영 시간               -->
+									<div class="uk-width-1-1">
+										<ScInput v-model="sendData.operationTime" :error-state="$v.sendData.operationTime.$error" :validator="$v.sendData.operationTime">
+											<label>
+												운영시간
+											</label>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: clock"/>
+										</ScInput>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.operationTime.required">
+												운영시간을 입력하세요.
+											</li>
+										</ul>
+									</div>
 									<!--	주소입력 -->
 									<div class="uk-width-1-1 uk-flex" style="justify-content: space-around; align-items: center">
 										<div class="uk-width-5-6">
@@ -161,6 +162,19 @@
 											<span data-uk-icon="icon: search"></span>
 										</a>
 									</div>
+									<div  v-if="this.$auth.$storage.state.user.grade === 0" class="uk-width-1-1">
+										<Select2
+											v-model="sendData.siteType"
+											:options="siteOpts"
+											:settings="{ 'width': '100%', 'placeholder': '운영사 유형' }"
+											:error-state="$v.sendData.siteType.$error"
+										/>
+										<ul class="sc-vue-errors">
+											<li v-if="!$v.sendData.siteType.required">
+												운영사 유형을 선택하세요.
+											</li>
+										</ul>
+									</div>
 									<div v-if="searchAddr" class="uk-width-1-1" style="margin: 15px; padding: 0px;">
 										<ul class="uk-list uk-list-divider uk-list-collapse">
 											<li class="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index style="justify-content: space-between" type="button" @click="selectAddr(item)">
@@ -169,13 +183,8 @@
 											</li>
 										</ul>
 									</div>
-									<!--    운영 시간               -->
-									<div class="uk-width-1-1 uk-flex uk-flex-between">
-										<div style="line-height: 40px">운영시간</div>
-										<div class="uk-width-1-3">
-											<ScInput v-model="sendData.operationTime" placeholder="운영시간" mode="outline"></ScInput>
-										</div>
-									</div>
+
+
 									<!--    주차장 안내             -->
 									<div class="uk-width-1-1">
 										<ScTextarea
@@ -397,6 +406,9 @@ export default {
 			},
 			accountUid:{
 				required
+			},
+			operationTime:{
+				required
 			}
 		}
 	},
@@ -411,9 +423,9 @@ export default {
 	},
 	async beforeMount() {
 		this.sendData = this.defaultForm
-
 		if(this.$auth.$storage.state.user.grade !== 0){
-			this.sendData.accountUid = this.$auth.$storage.state.user.uid
+			this.sendData.siteType = this.$auth.$storage.state.user.uid-2 //codes.json의 site key값과 일치하지 않아서 -2를 추가해준코드
+			this.sendData.accountUid = this.$auth.$storage.state.user.uid-2
 		}
 		let code = await this.$axios.$post(this.config.apiUrl + '/codes')
 		this.siteOpts = this.convertSelectJson(code.data.site)
@@ -544,6 +556,7 @@ export default {
 		submitForm(e) {
 			e.preventDefault()
 			this.$v.$touch()
+			this.sendData.accountUid = this.sendData.siteType
 			if (this.$v.$invalid) {
 				this.submitStatus = 'ERROR'
 			} else {
@@ -556,6 +569,7 @@ export default {
 			}
 		},
 		postForm() {
+			console.log(this.sendData)
 			this.$axios.$post(this.config.apiUrl + '/parkings', this.sendData).then(async res => {
 				this.callNotification('계정을 생성하였습니다.')
 				this.$nuxt.$emit('fetch-parking-list', res.data.uid)
