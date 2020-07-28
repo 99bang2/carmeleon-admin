@@ -189,7 +189,7 @@
 					}
 				})
 				this.gridOptions.api.setRowData(res.data.rows)
-				this.totalCount = this.gridOptions.api.getDisplayedRowCount()
+				this.totalCount = res.data.count
 			},
 			exportData(){
 				let aoaData = [

@@ -10,30 +10,36 @@ export const menuEntries = [
 		icon: "mdi mdi-map-marker-multiple",
 		page: "/spots",
 		isOpen: false,
+		level: 0,
+		grade: ['0', '1'],
 		submenu: [
 			{
 				id: uniqueID(),
 				title: "Parkings",
 				icon: "mdi mdi-parking",
-				page: "/spots/parkings"
+				page: "/spots/parkings",
+				grade: ['0','1']
 			},
 			{
 				id: uniqueID(),
 				title: "GasStations",
 				icon: "mdi mdi-gas-station",
-				page: "/spots/gasStations"
+				page: "/spots/gasStations",
+				grade: ['0']
 			},
 			{
 				id: uniqueID(),
 				title: "CarWashes",
 				icon: "mdi mdi-car-wash",
-				page: "/spots/carWashes"
+				page: "/spots/carWashes",
+				grade: ['0']
 			},
 			{
 				id: uniqueID(),
 				title: "EvCharges",
 				icon: "mdi mdi-battery-charging",
-				page: "/spots/evCharges"
+				page: "/spots/evCharges",
+				grade: ['0']
 			},
 		]
 	},
@@ -41,7 +47,8 @@ export const menuEntries = [
 		id: uniqueID(),
 		title: "Users",
 		icon: "mdi mdi-account-circle",
-		page: "/users"
+		page: "/users",
+		grade: ['0']
 	},
 	{
 		id: uniqueID(),
@@ -49,6 +56,8 @@ export const menuEntries = [
 		icon: "mdi mdi-settings",
 		page: "/operations",
 		isOpen: false,
+		level: 0,
+		grade: ['0'],
 		submenu: [
 			{
 				id: uniqueID(),
@@ -91,7 +100,8 @@ export const menuEntries = [
 		id: uniqueID(),
 		title: "Settlements",
 		icon: "mdi mdi-file-chart",
-		page: "/settlements"
+		page: "/settlements",
+		grade: ['0','1']
 	}
 	// {
 	// 	id: uniqueID(),

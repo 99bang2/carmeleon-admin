@@ -363,6 +363,7 @@ export default {
 				address: '',
 				info: '',
 				priceInfo: '',
+				accountUid: null,
 				paymentTag: [],
 				brandTag: [],
 				productTag: [],
@@ -411,6 +412,7 @@ export default {
 	},
 	async beforeMount() {
 		this.sendData = this.defaultForm
+		this.sendData.accountUid = this.$auth.$storage.state.user.uid
 		let code = await this.$axios.$post(this.config.apiUrl + '/codes')
 		this.siteOpts = this.convertSelectJson(code.data.site)
 		this.paymentTag = this.convertJson(code.data.paymentTag)
