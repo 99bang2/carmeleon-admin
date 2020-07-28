@@ -188,7 +188,7 @@
 						searchData: searchData
 					}
 				})
-				this.gridOptions.api.setRowData(res.data)
+				this.gridOptions.api.setRowData(res.data.rows)
 				this.totalCount = this.gridOptions.api.getDisplayedRowCount()
 			},
 			exportData(){
