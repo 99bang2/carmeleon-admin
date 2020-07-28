@@ -143,18 +143,6 @@
 											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"/>
 										</ScInput>
 									</div>
-									<div v-if="this.$auth.$storage.state.user.grade===0" class="uk-width-1-1">
-										<Select2 v-model="sendData.accountUid"
-											:options="operOpts"
-												 :settings="{ 'width': '100%', 'placeholder': '운영사 선택' }"
-												 :error-state="$v.sendData.accountUid.$error"
-										/>
-										<ul class="sc-vue-errors">
-											<li v-if="!$v.sendData.accountUid.required">
-												운영사를 선택하세요.
-											</li>
-										</ul>
-									</div>
 									<!--	주소입력 -->
 									<div class="uk-width-1-1 uk-flex" style="justify-content: space-around; align-items: center">
 										<div class="uk-width-5-6">
@@ -379,7 +367,6 @@ export default {
 				carTag: [],
 				picture: [],
 				siteOpts: [],
-				operOpts:[],
 				operationTime: ''
 			}
 		}
@@ -429,7 +416,6 @@ export default {
 			this.sendData.accountUid = this.$auth.$storage.state.user.uid
 		}
 		let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-		this.operOpts = this.convertSelectJson(code.data.operOpts)
 		this.siteOpts = this.convertSelectJson(code.data.site)
 		this.paymentTag = this.convertJson(code.data.paymentTag)
 		this.brandTag = this.convertJson(code.data.brandTag)
