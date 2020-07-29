@@ -83,7 +83,8 @@
 							<div v-if="product.ticketDayTypeName==='주말'" class="uk-text-bold uk-text-primary">{{product.ticketDayTypeName}}</div>
 							<div v-else-if="product.ticketDayTypeName==='평일'" class="uk-text-bold" style="color: #66bb6a">{{product.ticketDayTypeName}}</div>
 							<div v-else="" class="uk-text-bold uk-text-secondary">{{product.ticketDayTypeName}}</div>
-							<p>{{product.ticketTypeName === '시간권'?product.ticketTime +' '+product.ticketTypeName: product.ticketTypeName}}</p>
+							<div>{{product.ticketPrice}}원</div>
+							<div>{{product.ticketTypeName === '시간권'?product.ticketTime +' '+product.ticketTypeName: product.ticketTypeName}}</div>
 						</div>
 					</a>
 				</div>

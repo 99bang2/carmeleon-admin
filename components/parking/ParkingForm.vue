@@ -19,17 +19,22 @@
 					<ul class="uk-child-width-expand" data-uk-tab v-show="sendData.uid">
 						<li class="uk-active">
 							<a href="javascript:void(0)">
-								주차장 정보관리
+								주차장정보
 							</a>
 						</li>
 						<li>
 							<a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid,0)">
-								주차장 리뷰보기
+								주차장리뷰
 							</a>
 						</li>
 						<li>
 							<a href="javascript:void(0)" @click.prevent="openProductForm(sendData.uid)">
-								주차장 상품관리
+								주차장상품
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)" @click.prevent="openDicountForm(sendData.uid)">
+								상품할인율
 							</a>
 						</li>
 					</ul>
@@ -298,6 +303,9 @@
 						<li>
 							<product-list></product-list>
 						</li>
+						<l1>
+							<discount-list></discount-list>
+						</l1>
 					</ul>
 				</ScCardBody>
 			</ScCard>
@@ -316,6 +324,7 @@ import PrettyCheck from 'pretty-checkbox-vue/check'
 import {required, email} from 'vuelidate/lib/validators'
 import RatingList from "@/components/common/RatingList"
 import ProductList from "@/components/common/ProductList"
+import DiscountList from "@/components/common/DiscountList"
 import Select2 from "@/components/Select2"
 import customValidators from "@/plugins/vuelidateValidators"
 import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate"
@@ -333,7 +342,8 @@ export default {
 		PrettyCheck,
 		ScCardAction,
 		RatingList,
-		ProductList
+		ProductList,
+		DiscountList
 	},
 	mixins: [
 		validationMixin,
@@ -481,6 +491,9 @@ export default {
 		},
 		openProductForm(siteUid){
 			this.$nuxt.$emit('open-product-list',siteUid)
+		},
+		openDicountForm(siteUid){
+			this.$nuxt.$emit('open-discount-list', siteUid)
 		},
 		//multi image upload////////////////////////////////////////////////
 		uploadImageSuccess(formData, index, fileList) {
