@@ -257,7 +257,9 @@
 				if(this.gridOptions.api) {
 					this.gridOptions.api.setRowData(res.data.rows)
 					this.gridOptions.api.forEachNode((node)=>{
-						this.siteOpts.push(node.data.parkingSite.name)
+						if(node.data.parkingSite !== null) {
+							this.siteOpts.push(node.data.parkingSite.name)
+						}
 					})
 					this.totalCount = this.gridOptions.api.getDisplayedRowCount()
 					this.computeValue()

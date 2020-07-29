@@ -66,16 +66,21 @@
 			columnDefs(){
 				return [
 					{
-						headerName: '카드정보',
-						field: 'cardInfo',
-						width: 100
+						headerName: '카드번호',
+						field: 'cardInfo.cardNumber',
+						width: 150
+					},
+					{
+						headerName: '사용자 닉네임',
+						field: 'nickname',
+						width: 120
 					},
 					{
 						headerName: '주사용여부',
 						field: 'isMain',
-						width: 80,
+						width: 180,
 						cellRenderer: (obj) => {
-							return obj.value?<span>주사용카드</span>:''
+							return obj.value?'주사용카드':'주사용카드가 아닙니다.'
 						}
 					}
 				]
