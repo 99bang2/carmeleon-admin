@@ -80,10 +80,20 @@
 				<div v-for="(product,index) in productList" :key="index">
 					<a href="javascript:void(0)" @click.prevent="openInfo(product.uid)">
 						<div class="uk-card uk-card-default uk-card-body">
+							<!-- 티켓권 이름 -->
 							<div v-if="product.ticketDayTypeName==='주말'" class="uk-text-bold uk-text-primary">{{product.ticketDayTypeName}}</div>
 							<div v-else-if="product.ticketDayTypeName==='평일'" class="uk-text-bold" style="color: #66bb6a">{{product.ticketDayTypeName}}</div>
 							<div v-else="" class="uk-text-bold uk-text-secondary">{{product.ticketDayTypeName}}</div>
-							<div>{{product.ticketPrice}}원</div>
+							<!-- 상품가격 -->
+							<div v-if="product.ticketPriceDiscountPercent === null || product.ticketPriceDiscountPercent ===0">{{product.ticketPrice}}원</div>
+							<div v-else="">
+								<div>
+									<span style="opacity: 50%; text-decoration: line-through">{{product.ticketPrice}}원</span>
+									<span style="color: red; font-size:8px; font-weight: bold">{{product.ticketPriceDiscountPercent}}%</span>
+								</div>
+								<div>{{product.ticketPrice - product.ticketPriceDiscount}}원</div>
+							</div>
+							<!-- -->
 							<div>{{product.ticketTypeName === '시간권'?product.ticketTime +' '+product.ticketTypeName: product.ticketTypeName}}</div>
 						</div>
 					</a>
@@ -126,6 +136,8 @@
 					ticketDayType:null,
 					ticketTime:null,
 					ticketPrice:null,
+					ticketPriceDiscount:null,
+					ticketPriceDiscountPercent: null,
 					isActive: true,
 				},
 				ticketDayTypeOpts:[],

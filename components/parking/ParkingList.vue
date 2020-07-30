@@ -195,6 +195,8 @@
 									temp = '★'
 								}
 								return `<span>${temp} ${roundToTwo(obj.value)}</span>`;
+							}else{
+								return `<span>☆ 0</span>`
 							}
 						}
 					},
