@@ -196,7 +196,7 @@
 								}
 								return `<span>${temp} ${roundToTwo(obj.value)}</span>`;
 							}else{
-								return `<span>☆ 0</span>`
+								return `<span class="uk-badge md-bg-pink-400">평점없음</span>`
 							}
 						}
 					},
