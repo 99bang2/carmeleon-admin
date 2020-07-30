@@ -196,8 +196,8 @@
 			addPoints() {
 				let selected = this.gridOptions.api.getSelectedRows()
 				let selectedUids = selected.map(({uid}) => uid)
-				let seletedCnt = selectedUids.length
-				if (seletedCnt) {
+				let selectedCnt = selectedUids.length
+				if (selectedCnt) {
 					UIkit.modal.prompt(`적용할 추가포인트(%)를 입력해주세요`, this.addPoint).then((pointPercent) => {
 						this.$axios.$post(this.config.apiUrl + '/pointProducts/addPoint', {
 							addPoint: pointPercent,
@@ -215,9 +215,9 @@
 			deleteDatas() {
 				let selected = this.gridOptions.api.getSelectedRows()
 				let selectedUids = selected.map(({uid}) => uid)
-				let seletedCnt = selectedUids.length
-				if (seletedCnt) {
-					UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
+				let selectedCnt = selectedUids.length
+				if (selectedCnt) {
+					UIkit.modal.confirm(`선택한 항목 : ${selectedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
 						this.$axios.$post(this.config.apiUrl + '/pointProducts/bulkDelete', {
 							uids: selectedUids
 						}).then(res => {

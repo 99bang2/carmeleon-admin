@@ -47,48 +47,89 @@
 		},
     	data() {
 			return{
-				submitStatus: null,
-				siteUid:'',
-				sendData: {},
-				defaultForm:{
-					uid: null,
-					siteUid: null,
-					ticketType: null,
-					ticketDayType:null,
-					ticketTime:null,
-					ticketPrice:null,
-					isActive: true,
+				siteUid: null,
+				discountPercent: null,
+				gridOptions: {
+					localeText: {noRowsToShow: '등록된 상품이 없습니다.'},
+					suppressRowClickSelection: true,
+					suppressMenuHide: true,
+					rowSelection: 'multiple',
+					onGridReady: this.onGridReady,
+					onFirstDataRendered: this.onFirstDataRendered,
+					getRowStyle: this.getRowStyle,
+					getRowHeight: this.getRowHeight,
+					rowData: this.rowData,
+					rowHeight: 45,
 				},
-				ticketDayTypeOpts:[],
-				ticketTypeOpts:[],
-				productList:[]
 			}
 		},
+		computed: {
+			columnDefs() {
+				return [
+					{
+						headerName: "",
+						field: "",
+						width: 50,
+						resizable: false,
+						headerCheckboxSelection: true,
+						headerCheckboxSelectionFilteredOnly: true,
+						checkboxSelection: true,
+						suppressMovable: false,
+						onCellClicked: false,
+						cellStyle: {
+							'text-align': 'center',
+						}
+					},
+					{
+						//상품명
+						headerName: '상품명',
+						field: 'ticketTitle',
+						width: 140,
+					},
+					{
+						//원가격
+						headerName: '상품가격',
+						field: 'ticketPrice',
+						width: 110,
+						cellRenderer: obj => {
+							return obj.value + '원'
+						}
+
+					},
+					{
+						//할인가격
+						headerName: '할인된가격',
+						field: 'ticketPriceDiscount',
+						width: 110,
+						cellRenderer: obj => {
+							console.log(obj)
+							return obj.value ? (obj.data.ticketPrice-obj.value) + '원' : ''
+						}
+					},
+					{
+						//할인율
+						headerName: '할인율',
+						field: 'ticketPriceDiscountPercent',
+						width: 110,
+						cellRenderer: obj => {
+							return obj.value ? obj.value + '%' :''
+						}
+					}
+				]
+			}
+		},
+
 		created() {
 			let vm = this
-			this.$nuxt.$on('open-product-list', (uid) => {
-				vm.sendData = {}
-				vm.siteUid = null
-				vm.$v.$reset()
+			this.$nuxt.$on('open-discount-list', (uid) => {
 				vm.fetchData(uid)
-				vm.sendData.siteUid = uid
+				vm.siteUid = uid
 			})
 		},
-		async beforeMount() {
-			this.sendData = this.defaultForm
-			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-			this.ticketTypeOpts = this.convertSelectJson(code.data.ticketTypeOpts)
-			this.ticketDayTypeOpts = this.convertSelectJson(code.data.ticketDayTypeOpts)
-		},
 		beforeDestroy() {
-			this.$nuxt.$off('open-product-list')
+			this.$nuxt.$off('open-discount-list')
 		},
 		methods:{
-			async openInfo(selectUid){
-				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets/'+selectUid)
-				this.sendData = res.data
-				this.sendData.ticketType = String(res.data.ticketType)
-			},
 			async fetchData(siteUid){
 				this.productList = []
 				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets', {
@@ -96,57 +137,43 @@
 						siteUid: siteUid
 					}
 				})
-				for(let i of res.data){
-					this.productList.push(i)
+				if(this.gridOptions.api) {
+					this.gridOptions.api.setRowData(res.data)
 				}
 			},
-			submitForm(e) {
-				e.preventDefault()
-				this.$v.$touch()
-				if (this.$v.$invalid) {
-					this.submitStatus = 'ERROR'
+			setDiscount() {
+				let selected = this.gridOptions.api.getSelectedRows()
+				let selectedUids = selected.map(({uid}) => uid)
+				let selectedCnt = selectedUids.length
+				if (selectedCnt) {
+					UIkit.modal.prompt(`적용할 추가포인트(%)를 입력해주세요`, this.discountPercent).then((discountPercent) => {
+						this.$axios.$post(this.config.apiUrl + '/discountTickets/addDiscount', {
+							discountPercent: discountPercent,
+							uids: selectedUids
+						}).then(res => {
+							this.callNotification('적용했습니다.')
+							this.fetchData(this.siteUid)
+						})
+					})
 				} else {
-					this.submitStatus = 'PENDING'
-					if (this.sendData.uid) {
-						this.putForm()
-					} else {
-						this.postForm()
-					}
+					this.callAlertError('적용할 항목을 선택해주세요.')
 				}
 			},
-			postForm() {
-				this.$axios.$post(this.config.apiUrl + '/discountTickets', this.sendData).then(async res => {
-					this.callNotification('상품을 생성했습니다.')
-					this.$nuxt.$emit('open-product-list', this.sendData.siteUid)
-				}).finally(() => {
-					this.submitStatus = 'OK'
-				})
-			},
-			putForm() {
-				this.$axios.$put(this.config.apiUrl + '/discountTickets/' + this.sendData.uid, this.sendData).then(async res => {
-					this.callNotification('수정하였습니다.')
-					this.$nuxt.$emit('open-product-list', this.sendData.siteUid)
-				}).finally(() => {
-					this.submitStatus = 'OK'
-				})
-			},
-			deleteForm() {
-				this.$axios.$delete(this.config.apiUrl + '/discountTickets/' + this.sendData.uid, this.sendData).then(async res => {
-					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('open-product-list', this.sendData.siteUid)
-				}).finally(() => {
-					this.deleteStatus = 'OK'
-				})
-			},
-			convertSelectJson(json) {
-				let dataArray = []
-				Object.entries(json).map(function (obj) {
-					let data = {}
-					data.id = obj[0]
-					data.text = obj[1]
-					dataArray.push(data)
-				})
-				return dataArray
+			resetDiscount(){
+				let selected = this.gridOptions.api.getSelectedRows()
+				let selectedUids = selected.map(({uid}) => uid)
+				let selectedCnt = selectedUids.length
+				if(selectedCnt){
+					this.$axios.$post(this.config.apiUrl + '/discountTickets/addDiscount', {
+						discountPercent : 0,
+						uids: selectedUids
+					}).then(res => {
+						this.callNotification('적용했습니다.')
+						this.fetchData(this.siteUid)
+					})
+				}else {
+					this.callAlertError('적용할 항목을 선택해주세요.')
+				}
 			}
 		}
     }
