@@ -285,15 +285,15 @@
 					picture: [],
 					oilPrice:[
 						{PRODCD:'B027', //휘발유
-							PRICE:'0'},
+							PRICE:0},
 						{PRODCD:'D047', //경유
-							PRICE:'0'},
+							PRICE:0},
 						{PRODCD:'B034', //고급휘발유
-							PRICE:'0'},
+							PRICE:0},
 						{PRODCD:'C004', //실내등유
-							PRICE:'0'},
+							PRICE:0},
 						{PRODCD:'K015', //자동차부탄
-							PRICE:'0'}],
+							PRICE:0}],
 					brandCodeOpts:[],
 					gasStationTypeOpts:[]
 				}
@@ -417,16 +417,30 @@
 				if (props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
 					let oilPrice = this.sendData.oilPrice
-					//if(oilPrice === null){
-					this.sendData.oilPrice = this.defaultForm.oilPrice
-					// }else{
-					// 	console.log(this.defaultForm.oilPrice.length)
-					// 	for (let i =0; i < this.defaultForm.oilPrice.length; i++){
-					// 		console.log(oilPrice[i])
-					// 		oilPrice[i].PRODCD = this.defaultForm.oilPrice[i].PRODCD
-					// 		console.log(oilPrice[i].PRICE)
-					// 	}
-					// }
+					if(oilPrice === null){
+						this.sendData.oilPrice = this.defaultForm.oilPrice
+					}else{
+						let tempArr = this.defaultForm.oilPrice
+						oilPrice.find((item, idx) => {
+							if(item.PRODCD === 'B027'){
+								tempArr.splice(0,1,{PROCD:'B027', PRICE:item.PRICE})
+							}
+							if(item.PRODCD === 'D047'){
+								tempArr.splice(1,1,{PROCD:'D047', PRICE:item.PRICE})
+							}
+							if(item.PRODCD === 'B034'){
+								tempArr.splice(2,1,{PROCD:'B034', PRICE:item.PRICE})
+							}
+							if(item.PRODCD === 'C004'){
+								tempArr.splice(3,1,{PROCD:'C004', PRICE:item.PRICE})
+							}
+							if(item.PRODCD === 'K015'){
+								tempArr.splice(4,1,{PROCD:'K015', PRICE:item.PRICE})
+							}
+						})
+						this.sendData.oilPrice = tempArr
+						console.log(this.sendData.oilPrice)
+					}
 
 					// vue-upload-multiple-image 패키지 사용
 					// 주차장 상세보기 할 때, upload된 영역 불러올때 사용
