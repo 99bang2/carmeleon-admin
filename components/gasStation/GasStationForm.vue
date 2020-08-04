@@ -123,7 +123,7 @@
 										유가 정보
 									</h5>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.oilPrice[0].price">
+										<ScInput v-model="sendData.oilPrice[0].PRICE">
 											<label>
 												휘발유 가격
 											</label>
@@ -131,7 +131,7 @@
 										</ScInput>
 									</div>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.oilPrice[1].price">
+										<ScInput v-model="sendData.oilPrice[1].PRICE">
 											<label>
 												경유 가격
 											</label>
@@ -139,7 +139,7 @@
 										</ScInput>
 									</div>
 									<div class="uk-width-1-3">
-										<ScInput v-model="sendData.oilPrice[2].price">
+										<ScInput v-model="sendData.oilPrice[2].PRICE">
 											<label>
 												고급휘발유 가격
 											</label>
@@ -147,7 +147,7 @@
 										</ScInput>
 									</div>
 									<div class="uk-width-1-3">
-										<ScInput v-model="sendData.oilPrice[3].price">
+										<ScInput v-model="sendData.oilPrice[3].PRICE">
 											<label>
 												실내등유 가격
 											</label>
@@ -155,7 +155,7 @@
 										</ScInput>
 									</div>
 									<div class="uk-width-1-3">
-										<ScInput v-model="sendData.oilPrice[4].price">
+										<ScInput v-model="sendData.oilPrice[4].PRICE">
 											<label>
 												자동차부탄 가격
 											</label>
@@ -284,16 +284,16 @@
 					isKpetro:true,
 					picture: [],
 					oilPrice:[
-						{code:'B027', //휘발유
-						price:''},
-						{code:'D047', //경유
-						price:''},
-						{code:'B034', //고급휘발유
-						price:''},
-						{code:'C004', //실내등유
-						price:''},
-						{code:'K015', //자동차부탄
-						price:''}],
+						{PRODCD:'B027', //휘발유
+							PRICE:'0'},
+						{PRODCD:'D047', //경유
+							PRICE:'0'},
+						{PRODCD:'B034', //고급휘발유
+							PRICE:'0'},
+						{PRODCD:'C004', //실내등유
+							PRICE:'0'},
+						{PRODCD:'K015', //자동차부탄
+							PRICE:'0'}],
 					brandCodeOpts:[],
 					gasStationTypeOpts:[]
 				}
@@ -411,10 +411,23 @@
 			//multi image upload////////////////////////////////////////////////
 
 			settingForm(props) {
+				//console.log('open')
 				this.$v.$reset()
 				this.tempImage = []
 				if (props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
+					let oilPrice = this.sendData.oilPrice
+					//if(oilPrice === null){
+					this.sendData.oilPrice = this.defaultForm.oilPrice
+					// }else{
+					// 	console.log(this.defaultForm.oilPrice.length)
+					// 	for (let i =0; i < this.defaultForm.oilPrice.length; i++){
+					// 		console.log(oilPrice[i])
+					// 		oilPrice[i].PRODCD = this.defaultForm.oilPrice[i].PRODCD
+					// 		console.log(oilPrice[i].PRICE)
+					// 	}
+					// }
+
 					// vue-upload-multiple-image 패키지 사용
 					// 주차장 상세보기 할 때, upload된 영역 불러올때 사용
 					if (this.sendData.picture !== null) {
