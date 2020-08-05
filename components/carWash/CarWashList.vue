@@ -23,9 +23,9 @@
 						<div class="uk-width-1-3@s">
 							<select v-model="searchType" class="uk-select" required="required">
 								<option value="">업종명 분류</option>
-								<option value="carWash">세차장</option>
-								<option value="gasStation">주유소</option>
-								<option value="carCenter">정비업소</option>
+								<option value="세차">세차장</option>
+								<option value="주유">주유소</option>
+								<option value="정비">정비업소</option>
 							</select>
 						</div>
 					</div>
@@ -48,6 +48,11 @@
 				:grid-options="gridOptions"
 				:pagination="true"
 				:pagination-page-size="10"
+				:row-model-type="'infinite'"
+				:cache-overflow-size="10"
+				:cache-block-size="10"
+				:max-concurrent-datasource-requests="1"
+				:max-blocks-in-cache="10"
 				:framework-components="frameworkComponents"
 			>
 			</ag-grid-vue>
@@ -158,15 +163,10 @@
 		},
 		watch: {
 			'searchType': function (newValue) {
-				let filterComponent = this.gridOptions.api.getFilterInstance('carWashIndustry')
-				filterComponent.setModel({
-					type: 'equals',
-					filter: newValue
-				})
-				this.gridOptions.api.onFilterChanged()
+				this.fetchData()
 			},
 			'searchKeyword': function (newValue) {
-				this.gridOptions.api.setQuickFilter(newValue)
+				this.fetchData()
 			},
 		},
 		created() {
@@ -186,6 +186,44 @@
 			await this.fetchData()
 		},
 		methods:{
+			async onGridReady(params) {
+				const updateData = async context => {
+					let dataSource = {
+						rowCount: null,
+						getRows: async (params) => {
+							let lastRow = -1
+							let order = []
+							for (let sort of params.sortModel) {
+								order.push([sort.colId, sort.sort])
+							}
+							let parameters = {
+								offset: params.startRow,
+								limit: params.endRow - params.startRow,
+								order: order
+							}
+							await context.$axios.$get(this.config.apiUrl + '/carWashes', {
+								params: {
+									searchType: context.searchType,
+									searchKeyword: context.searchKeyword,
+									offset: parameters.offset,
+									limit: parameters.limit,
+									order: parameters.order,
+								}
+							}).then(response => {
+								console.log(response)
+								let rowsThisPage = response.data.rows
+								lastRow = response.data.count
+								params.successCallback(rowsThisPage, lastRow)
+							})
+						}
+					}
+					params.api.setDatasource(dataSource)
+				}
+				updateData(this)
+				let pageSize = params.api.gridOptionsWrapper.gridOptions.paginationPageSize
+				let rowHeight = params.api.gridOptionsWrapper.gridOptions.rowHeight
+				params.api.rowRenderer.rowContainers.body.eWrapper.style.minHeight = pageSize * rowHeight + 'px'
+			},
 			refreshFilter() {
 				this.searchType = ""
 				this.fetchData()
@@ -209,20 +247,21 @@
 			},
 			async fetchData(selectUid) {
 				// API 연동
-				let res = await this.$axios.$get(this.config.apiUrl + '/carWashes')
-				if(this.gridOptions.api) {
-					this.gridOptions.api.setRowData(res.data)
-					if (selectUid) {
-						this.gridOptions.api.forEachNode((node) => {
-							if (node.data.uid === selectUid) {
-								this.onRowClicked({
-									node: node,
-									data: node.data
-								})
-							}
-						})
-					}
-				}
+				// let res = await this.$axios.$get(this.config.apiUrl + '/carWashes')
+				// if(this.gridOptions.api) {
+				// 	this.gridOptions.api.setRowData(res.data)
+				// 	if (selectUid) {
+				// 		this.gridOptions.api.forEachNode((node) => {
+				// 			if (node.data.uid === selectUid) {
+				// 				this.onRowClicked({
+				// 					node: node,
+				// 					data: node.data
+				// 				})
+				// 			}
+				// 		})
+				// 	}
+				// }
+				this.gridOptions.api.onFilterChanged()
 			},
 			resetSelection() {
 				this.gridOptions.api.forEachNode((node) => {
