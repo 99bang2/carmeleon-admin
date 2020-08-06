@@ -3,10 +3,10 @@
 		<div id="sc-page-content">
 			<div class="uk-grid" data-uk-grid>
 				<div class="uk-width-2-3@l">
-					<GasStationList />
+					<GasStationList/>
 				</div>
 				<div class="uk-width-1-3@l">
-					<GasStationForm />
+					<GasStationForm/>
 				</div>
 			</div>
 		</div>
@@ -16,6 +16,7 @@
 <script>
 	import GasStationList from "@/components/gasStation/GasStationList";
 	import GasStationForm from "@/components/gasStation/GasStationForm";
+
 	export default {
 		middleware: ['auth'],
 		components: {

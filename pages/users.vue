@@ -3,16 +3,16 @@
 		<div id="sc-page-content">
 			<div class="uk-grid" data-uk-grid>
 				<div class="uk-width-2-3@l">
-					<UserList />
+					<UserList/>
 				</div>
 				<div class="uk-width-1-3@l">
-					<UserDetail />
-					<UserCard />
-					<UserCar />
-					<UserPointLog />
-					<UserPayLog />
-					<UserFavorite />
-					<UserRating />
+					<UserDetail/>
+					<UserCard/>
+					<UserCar/>
+					<UserPointLog/>
+					<UserPayLog/>
+					<UserFavorite/>
+					<UserRating/>
 				</div>
 			</div>
 		</div>
@@ -28,6 +28,7 @@
 	import UserPayLog from "@/components/user/UserPayLog"
 	import UserFavorite from "@/components/user/UserFavorite"
 	import UserRating from "@/components/user/UserRating"
+
 	export default {
 		middleware: ['auth'],
 		components: {

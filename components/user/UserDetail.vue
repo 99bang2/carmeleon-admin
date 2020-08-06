@@ -20,33 +20,37 @@
 					<div class="uk-accordion-content">
 						<table class="uk-table uk-table-large uk-text-normal uk-table-middle">
 							<tbody>
-								<tr>
-									<td>
-										<div class="uk-display-inline-block">
-											<img
-												:src="this.sendData.profileImage"
-												class="sc-avatar sc-avatar-initials-lg"
-											>
-										</div>
-									</td>
-									<td><span class="uk-text-bold">닉네임</span> {{this.sendData.nickname}}</td>
-								</tr>
-								<tr>
-									<td><span class="uk-text-bold">이메일</span> {{this.sendData.email}}</td>
-									<td><span class="uk-text-bold">폰번호</span> {{this.sendData.phone}}</td>
-								</tr>
-								<tr>
-								</tr>
-								<tr>
-									<td><span class="uk-text-bold">푸시알림 동의</span> {{this.sendData.push}}</td>
-									<td><span class="uk-text-bold">포인트</span> {{this.sendData.point}}</td>
-								</tr>
-								<tr>
-									<td colspan="2"><span class="uk-text-bold">마케팅 수신동의</span> {{this.sendData.marketing}}</td>
-								</tr>
-								<tr>
-									<td class="uk-table-expand" colspan="2"><div class="uk-text-bold">메모</div>{{this.sendData.memo}}</td>
-								</tr>
+							<tr>
+								<td>
+									<div class="uk-display-inline-block">
+										<img
+											:src="this.sendData.profileImage"
+											class="sc-avatar sc-avatar-initials-lg"
+										>
+									</div>
+								</td>
+								<td><span class="uk-text-bold">닉네임</span> {{this.sendData.nickname}}</td>
+							</tr>
+							<tr>
+								<td><span class="uk-text-bold">이메일</span> {{this.sendData.email}}</td>
+								<td><span class="uk-text-bold">폰번호</span> {{this.sendData.phone}}</td>
+							</tr>
+							<tr>
+							</tr>
+							<tr>
+								<td><span class="uk-text-bold">푸시알림 동의</span> {{this.sendData.push}}</td>
+								<td><span class="uk-text-bold">포인트</span> {{this.sendData.point}}</td>
+							</tr>
+							<tr>
+								<td colspan="2"><span class="uk-text-bold">마케팅 수신동의</span> {{this.sendData.marketing}}
+								</td>
+							</tr>
+							<tr>
+								<td class="uk-table-expand" colspan="2">
+									<div class="uk-text-bold">메모</div>
+									{{this.sendData.memo}}
+								</td>
+							</tr>
 							</tbody>
 						</table>
 					</div>
@@ -65,9 +69,9 @@
 			}
 		},
 		data() {
-			return{
+			return {
 				cardFormClosed: true,
-				sendData:{},
+				sendData: {},
 				defaultForm: {
 					uid: null,
 					snsType: '',
@@ -77,21 +81,21 @@
 					phone: '',
 					profileImage: '',
 					point: '',
-					push:false,
+					push: false,
 					marketing: false,
 					memo: '',
 				}
 			}
 		},
-		created(){
+		created() {
 			let vm = this
 			this.$nuxt.$on('open-user-form', (data) => {
 				vm.settingForm(data)
 			})
-			this.$nuxt.$on('close-user-form', () =>{
+			this.$nuxt.$on('close-user-form', () => {
 				vm.closeForm()
 			})
-			this.$nuxt.$on('close-all-list', () =>{
+			this.$nuxt.$on('close-all-list', () => {
 				vm.closeForm()
 			})
 		},
@@ -102,16 +106,16 @@
 		},
 		methods: {
 			settingForm(props) {
-				if(props) {
+				if (props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
 				}
 				this.cardFormClosed = true
-				setTimeout(()=>{
+				setTimeout(() => {
 					this.cardFormClosed = false
 				}, 100)
 			},
-			closeForm(){
-				this.cardFormClosed =true
+			closeForm() {
+				this.cardFormClosed = true
 				this.$nuxt.$emit('reset-user-list')
 			}
 		}

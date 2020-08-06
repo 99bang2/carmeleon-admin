@@ -38,6 +38,7 @@
 
 <script>
 	import {agGridMixin} from "~/plugins/ag-grid.mixin"
+
 	export default {
 		props: {
 			mode: {
@@ -61,11 +62,11 @@
 					getRowStyle: this.getRowStyle
 				},
 				cardFormClosed: true,
-				userName:''
+				userName: ''
 			}
 		},
-		computed:{
-			columnDefs(){
+		computed: {
+			columnDefs() {
 				return [
 					{
 						headerName: '포인트 기록',
@@ -88,16 +89,16 @@
 				]
 			}
 		},
-		created(){
+		created() {
 			let vm = this
 			this.$nuxt.$on('open-pointLog-list', (props) => {
 				vm.fetchData(props.data.uid)
 				this.userName = props.data.nickname
 			})
-			this.$nuxt.$on('close-pointLog-list', () =>{
+			this.$nuxt.$on('close-pointLog-list', () => {
 				vm.closeForm()
 			})
-			this.$nuxt.$on('close-all-list', () =>{
+			this.$nuxt.$on('close-all-list', () => {
 				vm.closeForm()
 			})
 		},
@@ -106,15 +107,15 @@
 			this.$nuxt.$off('close-pointLog-list')
 			this.$nuxt.$off('close-all-list')
 		},
-		methods:{
-			async fetchData(data){
+		methods: {
+			async fetchData(data) {
 				this.cardFormClosed = false
 				let res = await this.$axios.$get(this.config.apiUrl + '/userPointLogs/' + data)
-				this.sumPoint =  res.data.sum
+				this.sumPoint = res.data.sum
 				this.gridOptions.api.setRowData(res.data.row)
 			},
-			closeForm(){
-				this.cardFormClosed =true
+			closeForm() {
+				this.cardFormClosed = true
 				this.$nuxt.$emit('reset-user-list')
 			}
 		}

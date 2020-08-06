@@ -68,7 +68,6 @@
 				</ScCardBody>
 
 
-
 			</ScCard>
 		</Transition>
 	</div>
@@ -79,8 +78,9 @@
 	// import EvChargeFavorite from "@/components/user/UserFavoriteView/EvChargeFavorite"
 	import CarWashFavorite from "@/components/user/UserFavoriteView/CarWashFavorite";
 	import GasStationFavorite from "@/components/user/UserFavoriteView/GasStationFavorite";
+
 	export default {
-		components: {CarWashFavorite,GasStationFavorite},
+		components: {CarWashFavorite, GasStationFavorite},
 		props: {
 			mode: {
 				type: String,
@@ -102,13 +102,13 @@
 					getRowStyle: this.getRowStyle
 				},
 				cardFormClosed: true,
-				userName:'',
-				targetUid:'',
-				targetType:''
+				userName: '',
+				targetUid: '',
+				targetType: ''
 			}
 		},
-		computed:{
-			columnDefs(){
+		computed: {
+			columnDefs() {
 				return [
 					{
 						headerName: '주차장 유형',
@@ -159,6 +159,7 @@
 								function roundToTwo(num) {
 									return +(Math.round(num + "e+2") + "e-2");
 								}
+
 								let temp = ''
 								if (obj.value > 8) {
 									temp = '★★★★★'
@@ -178,17 +179,17 @@
 				]
 			}
 		},
-		created(){
+		created() {
 			let vm = this
 			this.$nuxt.$on('open-favorite-list', (props) => {
 				vm.fetchData(props.data.uid)
 				this.targetUid = props.data.uid
 				this.userName = props.data.nickname
 			})
-			this.$nuxt.$on('close-favorite-list', () =>{
+			this.$nuxt.$on('close-favorite-list', () => {
 				vm.closeForm()
 			})
-			this.$nuxt.$on('close-all-list', () =>{
+			this.$nuxt.$on('close-all-list', () => {
 				vm.closeForm()
 			})
 		},
@@ -197,24 +198,25 @@
 			this.$nuxt.$off('close-favorite-list')
 			this.$nuxt.$off('close-all-list')
 		},
-		methods:{
-			async fetchData(data){
+		methods: {
+			async fetchData(data) {
 				this.cardFormClosed = false
-				let res = await this.$axios.$get(this.config.apiUrl + '/userFavorites/' + data)
+				let res = await this.$axios.$get(this.config.apiUrl + '/favorites/' + data)
+				console.log(this.config.apiUrl + '/favorites/' + data)
 				let result = res.data.filter(data => data.targetType === 0)
-				this.gridOptions.api.setRowData(res.data)
+				this.gridOptions.api.setRowData(result)
 			},
-			closeForm(){
-				this.cardFormClosed =true
+			closeForm() {
+				this.cardFormClosed = true
 				this.$nuxt.$emit('reset-user-list')
 			},
-			switchNewList(targetUid, targetType){
+			switchNewList(targetUid, targetType) {
 				switch (targetType) {
 					case 1:
-						this.$nuxt.$emit('open-gasStation-favorite', targetUid,targetType)
+						this.$nuxt.$emit('open-gasStation-favorite', targetUid, targetType)
 						break;
 					case 2:
-						this.$nuxt.$emit('open-carWash-favorite', targetUid ,targetType)
+						this.$nuxt.$emit('open-carWash-favorite', targetUid, targetType)
 						break;
 					// case 3:
 					// 	this.$nuxt.$emit('open-evCharge-favorite', data)

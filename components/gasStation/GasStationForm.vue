@@ -259,6 +259,7 @@
 	import RatingList from "@/components/common/RatingList"
 	import Select2 from "@/components/Select2";
 	import PrettyCheck from 'pretty-checkbox-vue/check';
+	import Convert from "@/plugins/convertJson";
 
 	export default {
 		components: {
@@ -368,8 +369,8 @@
 		async beforeMount() {
 			this.sendData = this.defaultForm
 			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-			this.brandCodeOpts = this.convertSelectJson(code.data.brandCodeOpts)
-			this.gasStationTypeOpts = this.convertSelectJson(code.data.gasStationTypeOpts)
+			this.brandCodeOpts = Convert.convertJson(code.data.brandCodeOpts,'select')
+			this.gasStationTypeOpts = Convert.convertJson(code.data.gasStationTypeOpts,'select')
 		},
 		beforeDestroy() {
 			this.$nuxt.$off('open-gasStation-form')
@@ -534,16 +535,6 @@
 					this.submitStatus = 'OK'
 				})
 			},
-			convertSelectJson(json) {
-				let dataArray = []
-				Object.entries(json).map(function (obj) {
-					let data = {}
-					data.id = obj[0]
-					data.text = obj[1]
-					dataArray.push(data)
-				})
-				return dataArray
-			}
 		}
 	}
 </script>

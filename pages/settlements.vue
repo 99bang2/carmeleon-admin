@@ -14,18 +14,21 @@
 						</ScCardHeader>
 						<ScCardBody>
 							<!-- 검색필터 -->
-							<div class="sc-padding-medium sc-round sc-border md-bg-grey-100 uk-grid-small uk-grid" data-uk-grid>
-								<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline" style="height:40px;" @click.prevent="refreshFilter">
+							<div class="sc-padding-medium sc-round sc-border md-bg-grey-100 uk-grid-small uk-grid"
+								 data-uk-grid>
+								<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
+								   style="height:40px;" @click.prevent="refreshFilter">
 									<i class="mdi mdi-refresh"></i>
 								</a>
 								<div class="uk-width-2-5">
-									<SearchMenu :search-data="searchData" :search-keyword="true" @search="search"></SearchMenu>
+									<SearchMenu :search-data="searchData" :search-keyword="true"
+												@search="search"></SearchMenu>
 								</div>
 								<div class="uk-width-1-5@s">
 									<Select2 style="padding-top: 0px"
-										v-model="searchParkingSite"
-										:options="siteOpts"
-										:settings="{ 'width': '100%', 'placeholder': '주차장 명' }"
+											 v-model="searchParkingSite"
+											 :options="siteOpts"
+											 :settings="{ 'width': '100%', 'placeholder': '주차장 명' }"
 									/>
 								</div>
 								<div class="uk-width-1-6@s"></div>
@@ -43,7 +46,8 @@
 							<div style="display: flex; justify-content: space-between;">
 								<span class="uk-text-small"> 검색기간 : {{searchData.searchDate}} </span>
 								<div>
-									<a href="javascript:void(0)" class="sc-button sc-button-flex" @click.prevent="exportData()">
+									<a href="javascript:void(0)" class="sc-button sc-button-flex"
+									   @click.prevent="exportData()">
 										<i class="mdi mdi-file-excel sc-icon-28 uk-margin-mini-right"></i>
 										엑셀다운로드
 									</a>
@@ -58,26 +62,26 @@
 							<div>
 								<table class="uk-table">
 									<thead>
-										<tr>
-											<th class="jb-th-1"></th>
-											<th style="background-color: rgba(102,187,106,0.5); font-weight: bold">완료</th>
-											<th style="background-color: rgba(244,143,177,0.5); font-weight: bold">취소</th>
-											<th style="background-color: rgba(130,177,255,0.5); font-weight: bold">종합</th>
-										</tr>
+									<tr>
+										<th class="jb-th-1"></th>
+										<th style="background-color: rgba(102,187,106,0.5); font-weight: bold">완료</th>
+										<th style="background-color: rgba(244,143,177,0.5); font-weight: bold">취소</th>
+										<th style="background-color: rgba(130,177,255,0.5); font-weight: bold">종합</th>
+									</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td>금액</td>
-											<td>{{completeSum ? completeSum : "0"}}원</td>
-											<td>{{cancelSum ? cancelSum : "0"}}원</td>
-											<td>{{totalSum ? totalSum : "0"}}원</td>
-										</tr>
-										<tr>
-											<td>건수</td>
-											<td>{{completeCnt? completeCnt :"0" }}건</td>
-											<td>{{cancelCnt? cancelCnt : "0"}}건</td>
-											<td>{{totalCnt? totalCnt : "0"}}건</td>
-										</tr>
+									<tr>
+										<td>금액</td>
+										<td>{{completeSum ? completeSum : "0"}}원</td>
+										<td>{{cancelSum ? cancelSum : "0"}}원</td>
+										<td>{{totalSum ? totalSum : "0"}}원</td>
+									</tr>
+									<tr>
+										<td>건수</td>
+										<td>{{completeCnt? completeCnt :"0" }}건</td>
+										<td>{{cancelCnt? cancelCnt : "0"}}건</td>
+										<td>{{totalCnt? totalCnt : "0"}}건</td>
+									</tr>
 									</tbody>
 								</table>
 							</div>
@@ -118,7 +122,8 @@
 	import Select2 from "@/components/Select2"
 	import SearchMenu from "~/components/common/SearchMenu";
 	import XLSX from 'xlsx'
-    export default {
+
+	export default {
 		components: {SearchMenu, ScInput, Select2},
 		mixins: [
 			agGridMixin
@@ -126,7 +131,7 @@
 		data() {
 			return {
 				searchData: {
-					searchDate: this.$moment(new Date()).add(-7, 'days').format('YYYY-MM-DD')+' ~ '+this.$moment(new Date()).format('YYYY-MM-DD'),
+					searchDate: this.$moment(new Date()).add(-7, 'days').format('YYYY-MM-DD') + ' ~ ' + this.$moment(new Date()).format('YYYY-MM-DD'),
 				},
 				totalCount: null,
 				gridOptions: {
@@ -139,15 +144,15 @@
 					rowHeight: 45,
 					getRowStyle: this.getRowStyle
 				},
-				siteOpts:[],
-				searchKeyword:'',
-				searchParkingSite:'',
-				completeSum:null,
-				completeCnt:null,
-				cancelSum:null,
-				cancelCnt:null,
-				totalSum:null,
-				totalCnt:null,
+				siteOpts: [],
+				searchKeyword: '',
+				searchParkingSite: '',
+				completeSum: null,
+				completeCnt: null,
+				cancelSum: null,
+				cancelCnt: null,
+				totalSum: null,
+				totalCnt: null,
 			}
 		},
 		computed: {
@@ -163,7 +168,7 @@
 					},
 					{
 						headerName: '주차장명',
-						field:'parkingSite.name',
+						field: 'parkingSite.name',
 						width: 200
 					},
 					{
@@ -225,7 +230,7 @@
 				this.totalCount = this.gridOptions.api.getDisplayedRowCount()
 				this.computeValue()
 			},
-			'searchParkingSite' :function (newValue) {
+			'searchParkingSite': function (newValue) {
 				let filterComponent = this.gridOptions.api.getFilterInstance('parkingSite.name')
 				filterComponent.setModel({
 					type: 'equals',
@@ -242,22 +247,22 @@
 			refreshFilter() {
 				this.searchKeyword = ""
 				this.searchParkingSite = ""
-				this.searchData.searchDate= this.$moment(new Date()).add(-7, 'days').format('YYYY-MM-DD')+' ~ '+this.$moment(new Date()).format('YYYY-MM-DD')
+				this.searchData.searchDate = this.$moment(new Date()).add(-7, 'days').format('YYYY-MM-DD') + ' ~ ' + this.$moment(new Date()).format('YYYY-MM-DD')
 				this.fetchData()
 			},
 			search() {
 				this.fetchData(this.searchData)
 			},
 			async fetchData(searchData) {
-				let res = await this.$axios.$get(this.config.apiUrl + '/payLogs',{
-					params:{
+				let res = await this.$axios.$get(this.config.apiUrl + '/payLogs', {
+					params: {
 						searchData: searchData
 					}
 				})
-				if(this.gridOptions.api) {
+				if (this.gridOptions.api) {
 					this.gridOptions.api.setRowData(res.data.rows)
-					this.gridOptions.api.forEachNode((node)=>{
-						if(node.data.parkingSite !== null) {
+					this.gridOptions.api.forEachNode((node) => {
+						if (node.data.parkingSite !== null) {
 							this.siteOpts.push(node.data.parkingSite.name)
 						}
 					})
@@ -267,9 +272,9 @@
 
 
 			},
-			exportData(){
+			exportData() {
 				let aoaData = [
-					['결제일시', '주차장명', '예약자번호', '차량번호', '구매상품','입차예정시간','정산금액','결제상태'],
+					['결제일시', '주차장명', '예약자번호', '차량번호', '구매상품', '입차예정시간', '정산금액', '결제상태'],
 				]
 				this.gridOptions.api.forEachNode((node) => {
 					aoaData.push([
@@ -285,18 +290,18 @@
 				})
 				let sheet = XLSX.utils.aoa_to_sheet(aoaData)
 				// 엑셀 column width 설정 /////////////////////////////////////////////////////////////////////////////////
-				let objectMaxLength= []
+				let objectMaxLength = []
 				aoaData.map(arr => {
 					Object.keys(arr).map(key => {
 						let value = arr[key] === null ? '' : arr[key]
-						if(typeof value === 'number'){
+						if (typeof value === 'number') {
 							return objectMaxLength[key] = 10
 						}
 						objectMaxLength[key] = objectMaxLength[key] >= value.length ? objectMaxLength[key] : value.length
 					})
 				})
 				let worksheetCols = objectMaxLength.map(width => {
-					return{
+					return {
 						width
 					}
 				})
@@ -306,7 +311,7 @@
 				XLSX.utils.book_append_sheet(wb, sheet, `(할인) 차량별 통계 목록`)
 				XLSX.writeFile(wb, `주차 정산관리 목록.xlsx`)
 			},
-			computeValue(){
+			computeValue() {
 				this.completeSum = null
 				this.completeCnt = null
 				this.cancelSum = null
@@ -314,24 +319,24 @@
 				this.totalSum = null
 				this.totalCnt = null
 				this.gridOptions.api.forEachNodeAfterFilter((node) => {
-					if(node.data.status === 0){
+					if (node.data.status === 0) {
 						this.completeSum += node.data.discountPrice
 						this.completeCnt++
 						this.totalSum += node.data.discountPrice
 						this.totalCnt++
-					}else if(node.data.status === 1){
+					} else if (node.data.status === 1) {
 						this.cancelSum += node.data.discountPrice
 						this.cancelCnt++
 						this.totalSum += node.data.discountPrice
 						this.totalCnt++
-					}else{
+					} else {
 						this.totalSum += node.data.discountPrice
 						this.totalCnt++
 					}
 				})
 			}
 		}
-    }
+	}
 </script>
 
 <style scoped>
@@ -339,10 +344,12 @@
 		border: 1px solid #bcbcbc;
 		text-align: center;
 	}
-	table{
+
+	table {
 		table-layout: auto;
 	}
-	.jb-th-1{
+
+	.jb-th-1 {
 		width: 80px;
 	}
 </style>

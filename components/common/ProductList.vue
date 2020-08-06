@@ -121,6 +121,7 @@
 	import Select2 from "@/components/Select2"
 	import ScInput from "@/components/Input"
 	import PrettyCheck from 'pretty-checkbox-vue/check'
+	import Convert from "@/plugins/convertJson";
 
 	export default {
 		components: {
@@ -185,8 +186,8 @@
 		async beforeMount() {
 			this.sendData = this.defaultForm
 			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-			this.ticketTypeOpts = this.convertSelectJson(code.data.ticketTypeOpts)
-			this.ticketDayTypeOpts = this.convertSelectJson(code.data.ticketDayTypeOpts)
+			this.ticketTypeOpts = Convert.convertJson(code.data.ticketTypeOpts,'select')
+			this.ticketDayTypeOpts = Convert.convertJson(code.data.ticketDayTypeOpts,'select')
 		},
 		beforeDestroy() {
 			this.$nuxt.$off('open-product-list')
@@ -246,16 +247,6 @@
 					this.deleteStatus = 'OK'
 				})
 			},
-			convertSelectJson(json) {
-				let dataArray = []
-				Object.entries(json).map(function (obj) {
-					let data = {}
-					data.id = obj[0]
-					data.text = obj[1]
-					dataArray.push(data)
-				})
-				return dataArray
-			}
 		}
 	}
 </script>

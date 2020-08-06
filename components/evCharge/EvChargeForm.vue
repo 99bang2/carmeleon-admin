@@ -222,6 +222,7 @@
 	import {required, integer} from 'vuelidate/lib/validators'
 	import RatingList from "@/components/common/RatingList"
 	import Select2 from "@/components/Select2";
+	import Convert from "@/plugins/convertJson";
 
 	if (process.client) {
 		require('~/plugins/inputmask');
@@ -313,8 +314,8 @@
 		async beforeMount() {
 			this.sendData = this.defaultForm
 			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-			this.chgerTypeOpts = this.convertSelectJson(code.data.chgerTypeOpts)
-			this.statTypeOpts = this.convertSelectJson(code.data.statTypeOpts)
+			this.chgerTypeOpts = Convert.convertJson(code.data.chgerTypeOpts,'select')
+			this.statTypeOpts = Convert.convertJson(code.data.statTypeOpts,'select')
 		},
 		beforeDestroy() {
 			this.$nuxt.$off('open-evCharge-form')
@@ -459,16 +460,6 @@
 					this.submitStatus = 'OK'
 				})
 			},
-			convertSelectJson(json) {
-				let dataArray = []
-				Object.entries(json).map(function (obj) {
-					let data = {}
-					data.id = obj[0]
-					data.text = obj[1]
-					dataArray.push(data)
-				})
-				return dataArray
-			}
 		}
 	}
 </script>

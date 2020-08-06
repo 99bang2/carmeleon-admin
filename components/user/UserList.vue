@@ -41,7 +41,7 @@
 					:grid-options="gridOptions"
 					:pagination="true"
 					:pagination-page-size="10"
-					>
+				>
 				</ag-grid-vue>
 			</ScCardBody>
 		</ScCard>
@@ -104,11 +104,11 @@
 						field: "snsType",
 						width: 100,
 						onCellClicked: this.onRowClicked,
-						cellRenderer: (obj) =>{
-							let name=''
-							if(obj.value === 'kakao') {
+						cellRenderer: (obj) => {
+							let name = ''
+							if (obj.value === 'kakao') {
 								name = "카카오"
-							}else if(obj.value === 'naver'){
+							} else if (obj.value === 'naver') {
 								name = "네이버"
 							}
 							return `<span>${name}</span>`
@@ -123,7 +123,7 @@
 						headerName: "카드관리",
 						field: "card",
 						width: 90,
-						cellRenderer: ()=>{
+						cellRenderer: () => {
 							return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">카드관리</button>`
 						}
 					},
@@ -131,35 +131,35 @@
 						headerName: "차량관리",
 						field: "car",
 						width: 90,
-						cellRenderer: ()=>{
+						cellRenderer: () => {
 							return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">차량관리</button>`
 						}
 					}, {
 						headerName: "포인트",
 						field: "pointLog",
 						width: 90,
-						cellRenderer: ()=>{
+						cellRenderer: () => {
 							return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">포인트</button>`
 						}
 					}, {
 						headerName: "이용내역",
 						field: "payLog",
 						width: 90,
-						cellRenderer: ()=>{
+						cellRenderer: () => {
 							return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">이용내역</button>`
 						}
 					}, {
 						headerName: "즐겨찾기",
 						field: "favorite",
 						width: 90,
-						cellRenderer: ()=>{
+						cellRenderer: () => {
 							return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">즐겨찾기</button>`
 						}
 					}, {
 						headerName: "리뷰목록",
 						field: "rating",
 						width: 90,
-						cellRenderer: ()=>{
+						cellRenderer: () => {
 							return this.btnTemplate('리뷰')
 						}
 					}
@@ -200,11 +200,11 @@
 				return `<button class="uk-button uk-button-default uk-button-small uk-text-bold">${name}</button>`
 			},
 			onRowClicked(props, type) {
-				if(type !== undefined){
+				if (type !== undefined) {
 					this.resetSelection()
 					this.$nuxt.$emit('close-all-list', props)
 					this.$nuxt.$emit(`open-${type}-list`, props)
-				}else{
+				} else {
 					this.resetSelection()
 					this.$nuxt.$emit('close-all-list', props)
 					this.$nuxt.$emit('open-user-form', props)
@@ -215,7 +215,7 @@
 			async fetchData(selectUid) {
 				// API 연동
 				let res = await this.$axios.$get(this.config.apiUrl + '/users')
-				if(this.gridOptions.api){
+				if (this.gridOptions.api) {
 					this.gridOptions.api.setRowData(res.data)
 					if (selectUid) {
 						this.gridOptions.api.forEachNode((node) => {

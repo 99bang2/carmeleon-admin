@@ -33,11 +33,11 @@
 								세차장 리뷰
 							</a>
 						</li>
-<!--						<li>-->
-<!--							<a href="javascript:void(0)" @click.prevent="switchNewList(sendData.uid,3)">-->
-<!--								전기충전소 리뷰-->
-<!--							</a>-->
-<!--						</li>-->
+						<!--						<li>-->
+						<!--							<a href="javascript:void(0)" @click.prevent="switchNewList(sendData.uid,3)">-->
+						<!--								전기충전소 리뷰-->
+						<!--							</a>-->
+						<!--						</li>-->
 					</ul>
 					<ul class="uk-switcher">
 						<li>
@@ -61,9 +61,9 @@
 						<li>
 							<gas-station-rating></gas-station-rating>
 						</li>
-<!--						<li>-->
-<!--							<ev-charge-rating></ev-charge-rating>-->
-<!--						</li>-->
+						<!--						<li>-->
+						<!--							<ev-charge-rating></ev-charge-rating>-->
+						<!--						</li>-->
 					</ul>
 				</ScCardBody>
 			</ScCard>
@@ -76,6 +76,7 @@
 	// import EvChargeRating from "@/components/user/UserRatingView/EvChargeRating"
 	import CarWashRating from "@/components/user/UserRatingView/CarWashRating";
 	import GasStationRating from "@/components/user/UserRatingView/GasStationRating";
+
 	export default {
 		components: {GasStationRating, CarWashRating},
 		props: {
@@ -99,9 +100,9 @@
 					rowHeight: 45,
 				},
 				cardFormClosed: true,
-				userName:'',
-				targetUid:'',
-				targetType:''
+				userName: '',
+				targetUid: '',
+				targetType: ''
 			}
 		},
 		computed: {
@@ -155,13 +156,13 @@
 				this.cardFormClosed = true
 				this.$nuxt.$emit('reset-user-list')
 			},
-			switchNewList(targetUid, targetType){
+			switchNewList(targetUid, targetType) {
 				switch (targetType) {
 					case 1:
-						this.$nuxt.$emit('open-gasStation-rating', targetUid,targetType)
+						this.$nuxt.$emit('open-gasStation-rating', targetUid, targetType)
 						break;
 					case 2:
-						this.$nuxt.$emit('open-carWash-rating', targetUid ,targetType)
+						this.$nuxt.$emit('open-carWash-rating', targetUid, targetType)
 						break;
 					// case 3:
 					// 	this.$nuxt.$emit('open-evCharge-rating', data)

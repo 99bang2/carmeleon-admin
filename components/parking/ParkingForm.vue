@@ -357,6 +357,7 @@
 	import DiscountList from "@/components/common/DiscountList"
 	import Select2 from "@/components/Select2"
 	import customValidators from "@/plugins/vuelidateValidators"
+	import Convert from '@/plugins/convertJson'
 
 	if (process.client) {
 		require('~/plugins/inputmask')
@@ -466,12 +467,12 @@
 				this.sendData.accountUid = this.$auth.$storage.state.user.uid - 2
 			}
 			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-			this.siteOpts = this.convertSelectJson(code.data.site)
-			this.paymentTag = this.convertJson(code.data.paymentTag)
-			this.brandTag = this.convertJson(code.data.brandTag)
-			this.productTag = this.convertJson(code.data.productTag)
-			this.optionTag = this.convertJson(code.data.optionTag)
-			this.carTag = this.convertJson(code.data.carTag)
+			this.siteOpts = Convert.convertJson(code.data.site,'select')
+			this.paymentTag = Convert.convertJson(code.data.paymentTag)
+			this.brandTag = Convert.convertJson(code.data.brandTag)
+			this.productTag = Convert.convertJson(code.data.productTag)
+			this.optionTag = Convert.convertJson(code.data.optionTag)
+			this.carTag = Convert.convertJson(code.data.carTag)
 		},
 		beforeDestroy() {
 			this.$nuxt.$off('open-parking-form')
@@ -615,26 +616,6 @@
 					this.submitStatus = 'OK'
 				})
 			},
-			convertJson(json) {
-				let dataArray = []
-				Object.entries(json).map(function (obj) {
-					let data = {}
-					data.value = obj[0]
-					data.name = obj[1]
-					dataArray.push(data)
-				})
-				return dataArray
-			},
-			convertSelectJson(json) {
-				let dataArray = []
-				Object.entries(json).map(function (obj) {
-					let data = {}
-					data.id = obj[0]
-					data.text = obj[1]
-					dataArray.push(data)
-				})
-				return dataArray
-			}
 		}
 	}
 </script>

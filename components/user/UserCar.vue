@@ -37,6 +37,7 @@
 
 <script>
 	import {agGridMixin} from "~/plugins/ag-grid.mixin"
+
 	export default {
 		props: {
 			mode: {
@@ -59,11 +60,11 @@
 					getRowStyle: this.getRowStyle
 				},
 				cardFormClosed: true,
-				userName:''
+				userName: ''
 			}
 		},
-		computed:{
-			columnDefs(){
+		computed: {
+			columnDefs() {
 				return [
 					{
 						headerName: '차종',
@@ -72,12 +73,12 @@
 					},
 					{
 						headerName: '모델명',
-						field:'carModel',
+						field: 'carModel',
 						width: 120
 					},
 					{
 						headerName: '차량번호',
-						field:'carPlate',
+						field: 'carPlate',
 						width: 120
 					},
 					{
@@ -85,22 +86,22 @@
 						field: 'isMain',
 						width: 120,
 						cellRenderer: (obj) => {
-							return obj.value?<span>주사용차량</span>:''
+							return obj.value ? <span>주사용차량</span> : ''
 						}
 					}
 				]
 			}
 		},
-		created(){
+		created() {
 			let vm = this
 			this.$nuxt.$on('open-car-list', (props) => {
 				vm.fetchData(props.data.uid)
 				this.userName = props.data.nickname
 			})
-			this.$nuxt.$on('close-car-list', () =>{
+			this.$nuxt.$on('close-car-list', () => {
 				vm.closeForm()
 			})
-			this.$nuxt.$on('close-all-list', () =>{
+			this.$nuxt.$on('close-all-list', () => {
 				vm.closeForm()
 			})
 		},
@@ -109,14 +110,14 @@
 			this.$nuxt.$off('close-car-list')
 			this.$nuxt.$off('close-all-list')
 		},
-		methods:{
-			async fetchData(data){
+		methods: {
+			async fetchData(data) {
 				this.cardFormClosed = false
 				let res = await this.$axios.$get(this.config.apiUrl + '/userCars/' + data)
 				this.gridOptions.api.setRowData(res.data)
 			},
-			closeForm(){
-				this.cardFormClosed =true
+			closeForm() {
+				this.cardFormClosed = true
 				this.$nuxt.$emit('reset-user-list')
 			}
 		}

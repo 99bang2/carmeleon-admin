@@ -17,6 +17,7 @@
 
 <script>
 	import {agGridMixin} from "~/plugins/ag-grid.mixin"
+
 	export default {
 		mixins: [
 			agGridMixin
@@ -42,15 +43,15 @@
 						headerName: '주유소명',
 						field: 'gasStation.gasStationName',
 						width: 110,
-					},{
+					}, {
 						headerName: '브랜드',
 						field: 'gasStation.brandCodeName',
 						width: 120,
-					},{
+					}, {
 						headerName: '업종구분',
 						field: 'gasStation.gasStationTypeName',
 						width: 120,
-					},{
+					}, {
 						headerName: '평점',
 						field: 'gasStation.rate',
 						width: 120,
@@ -60,6 +61,7 @@
 								function roundToTwo(num) {
 									return +(Math.round(num + "e+2") + "e-2");
 								}
+
 								let temp = ''
 								if (obj.value > 8) {
 									temp = '★★★★★'
@@ -81,14 +83,15 @@
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('open-gasStation-favorite', (uid,type) => {
-				vm.fetchData(uid,type)
+			this.$nuxt.$on('open-gasStation-favorite', (uid, type) => {
+
+				vm.fetchData(uid, type)
 			})
 		},
-		methods:{
-			async fetchData(targetUid , targetType) {
+		methods: {
+			async fetchData(targetUid, targetType) {
 				this.cardFormClosed = false
-				let res = await this.$axios.$get(this.config.apiUrl + '/favorites/'+targetUid)
+				let res = await this.$axios.$get(this.config.apiUrl + '/favorites/' + targetUid)
 				let result = res.data.filter(data => data.targetType === targetType)
 				this.gridOptions.api.setRowData(result)
 			},

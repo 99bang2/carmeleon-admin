@@ -1,5 +1,5 @@
 <template>
-    <div>
+	<div>
 		<ag-grid-vue
 			style="width: 100%;"
 			class="ag-theme-material"
@@ -17,7 +17,8 @@
 
 <script>
 	import {agGridMixin} from "~/plugins/ag-grid.mixin"
-    export default {
+
+	export default {
 		mixins: [
 			agGridMixin
 		],
@@ -41,12 +42,12 @@
 						headerName: '세차장명',
 						field: 'carWash.carWashName',
 						width: 110,
-					},{
+					}, {
 						headerName: '업종명',
 						field: 'carWash.carWashIndustry',
 						width: 120,
 						cellRenderer: (obj) => {
-							if(obj.data){
+							if (obj.data) {
 								let icon = ''
 								let typeName = ''
 								switch (obj.value) {
@@ -66,11 +67,11 @@
 								return `<i class="mdi ${icon}"/>${typeName}`
 							}
 						}
-					},{
+					}, {
 						headerName: '세차유형',
 						field: 'carWash.carWashTypeName',
 						width: 120,
-					},{
+					}, {
 						headerName: '평점',
 						field: 'carWash.rate',
 						width: 120,
@@ -80,6 +81,7 @@
 								function roundToTwo(num) {
 									return +(Math.round(num + "e+2") + "e-2");
 								}
+
 								let temp = ''
 								if (obj.value > 8) {
 									temp = '★★★★★'
@@ -101,19 +103,19 @@
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('open-carWash-favorite', (uid,type) => {
-				vm.fetchData(uid,type)
+			this.$nuxt.$on('open-carWash-favorite', (uid, type) => {
+				vm.fetchData(uid, type)
 			})
 		},
-		methods:{
-			async fetchData(targetUid,targetType) {
+		methods: {
+			async fetchData(targetUid, targetType) {
 				this.cardFormClosed = false
-				let res = await this.$axios.$get(this.config.apiUrl + '/favorites/'+targetUid)
+				let res = await this.$axios.$get(this.config.apiUrl + '/favorites/' + targetUid)
 				let result = res.data.filter(data => data.targetType === targetType)
 				this.gridOptions.api.setRowData(result)
 			},
 		}
-    }
+	}
 </script>
 
 <style scoped>

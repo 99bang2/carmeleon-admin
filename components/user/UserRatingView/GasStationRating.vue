@@ -17,6 +17,7 @@
 
 <script>
 	import {agGridMixin} from "~/plugins/ag-grid.mixin"
+
 	export default {
 		mixins: [
 			agGridMixin
@@ -58,14 +59,14 @@
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('open-gasStation-rating', (uid,type) => {
-				vm.fetchData(uid,type)
+			this.$nuxt.$on('open-gasStation-rating', (uid, type) => {
+				vm.fetchData(uid, type)
 			})
 		},
-		methods:{
-			async fetchData(targetUid , targetType) {
+		methods: {
+			async fetchData(targetUid, targetType) {
 				this.cardFormClosed = false
-				let res = await this.$axios.$get(this.config.apiUrl + '/rates/'+targetUid)
+				let res = await this.$axios.$get(this.config.apiUrl + '/rates/' + targetUid)
 				let result = res.data.filter(data => data.targetType === targetType)
 				this.gridOptions.api.setRowData(result)
 			},
