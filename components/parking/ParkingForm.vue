@@ -327,7 +327,6 @@ import ProductList from "@/components/common/ProductList"
 import DiscountList from "@/components/common/DiscountList"
 import Select2 from "@/components/Select2"
 import customValidators from "@/plugins/vuelidateValidators"
-import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate"
 
 if (process.client) {
 	require('~/plugins/inputmask')
@@ -361,8 +360,6 @@ export default {
 			sendData: {},
 			tempImage: [],
 			searchAddr: [],
-			openTime: '',
-			closeTime: '',
 			defaultForm: {
 				uid: null,
 				siteType: '',
@@ -402,7 +399,8 @@ export default {
 			parkingLot: {
 				required,
 				integerFormatCheck: customValidators.integerFormatCheck()
-			}, price: {
+			},
+			price: {
 				required,
 				integerFormatCheck: customValidators.integerFormatCheck()
 			},
@@ -448,16 +446,6 @@ export default {
 	beforeDestroy() {
 		this.$nuxt.$off('open-parking-form')
 		this.$nuxt.$off('close-parking-form')
-	},
-	computed: {
-		timepicker24 () {
-			return {
-				enableTime: true,
-				noCalendar: true,
-				dateFormat: "H:i",
-				time_24hr: true,
-			}
-		}
 	},
 	methods: {
 		selectAddr(searchItem) {
@@ -544,7 +532,6 @@ export default {
 						this.tempImage[i] = img
 					}
 				}
-				let opTime = this.sendData.operationTime
 			} else {
 				this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
 			}
@@ -582,7 +569,6 @@ export default {
 			}
 		},
 		postForm() {
-			console.log(this.sendData)
 			this.$axios.$post(this.config.apiUrl + '/parkings', this.sendData).then(async res => {
 				this.callNotification('계정을 생성하였습니다.')
 				this.$nuxt.$emit('fetch-parking-list', res.data.uid)

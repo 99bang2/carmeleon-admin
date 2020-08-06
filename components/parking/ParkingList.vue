@@ -261,8 +261,6 @@
 			'searchRating': function (newValue) {
 				let start = parseInt(newValue.split(";")[0])
 				let end = parseInt(newValue.split(";")[1])
-				console.log(start, end)
-				console.log(typeof start, typeof end)
 				let filterComponent = this.gridOptions.api.getFilterInstance('rate')
 				filterComponent.setModel({
 					operator: 'OR',
