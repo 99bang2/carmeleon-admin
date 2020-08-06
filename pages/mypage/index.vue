@@ -102,7 +102,6 @@ export default {
 			this.userData = user.data
 		},
 		submitForm(e) {
-			console.log(this.userData)
 			e.preventDefault()
 			this.$v.$touch()
 			if (this.$v.$invalid) {

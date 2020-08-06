@@ -195,7 +195,7 @@
 									temp = '★'
 								}
 								return `<span>${temp} ${roundToTwo(obj.value)}</span>`;
-							}else{
+							} else {
 								return `<span class="uk-badge md-bg-pink-400">평점없음</span>`
 							}
 						}
@@ -328,7 +328,7 @@
 			async fetchData(selectUid) {
 				// API 연동
 				let res = await this.$axios.$get(this.config.apiUrl + '/parkings')
-				if(this.gridOptions.api) {
+				if (this.gridOptions.api) {
 					this.gridOptions.api.setRowData(res.data)
 					if (selectUid) {
 						this.gridOptions.api.forEachNode((node) => {

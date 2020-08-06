@@ -1,71 +1,74 @@
 <template>
-<div>
-	<ScCard>
-		<ScCardHeader class="uk-flex uk-flex-middle sc-theme-bg-dark sc-light" separator>
-			<div class="uk-flex-1">
-				<ScCardTitle>
-					<slot><i class="mdi mdi-car-wash"/> 세차장 목록</slot>
-				</ScCardTitle>
-			</div>
-			<div class="uk-text-nowrap">
-				<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-plus" style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="추가"/>
-				<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline" style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="삭제"/>
-			</div>
-		</ScCardHeader>
-		<ScCardBody>
-			<div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
-				<div class="uk-width-2-5@s">
-					<div class="uk-grid-small uk-grid" data-uk-grid>
-						<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
-						   style="height:40px;" @click.prevent="refreshFilter">
-							<i class="mdi mdi-refresh"></i>
-						</a>
-						<div class="uk-width-1-3@s">
-							<select v-model="searchType" class="uk-select" required="required">
-								<option value="">업종명 분류</option>
-								<option value="세차">세차장</option>
-								<option value="주유">주유소</option>
-								<option value="정비">정비업소</option>
-							</select>
+	<div>
+		<ScCard>
+			<ScCardHeader class="uk-flex uk-flex-middle sc-theme-bg-dark sc-light" separator>
+				<div class="uk-flex-1">
+					<ScCardTitle>
+						<slot><i class="mdi mdi-car-wash"/> 세차장 목록</slot>
+					</ScCardTitle>
+				</div>
+				<div class="uk-text-nowrap">
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-plus" style="display: inline-block"
+					   @click.prevent="openNewForm" data-uk-tooltip="추가"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline"
+					   style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="삭제"/>
+				</div>
+			</ScCardHeader>
+			<ScCardBody>
+				<div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
+					<div class="uk-width-2-5@s">
+						<div class="uk-grid-small uk-grid" data-uk-grid>
+							<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
+							   style="height:40px;" @click.prevent="refreshFilter">
+								<i class="mdi mdi-refresh"></i>
+							</a>
+							<div class="uk-width-1-3@s">
+								<select v-model="searchType" class="uk-select" required="required">
+									<option value="">업종명 분류</option>
+									<option value="세차">세차장</option>
+									<option value="주유">주유소</option>
+									<option value="정비">정비업소</option>
+								</select>
+							</div>
 						</div>
 					</div>
+					<div class="uk-width-2-5@s">
+					</div>
+					<div class="uk-width-1-5@s">
+						<ScInput v-model="searchKeyword" placeholder="세차장명 검색">
+							<span slot="icon" class="uk-form-icon" data-uk-icon="search"/>
+						</ScInput>
+					</div>
 				</div>
-				<div class="uk-width-2-5@s">
-				</div>
-				<div class="uk-width-1-5@s">
-					<ScInput v-model="searchKeyword" placeholder="세차장명 검색">
-						<span slot="icon" class="uk-form-icon" data-uk-icon="search"/>
-					</ScInput>
-				</div>
-			</div>
-			<ag-grid-vue
-				style="width: 100%;"
-				class="ag-theme-material"
-				:dom-layout="'autoHeight'"
-				:locale-text="localeText"
-				:default-col-def="defaultColDef"
-				:column-defs="columnDefs"
-				:grid-options="gridOptions"
-				:pagination="true"
-				:pagination-page-size="10"
-				:row-model-type="'infinite'"
-				:cache-overflow-size="10"
-				:cache-block-size="10"
-				:max-concurrent-datasource-requests="1"
-				:max-blocks-in-cache="10"
-				:framework-components="frameworkComponents"
-			>
-			</ag-grid-vue>
-		</ScCardBody>
-	</ScCard>
-</div>
+				<ag-grid-vue
+					style="width: 100%;"
+					class="ag-theme-material"
+					:dom-layout="'autoHeight'"
+					:locale-text="localeText"
+					:default-col-def="defaultColDef"
+					:column-defs="columnDefs"
+					:grid-options="gridOptions"
+					:pagination="true"
+					:pagination-page-size="10"
+					:row-model-type="'infinite'"
+					:cache-overflow-size="10"
+					:cache-block-size="10"
+					:max-concurrent-datasource-requests="1"
+					:max-blocks-in-cache="10"
+					:framework-components="frameworkComponents"
+				>
+				</ag-grid-vue>
+			</ScCardBody>
+		</ScCard>
+	</div>
 </template>
 
 
 <script>
 	import {agGridMixin} from "@/plugins/ag-grid.mixin";
 	import ScInput from '~/components/Input'
-    export default {
+
+	export default {
 		components: {
 			ScInput
 		},
@@ -109,51 +112,80 @@
 						headerName: '세차장명',
 						field: 'carWashName',
 						width: 170,
-					},{
+					}, {
 						headerName: '업종명',
 						field: 'carWashIndustry',
-						width: 120,
+						width: 130,
 						cellRenderer: (obj) => {
-							if(obj.data){
-								let icon = ''
-								let typeName = ''
-								switch (obj.value) {
-									case 'carWash' :
-										icon = 'mdi-car-wash'
-										typeName = '세차장'
-										break
-									case 'gasStation' :
-										icon = 'mdi-gas-station'
-										typeName = '주유소'
-										break
-									case 'carCenter' :
-										icon = 'mdi-screwdriver'
-										typeName = '정비업소'
-										break
+							if (obj.data) {
+								if (obj.value.includes('세차')) {
+									return "세차장"
+								} else if (obj.value.includes('주차')) {
+									return "주차장"
+								} else if (obj.value.includes('정비')) {
+									return "정비업소"
+								} else {
+									return "기타"
 								}
-								return `<i class="mdi ${icon}"/>${typeName}`
 							}
 						}
-					},{
+					}, {
 						headerName: '세차유형',
-						field: 'carWashTypeName',
-						width: 120,
-					},{
+						field: 'carWashType',
+						width: 100,
+						cellRenderer: (obj) => {
+							if (obj.data) {
+								if (obj.value) {
+									return obj.value
+								} else {
+									return '기타'
+								}
+							}
+						}
+					},
+					{
 						headerName: '휴무일',
 						field: 'closedDay',
-						width: 120,
-					},{
+						width: 110,
+						cellRenderer: (obj) => {
+							if (obj.data) {
+								if (obj.value) {
+									return obj.value
+								} else {
+									return 'X'
+								}
+							}
+						}
+					}, {
 						headerName: '세차요금정보',
 						field: 'carWashChargeInfo',
-						width: 120
-					},{
+						width: 180,
+						cellRenderer: (obj) => {
+							if (obj.data) {
+								if (obj.value) {
+									return obj.value
+								} else {
+									return 'X'
+								}
+							}
+						}
+					}, {
 						headerName: '전화번호',
 						field: 'phoneNumber',
-						width:150
-					},{
+						width: 110,
+						cellRenderer: (obj) => {
+							if (obj.data) {
+								if (obj.value) {
+									return obj.value
+								} else {
+									return 'X'
+								}
+							}
+						}
+					}, {
 						headerName: '등록일시',
 						field: 'createdAt',
-						width: 160,
+						width: 140,
 						valueFormatter: obj => {
 							return this.$moment(obj.value).format('YYYY-MM-DD HH:mm')
 						}
@@ -185,7 +217,7 @@
 		async mounted() {
 			await this.fetchData()
 		},
-		methods:{
+		methods: {
 			async onGridReady(params) {
 				const updateData = async context => {
 					let dataSource = {
@@ -210,7 +242,6 @@
 									order: parameters.order,
 								}
 							}).then(response => {
-								console.log(response)
 								let rowsThisPage = response.data.rows
 								lastRow = response.data.count
 								params.successCallback(rowsThisPage, lastRow)
@@ -226,6 +257,7 @@
 			},
 			refreshFilter() {
 				this.searchType = ""
+				this.searchKeyword = ""
 				this.fetchData()
 			},
 			openNewForm() {
@@ -246,21 +278,6 @@
 				this.gridOptions.api.redrawRows()
 			},
 			async fetchData(selectUid) {
-				// API 연동
-				// let res = await this.$axios.$get(this.config.apiUrl + '/carWashes')
-				// if(this.gridOptions.api) {
-				// 	this.gridOptions.api.setRowData(res.data)
-				// 	if (selectUid) {
-				// 		this.gridOptions.api.forEachNode((node) => {
-				// 			if (node.data.uid === selectUid) {
-				// 				this.onRowClicked({
-				// 					node: node,
-				// 					data: node.data
-				// 				})
-				// 			}
-				// 		})
-				// 	}
-				// }
 				this.gridOptions.api.onFilterChanged()
 			},
 			resetSelection() {
@@ -288,7 +305,7 @@
 				}
 			},
 		}
-    }
+	}
 </script>
 
 <style scoped>

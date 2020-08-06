@@ -102,7 +102,6 @@
 						field: 'ticketPriceDiscount',
 						width: 110,
 						cellRenderer: obj => {
-							console.log(obj)
 							return obj.value ? (obj.data.ticketPrice-obj.value) + '원' : ''
 						}
 					},

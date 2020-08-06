@@ -11,7 +11,8 @@
 							</ScCardTitle>
 						</div>
 						<ScCardAction v-if="mode !== 'mypage'">
-							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close" @click.prevent="closeForm"/>
+							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close"
+							   @click.prevent="closeForm"/>
 						</ScCardAction>
 					</div>
 				</ScCardHeader>
@@ -37,11 +38,14 @@
 										주유소 정보
 									</h5>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.gasStationName" :error-state="$v.sendData.gasStationName.$error" :validator="$v.sendData.gasStationName">
+										<ScInput v-model="sendData.gasStationName"
+												 :error-state="$v.sendData.gasStationName.$error"
+												 :validator="$v.sendData.gasStationName">
 											<label>
 												주유소명
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: pencil"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
 											<li v-if="!$v.sendData.gasStationName.required">
@@ -50,11 +54,14 @@
 										</ul>
 									</div>
 									<div class="uk-width-1-2">
-										<ScInput v-model="sendData.gasStationUid" :error-state="$v.sendData.gasStationUid.$error" :validator="$v.sendData.gasStationUid">
+										<ScInput v-model="sendData.gasStationUid"
+												 :error-state="$v.sendData.gasStationUid.$error"
+												 :validator="$v.sendData.gasStationUid">
 											<label>
 												주유소 ID
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: pencil"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
 											<li v-if="!$v.sendData.gasStationUid.required">
@@ -63,18 +70,17 @@
 										</ul>
 									</div>
 									<div class="uk-width-1-1">
-										<ScInput v-model="sendData.tel" :error-state="$v.sendData.tel.$error" :validator="$v.sendData.tel">
+										<ScInput v-model="sendData.tel" :error-state="$v.sendData.tel.$error"
+												 :validator="$v.sendData.tel">
 											<label>
 												주유소 전화번호
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: receiver"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: receiver"/>
 										</ScInput>
 										<ul class="sc-vue-errors">
 											<li v-if="!$v.sendData.tel.required">
 												전화번호를 입력하세요
-											</li>
-											<li v-if="!$v.sendData.tel.integer">
-												올바른 형식이 아닙니다.
 											</li>
 										</ul>
 									</div>
@@ -127,7 +133,8 @@
 											<label>
 												휘발유 가격
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: tag"/>
 										</ScInput>
 									</div>
 									<div class="uk-width-1-2">
@@ -135,7 +142,8 @@
 											<label>
 												경유 가격
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: tag"/>
 										</ScInput>
 									</div>
 									<div class="uk-width-1-3">
@@ -143,7 +151,8 @@
 											<label>
 												고급휘발유 가격
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: tag"/>
 										</ScInput>
 									</div>
 									<div class="uk-width-1-3">
@@ -151,7 +160,8 @@
 											<label>
 												실내등유 가격
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: tag"/>
 										</ScInput>
 									</div>
 									<div class="uk-width-1-3">
@@ -159,15 +169,19 @@
 											<label>
 												자동차부탄 가격
 											</label>
-											<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+											<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+												  data-uk-icon="icon: tag"/>
 										</ScInput>
 									</div>
 									<h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
 										주소 입력
 									</h5>
-									<div class="uk-width-1-1 uk-flex" style="justify-content: space-around; align-items: center">
+									<div class="uk-width-1-1 uk-flex"
+										 style="justify-content: space-around; align-items: center">
 										<div class="uk-width-5-6">
-											<ScInput v-model="sendData.address" class="uk-flex-1" :error-state="$v.sendData.address.$error" :validator="$v.sendData.address">
+											<ScInput v-model="sendData.address" class="uk-flex-1"
+													 :error-state="$v.sendData.address.$error"
+													 :validator="$v.sendData.address">
 												<label>
 													주소
 												</label>
@@ -178,13 +192,17 @@
 												</li>
 											</ul>
 										</div>
-										<a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline sc-button-large" @click.prevent="searchPlace(sendData.address)">
+										<a href="javascript:void(0)"
+										   class="sc-button sc-button-icon sc-button-outline sc-button-large"
+										   @click.prevent="searchPlace(sendData.address)">
 											<span data-uk-icon="icon: search"></span>
 										</a>
 									</div>
 									<div v-if="searchAddr" class="uk-width-1-1" style="margin: 15px; padding: 0px;">
 										<ul class="uk-list uk-list-divider uk-list-collapse">
-											<li class ="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index style="justify-content: space-between" type="button" @click="selectAddr(item)">
+											<li class="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index
+												style="justify-content: space-between" type="button"
+												@click="selectAddr(item)">
 												<span v-html="item.title"></span>
 												<span class="selectIcon" data-uk-icon="icon: check"></span>
 											</li>
@@ -237,10 +255,11 @@
 	import ScCardAction from "@/components/card/components/CardActions"
 	import VueUploadMultipleImage from 'vue-upload-multiple-image';
 	import {validationMixin} from 'vuelidate'
-	import {required, integer} from 'vuelidate/lib/validators'
+	import {required} from 'vuelidate/lib/validators'
 	import RatingList from "@/components/common/RatingList"
 	import Select2 from "@/components/Select2";
 	import PrettyCheck from 'pretty-checkbox-vue/check';
+
 	export default {
 		components: {
 			Select2,
@@ -270,54 +289,63 @@
 				defaultForm: {
 					uid: '',
 					gasStationName: '', //주유소명
-					gasStationUid:'', //주유소 Uid
+					gasStationUid: '', //주유소 Uid
 					brandCode: '', //브랜드코드명
 					gasStationType: '',
-					address:'', //주소
-					sido:'',
-					sigungu:'',
-					tel:'', //전화번호
+					address: '', //주소
+					sido: '',
+					sigungu: '',
+					tel: '', //전화번호
 					lat: null, //위도
 					lon: null, //경도
-					isCarWash : true,
+					isCarWash: true,
 					isConvenience: true,
-					isKpetro:true,
+					isKpetro: true,
 					picture: [],
-					oilPrice:[
-						{PRODCD:'B027', //휘발유
-							PRICE:0},
-						{PRODCD:'D047', //경유
-							PRICE:0},
-						{PRODCD:'B034', //고급휘발유
-							PRICE:0},
-						{PRODCD:'C004', //실내등유
-							PRICE:0},
-						{PRODCD:'K015', //자동차부탄
-							PRICE:0}],
-					brandCodeOpts:[],
-					gasStationTypeOpts:[]
+					oilPrice: [
+						{
+							PRODCD: 'B027', //휘발유
+							PRICE: 0
+						},
+						{
+							PRODCD: 'D047', //경유
+							PRICE: 0
+						},
+						{
+							PRODCD: 'B034', //고급휘발유
+							PRICE: 0
+						},
+						{
+							PRODCD: 'C004', //실내등유
+							PRICE: 0
+						},
+						{
+							PRODCD: 'K015', //자동차부탄
+							PRICE: 0
+						}],
+					brandCodeOpts: [],
+					gasStationTypeOpts: []
 				}
 			}
 		},
 		validations: {
 			sendData: {
-				gasStationName:{
+				gasStationName: {
 					required
 				},
-				gasStationUid:{
+				gasStationUid: {
 					required
 				},
-				tel:{
-					required,
-					integer
-				},
-				brandCode:{
+				tel: {
 					required
 				},
-				gasStationType:{
+				brandCode: {
 					required
 				},
-				address:{
+				gasStationType: {
+					required
+				},
+				address: {
 					required
 				},
 				lat: {
@@ -356,8 +384,8 @@
 					this.sendData.lon = res.data.addresses[0].y
 					let tmpAddr = res.data.addresses[0].jibunAddress.split(" ")
 					this.sendData.sido = tmpAddr[0]
-					tmpAddr[0] === '세종특별자치시' ? this.sendData.sigungu = tmpAddr[0]:this.sendData.sigungu = tmpAddr[1]
-					this.searchAddr=[]
+					tmpAddr[0] === '세종특별자치시' ? this.sendData.sigungu = tmpAddr[0] : this.sendData.sigungu = tmpAddr[1]
+					this.searchAddr = []
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
@@ -365,8 +393,11 @@
 			searchPlace(searchString) {
 				if (!searchString) {
 					this.callAlertError("주소가 입력되지 않았습니다.")
-				}else{
-					this.$axios.$post(this.config.apiUrl + '/searchList', {keyword: searchString, count: 5}).then(async res => {
+				} else {
+					this.$axios.$post(this.config.apiUrl + '/searchList', {
+						keyword: searchString,
+						count: 5
+					}).then(async res => {
 						this.callNotification('목록을 가져왔습니다.')
 						this.searchAddr = res.data.items
 					}).finally(() => {
@@ -379,14 +410,13 @@
 			},
 			//multi image upload////////////////////////////////////////////////
 			uploadImageSuccess(formData, index, fileList) {
-				formData.append('dir', 'site')
+				formData.append('dir', 'gasStation')
 				this.$axios.$post(this.config.apiUrl + '/uploads/', formData).then(response => {
 					this.sendData.picture[index] = response.data;
 				})
 			},
 			beforeRemove(index, done, fileList) {
-				let r = confirm("remove image")
-				if (r == true) {
+				if (confirm("remove image")) {
 					done()
 					this.sendData.picture.splice(index, 1);
 				} else {
@@ -398,7 +428,7 @@
 					this.sendData.picture[index] = response.data;
 				})
 			},
-			markIsPrimary(index, fileList){
+			markIsPrimary(index, fileList) {
 				let temp = this.sendData.picture[0]
 				this.sendData.picture[0] = this.sendData.picture[index]
 				this.sendData.picture[index] = temp
@@ -411,25 +441,25 @@
 				if (props) {
 					this.sendData = JSON.parse(JSON.stringify(props.data))
 					let oilPrice = this.sendData.oilPrice
-					if(oilPrice === null){
+					if (oilPrice === null) {
 						this.sendData.oilPrice = this.defaultForm.oilPrice
-					}else{
+					} else {
 						let tempArr = this.defaultForm.oilPrice
 						oilPrice.find((item, idx) => {
-							if(item.PRODCD === 'B027'){
-								tempArr.splice(0,1,{PROCD:'B027', PRICE:item.PRICE})
+							if (item.PRODCD === 'B027') {
+								tempArr.splice(0, 1, {PROCD: 'B027', PRICE: item.PRICE})
 							}
-							if(item.PRODCD === 'D047'){
-								tempArr.splice(1,1,{PROCD:'D047', PRICE:item.PRICE})
+							if (item.PRODCD === 'D047') {
+								tempArr.splice(1, 1, {PROCD: 'D047', PRICE: item.PRICE})
 							}
-							if(item.PRODCD === 'B034'){
-								tempArr.splice(2,1,{PROCD:'B034', PRICE:item.PRICE})
+							if (item.PRODCD === 'B034') {
+								tempArr.splice(2, 1, {PROCD: 'B034', PRICE: item.PRICE})
 							}
-							if(item.PRODCD === 'C004'){
-								tempArr.splice(3,1,{PROCD:'C004', PRICE:item.PRICE})
+							if (item.PRODCD === 'C004') {
+								tempArr.splice(3, 1, {PROCD: 'C004', PRICE: item.PRICE})
 							}
-							if(item.PRODCD === 'K015'){
-								tempArr.splice(4,1,{PROCD:'K015', PRICE:item.PRICE})
+							if (item.PRODCD === 'K015') {
+								tempArr.splice(4, 1, {PROCD: 'K015', PRICE: item.PRICE})
 							}
 						})
 						this.sendData.oilPrice = tempArr
@@ -440,16 +470,18 @@
 					if (this.sendData.picture !== null) {
 						for (let i = 0; i < this.sendData.picture.length; i++) {
 							let img = {}
-							if(i === 0){
+							if (i === 0) {
 								img.default = 1
-								img.highlight=1
-							}else{
+								img.highlight = 1
+							} else {
 								img.default = 0
-								img.highlight=0
+								img.highlight = 0
 							}
 							img.path = this.sendData.picture[i]
 							this.tempImage[i] = img
 						}
+					} else {
+						this.sendData.picture = []
 					}
 				} else {
 					this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
@@ -502,9 +534,9 @@
 					this.submitStatus = 'OK'
 				})
 			},
-			convertSelectJson(json){
+			convertSelectJson(json) {
 				let dataArray = []
-				Object.entries(json).map(function(obj){
+				Object.entries(json).map(function (obj) {
 					let data = {}
 					data.id = obj[0]
 					data.text = obj[1]
@@ -518,19 +550,24 @@
 
 <style lang="scss">
 	@import 'assets/scss/vue/_pretty_checkboxes';
+
 	.selectAddr {
 		float: right !important;
 	}
-	.selectIcon{
+
+	.selectIcon {
 		display: none;
 	}
-	.selectAddr:hover{
-		cursor:pointer;
+
+	.selectAddr:hover {
+		cursor: pointer;
 		background-color: #4db6ac;
 	}
-	.selectAddr:hover > .selectIcon{
+
+	.selectAddr:hover > .selectIcon {
 		display: block;
 	}
+
 	.sc-vue-errors li {
 		font-size: 12px;
 	}
