@@ -40,7 +40,8 @@
 					</ScInput>
 				</div>
 				<div class="uk-width-1-2">
-					<ScInput v-model="sendData.ticketPrice" :error-state="$v.sendData.ticketPrice.$error" :validator="$v.sendData.ticketPrice">
+					<ScInput v-model="sendData.ticketPrice" :error-state="$v.sendData.ticketPrice.$error"
+							 :validator="$v.sendData.ticketPrice">
 						<label>
 							상품가격
 						</label>
@@ -55,7 +56,8 @@
 						</li>
 					</ul>
 				</div>
-				<div :class="sendData.ticketType==='1'?'uk-width-1-1':'uk-width-1-2'" style="text-align: center; line-height: 50px">
+				<div :class="sendData.ticketType==='1'?'uk-width-1-1':'uk-width-1-2'"
+					 style="text-align: center; line-height: 50px">
 					<PrettyCheck v-model="sendData.isActive" class="p-switch">
 						{{sendData.isActive?"활성":"비활성"}}
 					</PrettyCheck>
@@ -81,20 +83,30 @@
 					<a href="javascript:void(0)" @click.prevent="openInfo(product.uid)">
 						<div class="uk-card uk-card-default uk-card-body">
 							<!-- 티켓권 이름 -->
-							<div v-if="product.ticketDayTypeName==='주말'" class="uk-text-bold uk-text-primary">{{product.ticketDayTypeName}}</div>
-							<div v-else-if="product.ticketDayTypeName==='평일'" class="uk-text-bold" style="color: #66bb6a">{{product.ticketDayTypeName}}</div>
+							<div v-if="product.ticketDayTypeName==='주말'" class="uk-text-bold uk-text-primary">
+								{{product.ticketDayTypeName}}
+							</div>
+							<div v-else-if="product.ticketDayTypeName==='평일'" class="uk-text-bold"
+								 style="color: #66bb6a">{{product.ticketDayTypeName}}
+							</div>
 							<div v-else="" class="uk-text-bold uk-text-secondary">{{product.ticketDayTypeName}}</div>
 							<!-- 상품가격 -->
-							<div v-if="product.ticketPriceDiscountPercent === null || product.ticketPriceDiscountPercent ===0">{{product.ticketPrice}}원</div>
+							<div
+								v-if="product.ticketPriceDiscountPercent === null || product.ticketPriceDiscountPercent ===0">
+								{{product.ticketPrice}}원
+							</div>
 							<div v-else="">
 								<div>
-									<span style="opacity: 50%; text-decoration: line-through">{{product.ticketPrice}}원</span>
+									<span
+										style="opacity: 50%; text-decoration: line-through">{{product.ticketPrice}}원</span>
 									<span style="color: red; font-size:8px; font-weight: bold">{{product.ticketPriceDiscountPercent}}%</span>
 								</div>
 								<div>{{product.ticketPrice - product.ticketPriceDiscount}}원</div>
 							</div>
 							<!-- -->
-							<div>{{product.ticketTypeName === '시간권'?product.ticketTime +' '+product.ticketTypeName: product.ticketTypeName}}</div>
+							<div>{{product.ticketTypeName === '시간권'?product.ticketTime +' '+product.ticketTypeName:
+								product.ticketTypeName}}
+							</div>
 						</div>
 					</a>
 				</div>
@@ -109,8 +121,9 @@
 	import Select2 from "@/components/Select2"
 	import ScInput from "@/components/Input"
 	import PrettyCheck from 'pretty-checkbox-vue/check'
-    export default {
-		components:{
+
+	export default {
+		components: {
 			Select2,
 			ScInput,
 			PrettyCheck
@@ -124,36 +137,36 @@
 				default: 'list'
 			}
 		},
-    	data() {
-			return{
+		data() {
+			return {
 				submitStatus: null,
-				siteUid:'',
+				siteUid: '',
 				sendData: {},
-				defaultForm:{
+				defaultForm: {
 					uid: null,
 					siteUid: null,
 					ticketType: null,
-					ticketDayType:null,
-					ticketTime:null,
-					ticketPrice:null,
-					ticketPriceDiscount:null,
+					ticketDayType: null,
+					ticketTime: null,
+					ticketPrice: null,
+					ticketPriceDiscount: null,
 					ticketPriceDiscountPercent: null,
 					isActive: true,
 				},
-				ticketDayTypeOpts:[],
-				ticketTypeOpts:[],
-				productList:[]
+				ticketDayTypeOpts: [],
+				ticketTypeOpts: [],
+				productList: []
 			}
 		},
-		validations:{
+		validations: {
 			sendData: {
-				ticketType:{
+				ticketType: {
 					required
 				},
-				ticketDayType:{
+				ticketDayType: {
 					required
 				},
-				ticketPrice:{
+				ticketPrice: {
 					required,
 					integer
 				},
@@ -178,20 +191,20 @@
 		beforeDestroy() {
 			this.$nuxt.$off('open-product-list')
 		},
-		methods:{
-			async openInfo(selectUid){
-				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets/'+selectUid)
+		methods: {
+			async openInfo(selectUid) {
+				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets/' + selectUid)
 				this.sendData = res.data
 				this.sendData.ticketType = String(res.data.ticketType)
 			},
-			async fetchData(siteUid){
+			async fetchData(siteUid) {
 				this.productList = []
 				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets', {
-					params:{
+					params: {
 						siteUid: siteUid
 					}
 				})
-				for(let i of res.data){
+				for (let i of res.data) {
 					this.productList.push(i)
 				}
 			},
@@ -244,7 +257,7 @@
 				return dataArray
 			}
 		}
-    }
+	}
 </script>
 
 <style lang="scss" scoped>

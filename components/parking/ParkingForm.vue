@@ -333,9 +333,9 @@
 						<li>
 							<product-list></product-list>
 						</li>
-						<l1>
+						<li>
 							<discount-list></discount-list>
-						</l1>
+						</li>
 					</ul>
 				</ScCardBody>
 			</ScCard>

@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-danger uk-width-1-1" @click="deleteDatas">
+		<button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-danger uk-width-1-1"
+				@click="deleteDatas">
 			<span data-uk-icon="icon: trash" class="md-color-red-600 uk-margin-small-right"></span>
 			리뷰 삭제
 		</button>
@@ -79,7 +80,6 @@
 						headerName: '평점',
 						field: 'rate',
 						suppressSizeToFit: false,
-						cellClass: 'ratestyle',
 						cellRenderer: (obj) => {
 							if (obj.data) {
 								let label = ''
@@ -144,7 +144,7 @@
 		},
 		created() {
 			let vm = this
-			this.$nuxt.$on('open-rate-list', (uid,type) => {
+			this.$nuxt.$on('open-rate-list', (uid, type) => {
 				vm.fetchData(uid, type) // parkingSite : 1
 				vm.siteUid = uid
 			})
@@ -153,9 +153,9 @@
 			this.$nuxt.$off('open-rate-list')
 		},
 		methods: {
-			async fetchData(siteUid,type) {
-				let res = await this.$axios.$get(this.config.apiUrl + '/rates/'+type+'/'+ siteUid)
-				if(this.gridOptions.api) {
+			async fetchData(siteUid, type) {
+				let res = await this.$axios.$get(this.config.apiUrl + '/rates/' + type + '/' + siteUid)
+				if (this.gridOptions.api) {
 					this.gridOptions.api.setRowData(res.data)
 				}
 			},

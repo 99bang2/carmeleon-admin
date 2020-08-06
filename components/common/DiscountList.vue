@@ -5,12 +5,14 @@
 				상품 리스트
 			</h5>
 			<div class="uk-flex uk-flex-around">
-				<button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-danger uk-width-2-5" @click="setDiscount">
-					<span class = "mdi mdi-sale mdi-18px md-color-red-600 uk-margin-small-right"></span>
+				<button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-danger uk-width-2-5"
+						@click="setDiscount">
+					<span class="mdi mdi-sale mdi-18px md-color-red-600 uk-margin-small-right"></span>
 					<span>할인율 등록</span>
 				</button>
-				<button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-success uk-width-2-5" @click="resetDiscount">
-					<span class = "mdi mdi-refresh mdi-18px md-color-green-600 uk-margin-small-right"></span>
+				<button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-success uk-width-2-5"
+						@click="resetDiscount">
+					<span class="mdi mdi-refresh mdi-18px md-color-green-600 uk-margin-small-right"></span>
 					<span>할인율 초기화</span>
 				</button>
 			</div>
@@ -35,7 +37,8 @@
 
 <script>
 	import {agGridMixin} from "~/plugins/ag-grid.mixin"
-    export default {
+
+	export default {
 		mixins: [
 			agGridMixin
 		],
@@ -45,8 +48,8 @@
 				default: 'list'
 			}
 		},
-    	data() {
-			return{
+		data() {
+			return {
 				siteUid: null,
 				discountPercent: null,
 				gridOptions: {
@@ -102,7 +105,7 @@
 						field: 'ticketPriceDiscount',
 						width: 110,
 						cellRenderer: obj => {
-							return obj.value ? (obj.data.ticketPrice-obj.value) + '원' : ''
+							return obj.value ? (obj.data.ticketPrice - obj.value) + '원' : ''
 						}
 					},
 					{
@@ -111,7 +114,7 @@
 						field: 'ticketPriceDiscountPercent',
 						width: 110,
 						cellRenderer: obj => {
-							return obj.value ? obj.value + '%' :''
+							return obj.value ? obj.value + '%' : ''
 						}
 					}
 				]
@@ -128,15 +131,15 @@
 		beforeDestroy() {
 			this.$nuxt.$off('open-discount-list')
 		},
-		methods:{
-			async fetchData(siteUid){
+		methods: {
+			async fetchData(siteUid) {
 				this.productList = []
 				let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets', {
-					params:{
+					params: {
 						siteUid: siteUid
 					}
 				})
-				if(this.gridOptions.api) {
+				if (this.gridOptions.api) {
 					this.gridOptions.api.setRowData(res.data)
 				}
 			},
@@ -158,24 +161,24 @@
 					this.callAlertError('적용할 항목을 선택해주세요.')
 				}
 			},
-			resetDiscount(){
+			resetDiscount() {
 				let selected = this.gridOptions.api.getSelectedRows()
 				let selectedUids = selected.map(({uid}) => uid)
 				let selectedCnt = selectedUids.length
-				if(selectedCnt){
+				if (selectedCnt) {
 					this.$axios.$post(this.config.apiUrl + '/discountTickets/addDiscount', {
-						discountPercent : 0,
+						discountPercent: 0,
 						uids: selectedUids
 					}).then(res => {
 						this.callNotification('적용했습니다.')
 						this.fetchData(this.siteUid)
 					})
-				}else {
+				} else {
 					this.callAlertError('적용할 항목을 선택해주세요.')
 				}
 			}
 		}
-    }
+	}
 </script>
 
 <style lang="scss" scoped>
