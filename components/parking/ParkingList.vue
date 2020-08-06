@@ -32,7 +32,7 @@
 							</div>
 							<div class="uk-width-1-5@s">
 								<select v-model="searchActive" class="uk-select" required="required">
-									<option value="">활성 상태</option>
+									<option value="">운영 상태</option>
 									<option value="true">운영중</option>
 									<option value="false">미운영</option>
 								</select>

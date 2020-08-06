@@ -228,7 +228,6 @@ export default {
 								order: parameters.order,
 							}
 						}).then(response => {
-							console.log(response)
 							let rowsThisPage = response.data.rows
 							lastRow = response.data.count
 							params.successCallback(rowsThisPage, lastRow)

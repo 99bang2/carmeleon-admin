@@ -355,13 +355,8 @@
 					this.sendData.lat = res.data.addresses[0].x
 					this.sendData.lon = res.data.addresses[0].y
 					let tmpAddr = res.data.addresses[0].jibunAddress.split(" ")
-					if(tmpAddr[0] === '세종특별자치시'){
-						this.sendData.sido = tmpAddr[0]
-						this.sendData.sigungu = tmpAddr[0]
-					}else{
-						this.sendData.sido = tmpAddr[0]
-						this.sendData.sigungu = tmpAddr[1]
-					}
+					this.sendData.sido = tmpAddr[0]
+					tmpAddr[0] === '세종특별자치시' ? this.sendData.sigungu = tmpAddr[0]:this.sendData.sigungu = tmpAddr[1]
 					this.searchAddr=[]
 				}).finally(() => {
 					this.submitStatus = 'OK'
@@ -411,7 +406,6 @@
 			//multi image upload////////////////////////////////////////////////
 
 			settingForm(props) {
-				//console.log('open')
 				this.$v.$reset()
 				this.tempImage = []
 				if (props) {
@@ -439,7 +433,6 @@
 							}
 						})
 						this.sendData.oilPrice = tempArr
-						console.log(this.sendData.oilPrice)
 					}
 
 					// vue-upload-multiple-image 패키지 사용
