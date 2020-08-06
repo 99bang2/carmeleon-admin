@@ -360,7 +360,7 @@
 			},
 			//multi image upload////////////////////////////////////////////////
 			uploadImageSuccess(formData, index, fileList) {
-				formData.append('dir', 'site')
+				formData.append('dir', 'evCharge')
 				this.$axios.$post(this.config.apiUrl + '/uploads/', formData).then(response => {
 					this.sendData.picture[index] = response.data;
 				})
