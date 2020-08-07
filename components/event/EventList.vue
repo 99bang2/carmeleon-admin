@@ -130,16 +130,13 @@
 				this.gridOptions.api.setQuickFilter(newValue)
 			},
 		},
-		async beforeMount() {
-			//let res = await this.$axios.$get(this.config.apiUrl + `/api/codes`)
-		},
 		created() {
 			let vm = this
 			this.$nuxt.$on('reset-event-list', () => {
 				vm.resetSelection()
 			})
-			this.$nuxt.$on('fetch-event-list', (uid) => {
-				vm.fetchData(uid)
+			this.$nuxt.$on('fetch-event-list', () => {
+				vm.fetchData()
 			})
 		},
 		beforeDestroy() {
@@ -165,16 +162,6 @@
 				let res = await this.$axios.$get(this.config.apiUrl + '/events')
 				if(this.gridOptions.api){
 					this.gridOptions.api.setRowData(res.data)
-					if (selectUid) {
-						this.gridOptions.api.forEachNode((node) => {
-							if (node.data.uid === selectUid) {
-								this.onRowClicked({
-									node: node,
-									data: node.data
-								})
-							}
-						})
-					}
 				}
 			},
 			resetSelection() {

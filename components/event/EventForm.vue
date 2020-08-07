@@ -181,6 +181,23 @@
 				}
 			}
 		},
+		created() {
+			let vm = this
+			this.$nuxt.$on('open-event-form', (data) => {
+				vm.settingForm(data)
+			})
+			this.$nuxt.$on('close-event-form', () => {
+				vm.closeForm()
+			})
+		},
+		async beforeMount() {
+			this.sendData = this.defaultForm
+		},
+
+		beforeDestroy() {
+			this.$nuxt.$off('open-event-form')
+			this.$nuxt.$off('close-event-form')
+		},
 		methods: {
 			onChangeBannerImageFile(event) {
 				var input = event.target;
@@ -199,9 +216,9 @@
 				this.sendData.bannerImage = this.$refs.bannerImage.files[0];
 			},
 			onChangeMainImageFile(event) {
-				var input = event.target;
+				let input = event.target;
 				if(input.files && input.files[0]){
-					var reader = new FileReader();
+					let reader = new FileReader();
 					reader.onload = e => {
 						this.mainImageData = e.target.result;
 					}
@@ -240,7 +257,7 @@
 			deleteForm() {
 				this.$axios.$delete(this.config.apiUrl + '/events/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('fetch-event-list', res.data.uid)
+					this.$nuxt.$emit('fetch-event-list')
 				}).finally(() => {
 					this.deleteStatus = 'OK'
 					this.cardFormClosed = true
@@ -261,7 +278,6 @@
 				}
 			},
 			postForm() {
-				// this.sendData.accountUid =
 				//-- 파일 전송을 위한 FormData 정의 --//
 				const formData = new FormData()
 				formData.append("bannerImage", this.sendData.bannerImage)
@@ -281,7 +297,7 @@
 					}
 				}).then(async res => {
 					this.callNotification('등록하였습니다.')
-					this.$nuxt.$emit('fetch-event-list', res.data.uid)
+					this.$nuxt.$emit('fetch-event-list')
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
@@ -301,30 +317,12 @@
 
 				this.$axios.$put(this.config.apiUrl + '/events/' + this.sendData.uid, formData).then(async res => {
 					this.callNotification('수정하였습니다.')
-					this.$nuxt.$emit('fetch-event-list', res.data.uid)
+					this.$nuxt.$emit('fetch-event-list')
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
 			},
 		},
-
-		created() {
-			let vm = this
-			this.$nuxt.$on('open-event-form', (data) => {
-				vm.settingForm(data)
-			})
-			this.$nuxt.$on('close-event-form', () => {
-				vm.closeForm()
-			})
-		},
-		async beforeMount() {
-			this.sendData = this.defaultForm
-		},
-
-		beforeDestroy() {
-			this.$nuxt.$off('open-event-form')
-			this.$nuxt.$off('close-event-form')
-		}
 	}
 </script>
 
