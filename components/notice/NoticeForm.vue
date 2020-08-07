@@ -11,7 +11,8 @@
 							</ScCardTitle>
 						</div>
 						<ScCardActions v-if="mode !== 'mypage'">
-							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close" @click.prevent="closeForm"/>
+							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close"
+							   @click.prevent="closeForm"/>
 						</ScCardActions>
 					</div>
 				</ScCardHeader>
@@ -19,11 +20,13 @@
 					<div class="uk-accordion-content">
 						<form class="uk-grid-small uk-grid" data-uk-grid>
 							<div class="uk-width-1-1">
-								<ScInput v-model="sendData.title" :error-state="$v.sendData.title.$error" :validator="$v.sendData.title">
+								<ScInput v-model="sendData.title" :error-state="$v.sendData.title.$error"
+										 :validator="$v.sendData.title">
 									<label>
 										제목
 									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
+									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+										  data-uk-icon="icon: pencil"/>
 								</ScInput>
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.title.required">
@@ -65,8 +68,10 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-2@s">
-								<input id="switch-css" v-model="sendData.isOpen" type="checkbox" class="sc-switch-input">
-								<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
+								<input id="switch-css" v-model="sendData.isOpen" type="checkbox"
+									   class="sc-switch-input">
+								<label for="switch-css" class="sc-switch-label"
+									   style="margin-top:15px;margin-left:15px;">
 									<span class="sc-switch-toggle-on">활성</span>
 									<span class="sc-switch-toggle-off">비활성</span>
 								</label>
@@ -74,10 +79,12 @@
 						</form>
 					</div>
 					<div class="uk-margin-top uk-text-center">
-						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="submitForm">
+						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
+								@click="submitForm">
 							{{ sendData.uid ? '수정': '등록' }}
 						</button>
-						<button v-if="sendData.uid" class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="deleteForm">
+						<button v-if="sendData.uid" class="sc-button sc-button-primary"
+								:disabled="submitStatus === 'PENDING'" @click="deleteForm">
 							삭제
 						</button>
 					</div>
@@ -89,10 +96,11 @@
 
 <script>
 	import {validationMixin} from 'vuelidate'
-	import {required, minLength, minValue, sameAs, email, requiredIf} from 'vuelidate/lib/validators'
+	import {required} from 'vuelidate/lib/validators'
 	import ScInput from '~/components/Input'
 	import ScTextarea from '~/components/Textarea'
 	import Select2 from '~/components/Select2'
+	import Convert from '@/plugins/convertJson'
 
 	export default {
 		components: {
@@ -111,11 +119,7 @@
 		},
 		data() {
 			return {
-				noticeOpts:[
-					{id: 0, text: '긴급'},
-					{id: 1, text: '필수'},
-					{id: 2, text: '일반'},
-				],
+
 				cardFormClosed: true,
 				submitStatus: null,
 				deleteStatus: null,
@@ -127,7 +131,8 @@
 					content: '',
 					noticeType: '',
 					isOpen: false
-				}
+				},
+				noticeOpts: []
 			}
 		},
 		validations: {
@@ -159,6 +164,8 @@
 		},
 		async beforeMount() {
 			this.sendData = this.defaultForm
+			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
+			this.noticeOpts = Convert.convertJson(code.data.notice, 'select')
 		},
 		methods: {
 			settingForm(props) {
@@ -180,7 +187,7 @@
 			deleteForm() {
 				this.$axios.$delete(this.config.apiUrl + '/notices/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('fetch-notice-list', res.data.uid)
+					this.$nuxt.$emit('fetch-notice-list')
 				}).finally(() => {
 					this.deleteStatus = 'OK'
 					this.cardFormClosed = true
@@ -204,7 +211,7 @@
 				this.sendData.accountUid = this.$auth.user.uid;
 				this.$axios.$post(this.config.apiUrl + '/notices', this.sendData).then(async res => {
 					this.callNotification('등록하였습니다.')
-					this.$nuxt.$emit('fetch-notice-list', res.data.uid)
+					this.$nuxt.$emit('fetch-notice-list')
 				}).finally(() => {
 					this.submitStatus = 'OK'
 					this.cardFormClosed = true
@@ -213,7 +220,7 @@
 			putForm() {
 				this.$axios.$put(this.config.apiUrl + '/notices/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
-					this.$nuxt.$emit('fetch-notice-list', res.data.uid)
+					this.$nuxt.$emit('fetch-notice-list')
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})

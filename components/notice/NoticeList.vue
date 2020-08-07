@@ -8,8 +8,10 @@
 					</ScCardTitle>
 				</div>
 				<div class="uk-text-nowrap">
-					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-plus" style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="추가"/>
-					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline" style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="삭제"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-plus" style="display: inline-block"
+					   @click.prevent="openNewForm" data-uk-tooltip="추가"/>
+					<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline"
+					   style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="삭제"/>
 				</div>
 			</ScCardHeader>
 			<ScCardBody>
@@ -21,12 +23,12 @@
 								<i class="mdi mdi-refresh"></i>
 							</a>
 							<div class="uk-width-1-3@s">
-							<select v-model="searchType" class="uk-select">
-								<option value="">공지사항 분류</option>
-								<option value="0">긴급</option>
-								<option value="1">필수</option>
-								<option value="2">일반</option>
-							</select>
+								<select v-model="searchType" class="uk-select">
+									<option value="">공지사항 분류</option>
+									<option value="0">긴급</option>
+									<option value="1">필수</option>
+									<option value="2">일반</option>
+								</select>
 							</div>
 						</div>
 					</div>
@@ -115,7 +117,7 @@
 									break;
 								case 2:
 									typeName = "일반"
-								break;
+									break;
 							}
 							return typeName
 						}
@@ -162,16 +164,13 @@
 				this.gridOptions.api.setQuickFilter(newValue)
 			},
 		},
-		async beforeMount() {
-			//let res = await this.$axios.$get(this.config.apiUrl + `/api/codes`)
-		},
 		created() {
 			let vm = this
 			this.$nuxt.$on('reset-notice-list', () => {
 				vm.resetSelection()
 			})
-			this.$nuxt.$on('fetch-notice-list', (uid) => {
-				vm.fetchData(uid)
+			this.$nuxt.$on('fetch-notice-list', () => {
+				vm.fetchData()
 			})
 		},
 		beforeDestroy() {
@@ -182,7 +181,7 @@
 			await this.fetchData()
 		},
 		methods: {
-			refreshFilter(){
+			refreshFilter() {
 				this.searchKeyword = ""
 				this.searchType = ""
 				this.fetchData()
@@ -200,18 +199,8 @@
 			async fetchData(selectUid) {
 				//API 연동
 				let res = await this.$axios.$get(this.config.apiUrl + '/notices')
-				if(this.gridOptions.api){
+				if (this.gridOptions.api) {
 					this.gridOptions.api.setRowData(res.data)
-					if (selectUid) {
-						this.gridOptions.api.forEachNode((node) => {
-							if (node.data.uid === selectUid) {
-								this.onRowClicked({
-									node: node,
-									data: node.data
-								})
-							}
-						})
-					}
 				}
 			},
 			resetSelection() {
