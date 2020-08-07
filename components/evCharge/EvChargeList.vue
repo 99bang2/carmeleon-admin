@@ -23,7 +23,7 @@
 								<i class="mdi mdi-refresh"></i>
 							</a>
 							<div class="uk-width-1-4@s">
-								<select v-model="searchChargeType" class="uk-select" required="required">
+								<select v-model="searchChargeType" class="uk-select">
 									<option value="">충전기타입</option>
 									<option value="01">DC 차데모</option>
 									<option value="02">AC 완속</option>
@@ -35,7 +35,7 @@
 								</select>
 							</div>
 							<div class="uk-width-1-4@s">
-								<select v-model="searchStat" class="uk-select" required="required">
+								<select v-model="searchStat" class="uk-select">
 									<option value="">충전기상태</option>
 									<option value=1>통신이상</option>
 									<option value=2>충전대기</option>

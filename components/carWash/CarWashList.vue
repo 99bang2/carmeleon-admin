@@ -23,7 +23,7 @@
 								<i class="mdi mdi-refresh"></i>
 							</a>
 							<div class="uk-width-1-3@s">
-								<select v-model="searchType" class="uk-select" required="required">
+								<select v-model="searchType" class="uk-select">
 									<option value="">업종명 분류</option>
 									<option value="세차">세차장</option>
 									<option value="주유">주유소</option>

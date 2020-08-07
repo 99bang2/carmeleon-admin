@@ -21,7 +21,7 @@
 								<i class="mdi mdi-refresh"></i>
 							</a>
 							<div class="uk-width-1-3@s">
-							<select v-model="searchType" class="uk-select" required="required">
+							<select v-model="searchType" class="uk-select">
 								<option value="">공지사항 분류</option>
 								<option value="0">긴급</option>
 								<option value="1">필수</option>

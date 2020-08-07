@@ -23,7 +23,7 @@
 								<i class="mdi mdi-refresh"></i>
 							</a>
 							<div class="uk-width-1-5@s">
-								<select v-model="searchSiteType" class="uk-select" required="required">
+								<select v-model="searchSiteType" class="uk-select">
 									<option value="">주차장 유형</option>
 									<option value="0">하이파킹</option>
 									<option value="1">제휴</option>
@@ -31,7 +31,7 @@
 								</select>
 							</div>
 							<div class="uk-width-1-5@s">
-								<select v-model="searchActive" class="uk-select" required="required">
+								<select v-model="searchActive" class="uk-select">
 									<option value="">운영 상태</option>
 									<option value="true">운영중</option>
 									<option value="false">미운영</option>

@@ -25,24 +25,17 @@
 							<div class="uk-width-1-3@s">
 								<label>
 									<select v-model="searchGrade" class="uk-select">
-										<option value="">
-											모든 등급
-										</option>
-										<option v-for="grade in gradeOptions" :key="grade.id" :value="grade.id">
-											{{ grade.text }}
-										</option>
+										<option value="">업종명 분류</option>
+										<option value="0">최고 관리자</option>
+										<option value="1">일반 관리자</option>
 									</select>
 								</label>
 							</div>
 							<div class="uk-width-1-3@s">
 								<label>
 									<select v-model="searchActive" class="uk-select">
-										<option value="">
-											활성상태
-										</option>
-										<option value="true">
-											활성
-										</option>
+										<option value="">활성상태</option>
+										<option value="true">활성</option>
 										<option value="false">비활성</option>
 									</select>
 								</label>
@@ -105,12 +98,6 @@
 			}
 		},
 		computed: {
-			gradeOptions() {
-				let opts = []
-				opts.push({id: 0, text: "최고 관리자"})
-				opts.push({id: 1, text: "일반 관리자"})
-				return opts
-			},
 			columnDefs() {
 				return [
 					{
@@ -137,7 +124,7 @@
 						field: 'grade',
 						width: 160,
 						cellRenderer: (obj) => {
-							return obj.data.grade === 0 ?'최고 관리자': '일반 관리자'
+							return obj.data.grade === 0 ? '최고 관리자' : '일반 관리자'
 						}
 					},
 					{
@@ -190,8 +177,8 @@
 			this.$nuxt.$on('reset-account-list', () => {
 				vm.resetSelection()
 			})
-			this.$nuxt.$on('fetch-account-list', (uid) => {
-				vm.fetchData(uid)
+			this.$nuxt.$on('fetch-account-list', () => {
+				vm.fetchData()
 			})
 		},
 		beforeDestroy() {
@@ -202,7 +189,7 @@
 			await this.fetchData()
 		},
 		methods: {
-			refreshFilter(){
+			refreshFilter() {
 				this.searchGrade = ""
 				this.searchActive = ""
 				this.fetchData()
@@ -224,21 +211,11 @@
 				this.cardFormClosed = true
 				this.gridOptions.api.redrawRows()
 			},
-			async fetchData(selectUid) {
+			async fetchData() {
 				// API 연동
-				let res = await this.$axios.$get(this.config.apiUrl +'/accounts')
-				if(this.gridOptions.api) {
+				let res = await this.$axios.$get(this.config.apiUrl + '/accounts')
+				if (this.gridOptions.api) {
 					this.gridOptions.api.setRowData(res.data)
-					if (selectUid) {
-						this.gridOptions.api.forEachNode((node) => {
-							if (node.data.uid === selectUid) {
-								this.onRowClicked({
-									node: node,
-									data: node.data
-								})
-							}
-						})
-					}
 				}
 			},
 			resetSelection() {

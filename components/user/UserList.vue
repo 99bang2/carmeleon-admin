@@ -17,7 +17,7 @@
 					<div class="uk-width-4-5@s">
 						<div class="uk-grid-small uk-grid" data-uk-grid>
 							<div class="uk-width-1-5@s">
-								<select v-model="searchSnsType" class="uk-select" required="required">
+								<select v-model="searchSnsType" class="uk-select">
 									<option value="">SNS 종류</option>
 									<option value="kakao">카카오</option>
 									<option value="naver">네이버</option>

@@ -6,12 +6,14 @@
 					<div class="uk-flex uk-flex-middle">
 						<div class="uk-flex-1">
 							<ScCardTitle>
-								<i class="mdi" :class="{ 'mdi-account-card-details-outline' : sendData.uid, 'mdi-account-plus': !sendData.uid }"/>
+								<i class="mdi"
+								   :class="{ 'mdi-account-card-details-outline' : sendData.uid, 'mdi-account-plus': !sendData.uid }"/>
 								계정{{ sendData.uid ? '상세': '생성' }}
 							</ScCardTitle>
 						</div>
 						<ScCardActions>
-							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close" @click.prevent="closeForm"/>
+							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close"
+							   @click.prevent="closeForm"/>
 						</ScCardActions>
 					</div>
 				</ScCardHeader>
@@ -32,7 +34,8 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-1">
-								<ScInput v-model="sendData.id" :error-state="$v.sendData.id.$error" :validator="$v.sendData.id" :read-only="!!sendData.uid">
+								<ScInput v-model="sendData.id" :error-state="$v.sendData.id.$error"
+										 :validator="$v.sendData.id" :read-only="!!sendData.uid">
 									<label>
 										아이디
 									</label>
@@ -51,11 +54,13 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-2@s">
-								<ScInput v-model="sendData.password" type="password" :error-state="$v.sendData.password.$error" :validator="$v.sendData.password">
+								<ScInput v-model="sendData.password" type="password"
+										 :error-state="$v.sendData.password.$error" :validator="$v.sendData.password">
 									<label>
 										비밀번호
 									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
+									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+										  data-uk-icon="icon: lock"></span>
 								</ScInput>
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.password.required">
@@ -68,11 +73,14 @@
 								<span v-if="sendData.uid" class="uk-form-help-block">* 비밀번호는 변경시에만 입력</span>
 							</div>
 							<div class="uk-width-1-2@s">
-								<ScInput v-model="sendData.passwordConfirm" type="password" :error-state="$v.sendData.passwordConfirm.$error" :validator="$v.sendData.passwordConfirm">
+								<ScInput v-model="sendData.passwordConfirm" type="password"
+										 :error-state="$v.sendData.passwordConfirm.$error"
+										 :validator="$v.sendData.passwordConfirm">
 									<label>
 										비밀번호확인
 									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
+									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+										  data-uk-icon="icon: lock"></span>
 								</ScInput>
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.passwordConfirm.sameAsPassword">
@@ -81,7 +89,8 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-2@s">
-								<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error" :validator="$v.sendData.name">
+								<ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error"
+										 :validator="$v.sendData.name">
 									<label>
 										이름
 									</label>
@@ -93,8 +102,10 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-2@s">
-								<input id="switch-css" v-model="sendData.isActive" type="checkbox" class="sc-switch-input">
-								<label for="switch-css" class="sc-switch-label" style="margin-top:15px;margin-left:15px;">
+								<input id="switch-css" v-model="sendData.isActive" type="checkbox"
+									   class="sc-switch-input">
+								<label for="switch-css" class="sc-switch-label"
+									   style="margin-top:15px;margin-left:15px;">
 									<span class="sc-switch-toggle-on">활성</span>
 									<span class="sc-switch-toggle-off">비활성</span>
 								</label>
@@ -102,10 +113,12 @@
 						</form>
 					</div>
 					<div class="uk-margin-top uk-text-center">
-						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="submitForm">
+						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
+								@click="submitForm">
 							{{ sendData.uid ? '수정': '생성' }}
 						</button>
-						<button v-if="sendData.uid" class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="deleteForm">
+						<button v-if="sendData.uid" class="sc-button sc-button-primary"
+								:disabled="submitStatus === 'PENDING'" @click="deleteForm">
 							삭제
 						</button>
 					</div>
@@ -164,7 +177,7 @@
 					async isUnique(value) {
 						if (value === '') return true
 						if (this.sendData.uid) return true
-						let res = await this.$axios.$get(this.config.apiUrl +`/account/unique/${value}`)
+						let res = await this.$axios.$get(this.config.apiUrl + `/account/unique/${value}`)
 						return Boolean(res.data)
 					}
 				},
@@ -184,6 +197,22 @@
 					required
 				}
 			}
+		},
+		created() {
+			let vm = this
+			this.$nuxt.$on('open-account-form', (data) => {
+				vm.settingForm(data)
+			})
+			this.$nuxt.$on('close-account-form', () => {
+				vm.closeForm()
+			})
+		},
+		async beforeMount() {
+			this.sendData = this.defaultForm
+		},
+		beforeDestroy() {
+			this.$nuxt.$off('open-account-form')
+			this.$nuxt.$off('close-account-form')
 		},
 		methods: {
 			settingForm(props) {
@@ -205,7 +234,7 @@
 			deleteForm() {
 				this.$axios.$delete(this.config.apiUrl + '/accounts/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('fetch-account-list', res.data.uid)
+					this.$nuxt.$emit('fetch-account-list')
 				}).finally(() => {
 					this.deleteStatus = 'OK'
 					this.cardFormClosed = true
@@ -229,7 +258,7 @@
 			postForm() {
 				this.$axios.$post(this.config.apiUrl + '/accounts', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
-					this.$nuxt.$emit('fetch-account-list', res.data.uid)
+					this.$nuxt.$emit('fetch-account-list')
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
@@ -237,28 +266,12 @@
 			putForm() {
 				this.$axios.$put(this.config.apiUrl + '/accounts/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
-					this.$nuxt.$emit('fetch-account-list', res.data.uid)
+					this.$nuxt.$emit('fetch-account-list')
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
 			},
 		},
-		created() {
-			let vm = this
-			this.$nuxt.$on('open-account-form', (data) => {
-				vm.settingForm(data)
-			})
-			this.$nuxt.$on('close-account-form', () => {
-				vm.closeForm()
-			})
-		},
-		async beforeMount() {
-			this.sendData = this.defaultForm
-		},
-		beforeDestroy() {
-			this.$nuxt.$off('open-account-form')
-			this.$nuxt.$off('close-account-form')
-		}
 	}
 </script>
 

@@ -26,7 +26,8 @@
 													step{{index + 1}}
 												</h3>
 											</div>
-											<div class="uk-card-body uk-margin" style="min-height: 350px" data-uk-margin>
+											<div class="uk-card-body uk-margin" style="min-height: 350px"
+												 data-uk-margin>
 												<div data-uk-form-custom="target: true">
 													<input type="file" accept="image/*"
 														   @change="onChangeStepImageFile($event, index)">
@@ -39,10 +40,12 @@
 												</div>
 											</div>
 											<div class="uk-width-1-2 uk-align-center uk-flex">
-												<button @click.prevent="refresh(index)" class="uk-button uk-button-danger uk-width-1-2 uk-button-small">
+												<button @click.prevent="refresh(index)"
+														class="uk-button uk-button-danger uk-width-1-2 uk-button-small">
 													삭제
 												</button>
-												<a class="uk-button uk-button-small uk-width-1-2" @click.prevent="showModal(stepImage)">
+												<a class="uk-button uk-button-small uk-width-1-2"
+												   @click.prevent="showModal(stepImage)">
 													<i class="mdi mdi-arrow-expand-all md-color-light-blue-600"></i>
 												</a>
 											</div>
@@ -69,7 +72,7 @@
 		</div>
 		<!-- modal 팝업	-->
 		<div id="modal-media-image" class="uk-flex-top uk-modal" data-uk-modal>
-			<div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical" >
+			<div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical">
 				<button class="uk-modal-close-outside" type="button" data-uk-close></button>
 				<img style="max-width: 500px" :src="showImage" alt="">
 			</div>
@@ -81,6 +84,7 @@
 
 	import ScCard from "@/components/card/components/Card";
 	import draggable from 'vuedraggable';
+
 	export default {
 		components: {
 			ScCard,
@@ -93,7 +97,7 @@
 				},
 				drag: false,
 				flag: false,
-				showImage:''
+				showImage: ''
 			}
 		},
 		async created() {
@@ -101,12 +105,12 @@
 			vm.fetchData()
 		},
 		methods: {
-			showModal(stepImage){
+			showModal(stepImage) {
 				this.showImage = stepImage
 				UIkit.modal('#modal-media-image').show()
 			}, //modal 띄우기
 			async fetchData(input) {
-				this.flag=false
+				this.flag = false
 				let res = await this.$axios.$get(this.config.apiUrl + '/tutorials')
 				if (res.data) {
 					this.sendData.stepImages = res.data
@@ -136,7 +140,7 @@
 			async postForm() {
 				let flag = false
 				for (let stepImage of this.sendData.stepImages) {
-					if (stepImage === null  || typeof stepImage == 'undefined') {
+					if (stepImage === null || typeof stepImage == 'undefined') {
 						flag = true
 					}
 				}
@@ -172,7 +176,7 @@
 					this.fetchData()
 				})
 			},
-			async refresh(index){
+			async refresh(index) {
 				this.sendData.stepImages[index] = undefined
 				this.$forceUpdate()
 			}

@@ -23,7 +23,7 @@
 								<i class="mdi mdi-refresh"></i>
 							</a>
 							<div class="uk-width-1-4@s">
-								<select v-model="searchBrandCode" class="uk-select" required="required">
+								<select v-model="searchBrandCode" class="uk-select">
 									<option value="">브랜드 분류</option>
 									<option value="SKE">SK에너지</option>
 									<option value="GSC">GS칼텍스</option>
@@ -38,7 +38,7 @@
 								</select>
 							</div>
 							<div class="uk-width-1-4@s">
-								<select v-model="searchType" class="uk-select" required="required">
+								<select v-model="searchType" class="uk-select">
 									<option value="">업종구분</option>
 									<option value="N">주유소</option>
 									<option value="Y">충전소</option>
@@ -46,7 +46,7 @@
 								</select>
 							</div>
 							<div class="uk-width-1-4@s">
-								<select v-model="searchKpetro" class="uk-select" required="required">
+								<select v-model="searchKpetro" class="uk-select">
 									<option value="">품질인증</option>
 									<option value="1">인증</option>
 									<option value="0">미인증</option>
