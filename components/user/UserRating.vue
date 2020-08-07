@@ -20,24 +20,24 @@
 					<ul class="uk-child-width-expand" data-uk-tab>
 						<li class="uk-active">
 							<a href="javascript:void(0)">
-								주차장 리뷰
+								주차장
 							</a>
 						</li>
 						<li>
 							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,1)">
-								주유소 리뷰
+								주유소
 							</a>
 						</li>
 						<li>
 							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,2)">
-								세차장 리뷰
+								세차장
 							</a>
 						</li>
-						<!--						<li>-->
-						<!--							<a href="javascript:void(0)" @click.prevent="switchNewList(sendData.uid,3)">-->
-						<!--								전기충전소 리뷰-->
-						<!--							</a>-->
-						<!--						</li>-->
+						<li>
+							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,3)">
+								전기차충전소
+							</a>
+						</li>
 					</ul>
 					<ul class="uk-switcher">
 						<li>
@@ -61,9 +61,9 @@
 						<li>
 							<gas-station-rating></gas-station-rating>
 						</li>
-						<!--						<li>-->
-						<!--							<ev-charge-rating></ev-charge-rating>-->
-						<!--						</li>-->
+						<li>
+							<ev-charge-rating></ev-charge-rating>
+						</li>
 					</ul>
 				</ScCardBody>
 			</ScCard>
@@ -73,12 +73,12 @@
 
 <script>
 	import {agGridMixin} from "~/plugins/ag-grid.mixin"
-	// import EvChargeRating from "@/components/user/UserRatingView/EvChargeRating"
+	import EvChargeRating from "@/components/user/UserRatingView/EvChargeRating"
 	import CarWashRating from "@/components/user/UserRatingView/CarWashRating";
 	import GasStationRating from "@/components/user/UserRatingView/GasStationRating";
 
 	export default {
-		components: {GasStationRating, CarWashRating},
+		components: {GasStationRating, CarWashRating, EvChargeRating},
 		props: {
 			mode: {
 				type: String,
@@ -164,9 +164,9 @@
 					case 2:
 						this.$nuxt.$emit('open-carWash-rating', targetUid, targetType)
 						break;
-					// case 3:
-					// 	this.$nuxt.$emit('open-evCharge-rating', data)
-					// 	break;
+					case 3:
+						this.$nuxt.$emit('open-evCharge-rating', targetUid, targetType)
+						break;
 				}
 			}
 		}

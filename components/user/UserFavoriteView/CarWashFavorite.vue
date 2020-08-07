@@ -48,23 +48,15 @@
 						width: 120,
 						cellRenderer: (obj) => {
 							if (obj.data) {
-								let icon = ''
-								let typeName = ''
-								switch (obj.value) {
-									case 'carWash' :
-										icon = 'mdi-car-wash'
-										typeName = '세차장'
-										break
-									case 'gasStation' :
-										icon = 'mdi-gas-station'
-										typeName = '주유소'
-										break
-									case 'carCenter' :
-										icon = 'mdi-screwdriver'
-										typeName = '정비업소'
-										break
+								if (obj.value.includes('세차')) {
+									return "세차장"
+								} else if (obj.value.includes('주차')) {
+									return "주차장"
+								} else if (obj.value.includes('정비')) {
+									return "정비업소"
+								} else {
+									return "기타"
 								}
-								return `<i class="mdi ${icon}"/>${typeName}`
 							}
 						}
 					}, {

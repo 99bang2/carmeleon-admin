@@ -20,24 +20,24 @@
 					<ul class="uk-child-width-expand" data-uk-tab>
 						<li class="uk-active">
 							<a href="javascript:void(0)">
-								주차장 즐겨찾기
+								주차장
 							</a>
 						</li>
 						<li>
 							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,1)">
-								주유소 즐겨찾기
+								주유소
 							</a>
 						</li>
 						<li>
 							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,2)">
-								세차장 즐겨찾기
+								세차장
 							</a>
 						</li>
-						<!--						<li>-->
-						<!--							<a href="javascript:void(0)" @click.prevent="switchNewList(sendData.uid,3)">-->
-						<!--								전기충전소 즐겨찾기-->
-						<!--							</a>-->
-						<!--						</li>-->
+						<li>
+							<a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,3)">
+								전기차충전소
+							</a>
+						</li>
 					</ul>
 					<ul class="uk-switcher">
 						<li>
@@ -61,9 +61,9 @@
 						<li>
 							<gas-station-favorite></gas-station-favorite>
 						</li>
-						<!--						<li>-->
-						<!--							<ev-charge-favorite></ev-charge-favorite>-->
-						<!--						</li>-->
+						<li>
+							<ev-charge-favorite></ev-charge-favorite>
+						</li>
 					</ul>
 				</ScCardBody>
 
@@ -75,12 +75,12 @@
 
 <script>
 	import {agGridMixin} from "~/plugins/ag-grid.mixin"
-	// import EvChargeFavorite from "@/components/user/UserFavoriteView/EvChargeFavorite"
+	import EvChargeFavorite from "@/components/user/UserFavoriteView/EvChargeFavorite"
 	import CarWashFavorite from "@/components/user/UserFavoriteView/CarWashFavorite";
 	import GasStationFavorite from "@/components/user/UserFavoriteView/GasStationFavorite";
 
 	export default {
-		components: {CarWashFavorite, GasStationFavorite},
+		components: {CarWashFavorite, GasStationFavorite, EvChargeFavorite},
 		props: {
 			mode: {
 				type: String,
@@ -218,9 +218,9 @@
 					case 2:
 						this.$nuxt.$emit('open-carWash-favorite', targetUid, targetType)
 						break;
-					// case 3:
-					// 	this.$nuxt.$emit('open-evCharge-favorite', data)
-					// 	break;
+					case 3:
+						this.$nuxt.$emit('open-evCharge-favorite', targetUid, targetType)
+						break;
 				}
 			}
 		}
