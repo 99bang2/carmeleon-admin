@@ -35,14 +35,15 @@
 							</div>
 							<div class="uk-width-1-1@s">
 								<ScTextarea v-model="sendData.review" :error-state="$v.sendData.review.$error"
-										 :validator="$v.sendData.review"
+											:validator="$v.sendData.review"
 											:rows="10"
 											:autosize="true"
 											mode="outline">
 									<label>
 										리뷰템플릿입력
 									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: file-text"/>
+									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+										  data-uk-icon="icon: file-text"/>
 								</ScTextarea>
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.review.required">
@@ -74,13 +75,14 @@
 
 <script>
 	import Select2 from "@/components/Select2";
-	// import ScInput from "@/components/Input";
 	import {required} from 'vuelidate/lib/validators'
 	import customValidators from '@/plugins/vuelidateValidators'
 	import {validationMixin} from 'vuelidate'
 	import ScTextarea from "@/components/Textarea";
+	import Convert from "@/plugins/convertJson";
+
 	export default {
-		components: {ScTextarea,  Select2},
+		components: {ScTextarea, Select2},
 		mixins: [
 			validationMixin,
 		],
@@ -94,18 +96,13 @@
 			return {
 				cardFormClosed: true,
 				submitStatus: null,
-				reviewTypeOpts: [
-					{id: 0, text: '아주좋은리뷰'},
-					{id: 1, text: '좋은리뷰'},
-					{id: 2, text: '나쁜리뷰'},
-					{id: 3, text: '아주나쁜리뷰'},
-				],
 				sendData: {},
 				defaultForm: {
 					uid: null,
 					reviewType: '',
 					review: '',
 				},
+				reviewTypeOpts: [],
 			}
 		},
 		validations: {
@@ -113,12 +110,30 @@
 				reviewType: {
 					required
 				},
-				review:{
+				review: {
 					required,
-					minMaxCheck: customValidators.minMaxCheck(5,50)
+					minMaxCheck: customValidators.minMaxCheck(5, 50)
 				}
 			}
 		},
+		created() {
+			let vm = this
+			this.$nuxt.$on('open-reviewTemplate-form', (data) => {
+				vm.settingForm(data)
+			})
+			this.$nuxt.$on('close-reviewTemplate-form', () => {
+				vm.closeForm()
+			})
+		},
+		async beforeMount() {
+			this.sendData = this.defaultForm
+			let code = await this.$axios.$post(this.config.apiUrl + '/codes')
+			this.reviewTypeOpts = Convert.convertJson(code.data.reviewTemplate, 'select')
+		},
+		beforeDestroy() {
+			this.$nuxt.$off('open-reviewTemplate-form')
+			this.$nuxt.$off('close-reviewTemplate-form')
+		}
 		methods: {
 			settingForm(props) {
 				this.$v.$reset()
@@ -139,7 +154,7 @@
 			deleteForm() {
 				this.$axios.$delete(this.config.apiUrl + '/reviewTemplates/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('fetch-reviewTemplate-list', res.data.uid)
+					this.$nuxt.$emit('fetch-reviewTemplate-list')
 				}).finally(() => {
 					this.deleteStatus = 'OK'
 					this.cardFormClosed = true
@@ -163,7 +178,7 @@
 			postForm() {
 				this.$axios.$post(this.config.apiUrl + '/reviewTemplates', this.sendData).then(async res => {
 					this.callNotification('계정을 생성하였습니다.')
-					this.$nuxt.$emit('fetch-reviewTemplate-list', res.data.uid)
+					this.$nuxt.$emit('fetch-reviewTemplate-list')
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
@@ -171,28 +186,12 @@
 			putForm() {
 				this.$axios.$put(this.config.apiUrl + '/reviewTemplates/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
-					this.$nuxt.$emit('fetch-reviewTemplate-list', res.data.uid)
+					this.$nuxt.$emit('fetch-reviewTemplate-list')
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
 			},
 		},
-		created() {
-			let vm = this
-			this.$nuxt.$on('open-reviewTemplate-form', (data) => {
-				vm.settingForm(data)
-			})
-			this.$nuxt.$on('close-reviewTemplate-form', () => {
-				vm.closeForm()
-			})
-		},
-		async beforeMount() {
-			this.sendData = this.defaultForm
-		},
-		beforeDestroy() {
-			this.$nuxt.$off('open-reviewTemplate-form')
-			this.$nuxt.$off('close-reviewTemplate-form')
-		}
 	}
 </script>
 

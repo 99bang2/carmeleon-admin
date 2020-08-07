@@ -25,13 +25,11 @@
 							<div class="uk-width-1-3@s">
 								<label>
 									<select v-model="searchReviewType" class="uk-select">
-										<option value="">
-											모든리뷰유형
-										</option>
-										<option v-for="reviewType in reviewTypeOptions" :key="reviewType.id"
-												:value="reviewType.id">
-											{{ reviewType.text }}
-										</option>
+										<option value="">모든리뷰유형</option>
+										<option value="0">아주좋은리뷰</option>
+										<option value="1">좋은리뷰</option>
+										<option value="2">나쁜리뷰</option>
+										<option value="3">아주나쁜리뷰</option>
 									</select>
 								</label>
 							</div>
@@ -91,14 +89,6 @@
 			}
 		},
 		computed: {
-			reviewTypeOptions() {
-				let opts = []
-				opts.push({id: 0, text: "아주좋은리뷰"})
-				opts.push({id: 1, text: "좋은리뷰"})
-				opts.push({id: 2, text: "나쁜리뷰"})
-				opts.push({id: 3, text: "아주나쁜리뷰"})
-				return opts
-			},
 			columnDefs() {
 				return [
 					{
@@ -172,8 +162,8 @@
 			this.$nuxt.$on('reset-reviewTemplate-list', () => {
 				vm.resetSelection()
 			})
-			this.$nuxt.$on('fetch-reviewTemplate-list', (uid) => {
-				vm.fetchData(uid)
+			this.$nuxt.$on('fetch-reviewTemplate-list', () => {
+				vm.fetchData()
 			})
 		},
 		beforeDestroy() {
@@ -209,18 +199,8 @@
 			async fetchData(selectUid) {
 				// API 연동
 				let res = await this.$axios.$get(this.config.apiUrl + '/reviewTemplates')
-				if(this.gridOptions.api){
+				if (this.gridOptions.api) {
 					this.gridOptions.api.setRowData(res.data)
-					if (selectUid) {
-						this.gridOptions.api.forEachNode((node) => {
-							if (node.data.uid === selectUid) {
-								this.onRowClicked({
-									node: node,
-									data: node.data
-								})
-							}
-						})
-					}
 				}
 			},
 			resetSelection() {
