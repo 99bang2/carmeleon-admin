@@ -6,12 +6,14 @@
 					<div class="uk-flex uk-flex-middle">
 						<div class="uk-flex-1">
 							<ScCardTitle>
-								<i class="mdi" :class="{ 'mdi-coin' : sendData.uid, 'mdi-shape-circle-plus': !sendData.uid }"/>
+								<i class="mdi"
+								   :class="{ 'mdi-coin' : sendData.uid, 'mdi-shape-circle-plus': !sendData.uid }"/>
 								포인트상품{{ sendData.uid ? '상세': '생성' }}
 							</ScCardTitle>
 						</div>
 						<ScCardActions>
-							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close" @click.prevent="closeForm"/>
+							<a href="javascript:void(0)" class="sc-actions-icon mdi mdi-close"
+							   @click.prevent="closeForm"/>
 						</ScCardActions>
 					</div>
 				</ScCardHeader>
@@ -19,11 +21,13 @@
 					<div class="uk-accordion-content">
 						<form class="uk-grid-small uk-grid" data-uk-grid>
 							<div class="uk-width-1-1@s">
-								<ScInput v-model="sendData.point" :error-state="$v.sendData.point.$error" :validator="$v.sendData.point">
+								<ScInput v-model="sendData.point" :error-state="$v.sendData.point.$error"
+										 :validator="$v.sendData.point">
 									<label>
 										포인트입력
 									</label>
-									<span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: database"/>
+									<span slot="icon" class="uk-form-icon uk-form-icon-flip"
+										  data-uk-icon="icon: database"/>
 								</ScInput>
 								<ul class="sc-vue-errors">
 									<li v-if="!$v.sendData.point.required">
@@ -35,7 +39,8 @@
 								</ul>
 							</div>
 							<div class="uk-width-1-1@s">
-								<ScInput v-model="sendData.price" :error-state="$v.sendData.price.$error" :validator="$v.sendData.price">
+								<ScInput v-model="sendData.price" :error-state="$v.sendData.price.$error"
+										 :validator="$v.sendData.price">
 									<label>
 										가격입력
 									</label>
@@ -53,10 +58,12 @@
 						</form>
 					</div>
 					<div class="uk-margin-top uk-text-center">
-						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="submitForm">
+						<button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
+								@click="submitForm">
 							{{ sendData.uid ? '수정': '생성' }}
 						</button>
-						<button v-if="sendData.uid" class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="deleteForm">
+						<button v-if="sendData.uid" class="sc-button sc-button-primary"
+								:disabled="submitStatus === 'PENDING'" @click="deleteForm">
 							삭제
 						</button>
 					</div>
@@ -70,6 +77,7 @@
 	import {required, integer} from 'vuelidate/lib/validators'
 	import {validationMixin} from 'vuelidate'
 	import ScInput from "@/components/Input";
+
 	export default {
 		components: {ScInput},
 		mixins: [
@@ -90,7 +98,7 @@
 					uid: null,
 					point: null,
 					price: null,
-					addPoint:null,
+					addPoint: null,
 					addPointPercent: null,
 				},
 			}
@@ -101,7 +109,7 @@
 					required,
 					integer
 				},
-				price:{
+				price: {
 					required,
 					integer
 				}
@@ -143,7 +151,7 @@
 			deleteForm() {
 				this.$axios.$delete(this.config.apiUrl + '/pointProducts/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('삭제하였습니다.')
-					this.$nuxt.$emit('fetch-pointProduct-list', res.data.uid)
+					this.$nuxt.$emit('fetch-pointProduct-list')
 				}).finally(() => {
 					this.deleteStatus = 'OK'
 					this.cardFormClosed = true
@@ -167,7 +175,7 @@
 			postForm() {
 				this.$axios.$post(this.config.apiUrl + '/pointProducts', this.sendData).then(async res => {
 					this.callNotification('상품을 생성하였습니다.')
-					this.$nuxt.$emit('fetch-pointProduct-list', res.data.uid)
+					this.$nuxt.$emit('fetch-pointProduct-list')
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})
@@ -175,7 +183,7 @@
 			putForm() {
 				this.$axios.$put(this.config.apiUrl + '/pointProducts/' + this.sendData.uid, this.sendData).then(async res => {
 					this.callNotification('수정하였습니다.')
-					this.$nuxt.$emit('fetch-pointProduct-list', res.data.uid)
+					this.$nuxt.$emit('fetch-pointProduct-list')
 				}).finally(() => {
 					this.submitStatus = 'OK'
 				})

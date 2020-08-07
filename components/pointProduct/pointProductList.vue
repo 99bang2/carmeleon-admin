@@ -117,7 +117,7 @@
 						field: "addPointPercent",
 						width: 210,
 						cellRenderer: (obj) => {
-							return obj.value ? obj.value + '%' :''
+							return obj.value ? obj.value + '%' : ''
 						}
 					},
 					{
@@ -141,8 +141,8 @@
 			this.$nuxt.$on('reset-pointProduct-list', () => {
 				vm.resetSelection()
 			})
-			this.$nuxt.$on('fetch-pointProduct-list', (uid) => {
-				vm.fetchData(uid)
+			this.$nuxt.$on('fetch-pointProduct-list', () => {
+				vm.fetchData()
 			})
 		},
 		beforeDestroy() {
@@ -173,18 +173,8 @@
 			async fetchData(selectUid) {
 				// API 연동
 				let res = await this.$axios.$get(this.config.apiUrl + '/pointProducts')
-				if(this.gridOptions.api) {
+				if (this.gridOptions.api) {
 					this.gridOptions.api.setRowData(res.data)
-					if (selectUid) {
-						this.gridOptions.api.forEachNode((node) => {
-							if (node.data.uid === selectUid) {
-								this.onRowClicked({
-									node: node,
-									data: node.data
-								})
-							}
-						})
-					}
 				}
 			},
 			resetSelection() {
