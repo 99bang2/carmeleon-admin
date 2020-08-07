@@ -21,19 +21,15 @@ module.exports = {
 		"vue/attributes-order": "off",
 		"vue/no-use-v-if-with-v-for": "off",
 		"vue/v-bind-style": "off",
-		"vue/html-indent": ["warn", "tab"],
+		"vue/html-indent": "off",
+        "vue/no-v-html":"off",
+        "vue/mustache-interpolation-spacing" : "off",
 		"vue/max-attributes-per-line": "off",
 		"vue/html-closing-bracket-spacing": "off",
+        "vue/html-quotes":"off",
+        "vue/attribute-hyphenation":"off",
 		"vue/html-closing-bracket-newline": "off",
-		"vue/html-self-closing": ["warn", {
-			"html": {
-				"void": "never",
-				"normal": "any",
-				"component": "any"
-			},
-			"svg": "always",
-			"math": "always"
-		}],
+		"vue/html-self-closing": "off",
 		"vue/component-name-in-template-casing": [
 			"warn",
 			"PascalCase",
