@@ -133,7 +133,7 @@
 		beforeDestroy() {
 			this.$nuxt.$off('open-reviewTemplate-form')
 			this.$nuxt.$off('close-reviewTemplate-form')
-		}
+		},
 		methods: {
 			settingForm(props) {
 				this.$v.$reset()
