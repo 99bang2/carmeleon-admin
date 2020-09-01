@@ -31,7 +31,14 @@
                         </li>
                     </ul>
                 </div>
-                <div v-if="sendData.ticketType==='1'" class="uk-width-1-2">
+                <div class="uk-width-1-1@s">
+                    <div class="uk-grid-small uk-grid" data-uk-grid>
+                        <ScInput v-model="ticketDate" v-flatpickr="dpRange" placeholder="판매 기간">
+                            <span slot="icon" class="uk-form-icon" data-uk-icon="calendar"></span>
+                        </ScInput>
+                    </div>
+                </div>
+                <div v-if="sendData.ticketType==='1'" class="uk-width-1-4">
                     <ScInput v-model="sendData.ticketTime">
                         <label>
                             시간권 시간
@@ -39,7 +46,7 @@
                         <span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
                     </ScInput>
                 </div>
-                <div class="uk-width-1-2">
+                <div class="uk-width-1-4">
                     <ScInput v-model="sendData.ticketPrice" :error-state="$v.sendData.ticketPrice.$error"
                              :validator="$v.sendData.ticketPrice">
                         <label>
@@ -56,7 +63,15 @@
                         </li>
                     </ul>
                 </div>
-                <div :class="sendData.ticketType==='1'?'uk-width-1-1':'uk-width-1-2'"
+                <div :class="sendData.ticketType!=='1'?'uk-width-1-3':'uk-width-1-4'">
+                    <ScInput v-model="sendData.ticketCount">
+                        <label>
+                            재고
+                        </label>
+                        <span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+                    </ScInput>
+                </div>
+                <div :class="sendData.ticketType==='1'?'uk-width-1-4':'uk-width-1-3'"
                      style="text-align: center; line-height: 50px">
                     <PrettyCheck v-model="sendData.isActive" class="p-switch">
                         {{sendData.isActive?"활성":"비활성"}}
@@ -121,7 +136,12 @@
     import Select2 from "@/components/Select2"
     import ScInput from "@/components/Input"
     import PrettyCheck from 'pretty-checkbox-vue/check'
-    import Convert from "@/plugins/convertJson";
+    import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate"
+    import Convert from "@/plugins/convertJson"
+
+    if (process.client) {
+        require('~/plugins/flatpickr');
+    }
 
     export default {
         components: {
@@ -153,7 +173,11 @@
                     ticketPriceDiscount: null,
                     ticketPriceDiscountPercent: null,
                     isActive: true,
+                    ticketStartDate: '',
+                    ticketEndDate: '',
+                    ticketCount: null
                 },
+                ticketDate: '',
                 ticketDayTypeOpts: [],
                 ticketTypeOpts: [],
                 productList: []
@@ -172,6 +196,22 @@
                     integer
                 },
             }
+        },
+        computed: {
+            dpRange() {
+                return {
+                    mode: "range",
+                    plugins: [confirmDatePlugin]
+                }
+            },
+        },
+        watch: {
+            'ticketDate': function (newVal) {
+                if (newVal.includes("~")) {
+                    this.sendData.ticketStartDate = newVal.split('~')[0].trim();
+                    this.sendData.ticketEndDate = newVal.split('~')[1].trim();
+                }
+            },
         },
         created() {
             let vm = this

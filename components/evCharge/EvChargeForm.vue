@@ -20,12 +20,17 @@
                     <ul class="uk-child-width-expand" data-uk-tab v-show="sendData.uid">
                         <li class="uk-active">
                             <a href="javascript:void(0)">
-                                전기차충전소 정보관리
+                                충전소 정보관리
+                            </a>
+                        </li>
+                        <li class="uk-active">
+                            <a href="javascript:void(0)" @click.prevent="openListForm()">
+                                충전소 충전기관리
                             </a>
                         </li>
                         <li>
                             <a href="javascript:void(0)" @click.prevent="openNewForm(sendData.uid, 3)">
-                                전기차충전소 리뷰보기
+                                충전소 리뷰보기
                             </a>
                         </li>
                     </ul>
@@ -67,34 +72,6 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="uk-width-1-2">
-                                        <ScInput v-model="sendData.chgerId" :error-state="$v.sendData.chgerId.$error"
-                                                 :validator="$v.sendData.chgerId" :read-only="sendData.uid > 0">
-                                            <label>
-                                                충전기ID
-                                            </label>
-                                            <span slot="icon" class="uk-form-icon uk-form-icon-flip"
-                                                  data-uk-icon="icon: pencil"/>
-                                        </ScInput>
-                                        <ul class="sc-vue-errors">
-                                            <li v-if="!$v.sendData.chgerId.required">
-                                                충전기ID를 입력하세요
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="uk-width-1-2">
-                                        <Select2
-                                                v-model="sendData.chgerType"
-                                                :options="chgerTypeOpts"
-                                                :settings="{ 'width': '100%', 'placeholder': '충전기타입' }"
-                                                :error-state="$v.sendData.chgerType.$error"
-                                        />
-                                        <ul class="sc-vue-errors">
-                                            <li v-if="!$v.sendData.chgerType.required">
-                                                충전기타입을 선택하세요.
-                                            </li>
-                                        </ul>
-                                    </div>
                                     <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
                                         상세정보 입력
                                     </h5>
@@ -108,21 +85,7 @@
                                         </ScInput>
                                     </div>
                                     <div class="uk-width-1-2">
-                                        <Select2
-                                                v-model="sendData.stat"
-                                                :options="statTypeOpts"
-                                                :settings="{ 'width': '100%', 'placeholder': '충전기상태' }"
-                                                :error-state="$v.sendData.stat.$error"
-                                        />
-                                        <ul class="sc-vue-errors">
-                                            <li v-if="!$v.sendData.stat.required">
-                                                충전기상태를 변경하세요.
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.powerType"
-                                                 :error-state="$v.sendData.powerType.$error"
                                                  :validator="$v.sendData.powerType">
                                             <label>
                                                 충전량 유형
@@ -130,11 +93,6 @@
                                             <span slot="icon" class="uk-form-icon uk-form-icon-flip"
                                                   data-uk-icon="icon: bolt"/>
                                         </ScInput>
-                                        <ul class="sc-vue-errors">
-                                            <li v-if="!$v.sendData.powerType.required">
-                                                충전량 유형을 입력하세요
-                                            </li>
-                                        </ul>
                                     </div>
                                     <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
                                         주소 입력
@@ -203,6 +161,23 @@
                             </div>
                         </li>
                         <li>
+                            <div class="uk-accordion-content">
+                                <form class="uk-grid-small uk-grid" data-uk-grid>
+                                    <!--	최대 가용 대수 , 가격  -->
+                                    <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+                                        전기차충전소 정보
+                                    </h5>
+                                    <div class="uk-width-1-1">
+                                        <div v-if="sendData.evChargers.length > 0">
+                                            <div v-for="(items, index) in sendData.evChargers" :key="index">
+                                                {{items.chgerId}} {{items.statName}} {{items.chgerTypeName}} {{items.statUpdDt}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+                        <li>
                             <RatingList></RatingList>
                         </li>
                     </ul>
@@ -228,13 +203,11 @@
     }
     export default {
         components: {
-            Select2,
             ScInput,
             ScCard,
             VueUploadMultipleImage,
             ScCardAction,
             RatingList,
-
         },
         mixins: [
             validationMixin,
@@ -256,8 +229,6 @@
                     uid: '',
                     statNm: '', //사업장명
                     statId: '', //사업장ID
-                    chgerId: '', //충전기ID
-                    chgerType: '', // 충전기타입
                     addr: '', //주소
                     lat: null, //위도
                     lon: null, //경도
@@ -267,12 +238,9 @@
                     busiId: '', 		// 기관아이디
                     busiNm: '',		// 운영기관명
                     busiCall: '', //연락처
-                    stat: null, // 충전기타입
-                    statUpdDt: '', // 상태갱신일시
                     powerType: '', // 충전량
                     picture: [],
-                    chgerTypeOpts: [],
-                    statTypeOpts: []
+                    evChargers: []
                 }
             }
         },
@@ -284,19 +252,7 @@
                 statId: {
                     required
                 },
-                chgerId: {
-                    required
-                },
-                chgerType: {
-                    required
-                },
-                stat: {
-                    required
-                },
                 addr: {
-                    required
-                },
-                powerType: {
                     required
                 }
             }
@@ -312,9 +268,6 @@
         },
         async beforeMount() {
             this.sendData = this.defaultForm
-            let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-            this.chgerTypeOpts = Convert.convertJson(code.data.chgerTypeOpts, 'select')
-            this.statTypeOpts = Convert.convertJson(code.data.statTypeOpts, 'select')
         },
         beforeDestroy() {
             this.$nuxt.$off('open-evCharge-form')
@@ -354,6 +307,9 @@
                         this.submitStatus = 'OK'
                     })
                 }
+            },
+            openListForm() {
+                //let code = this.$axios.$post(this.config.apiUrl + '/codes')
             },
             openNewForm(siteUid, type) {
                 this.$nuxt.$emit('open-rate-list', siteUid, type)
@@ -421,7 +377,7 @@
                 this.$nuxt.$emit('reset-evCharge-list')
             },
             deleteForm() {
-                this.$axios.$delete(this.config.apiUrl + '/evCharges/' + this.sendData.uid, this.sendData).then(async res => {
+                this.$axios.$delete(this.config.apiUrl + '/evChargeStation/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('삭제하였습니다.')
                     this.$nuxt.$emit('fetch-evCharge-list', res.data.uid)
                 }).finally(() => {
@@ -444,7 +400,7 @@
                 }
             },
             postForm() {
-                this.$axios.$post(this.config.apiUrl + '/evCharges', this.sendData).then(async res => {
+                this.$axios.$post(this.config.apiUrl + '/evChargeStation', this.sendData).then(async res => {
                     this.callNotification('계정을 생성하였습니다.')
                     this.$nuxt.$emit('fetch-evCharge-list', res.data.uid)
                 }).finally(() => {
@@ -452,7 +408,7 @@
                 })
             },
             putForm() {
-                this.$axios.$put(this.config.apiUrl + '/evCharges/' + this.sendData.uid, this.sendData).then(async res => {
+                this.$axios.$put(this.config.apiUrl + '/evChargeStation/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('수정하였습니다.')
                     this.$nuxt.$emit('fetch-evCharge-list', res.data.uid)
                 }).finally(() => {

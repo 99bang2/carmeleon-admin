@@ -239,49 +239,27 @@
                                             <label>요금 안내 입력</label>
                                         </ScTextarea>
                                     </div>
-                                    <!--    결제태그 제휴태그-->
-                                    <div class="uk-width-1-3@s">
-                                        <ul class="uk-list">
-                                            <h6>결제태그</h6>
-                                            <li v-for="tag in paymentTag" :key="tag.id">
-                                                <PrettyCheck v-model="sendData.paymentTag" :value="tag.value"
-                                                             class="p-icon">
-                                                    <i slot="extra" class="icon mdi mdi-check"></i>
-                                                    {{tag.name}}
-                                                </PrettyCheck>
-                                            </li>
-
-                                            <h6>제휴태그</h6>
-                                            <li v-for="tag in brandTag" :key="tag.id">
-                                                <PrettyCheck v-model="sendData.brandTag" :value="tag.value"
-                                                             class="p-icon">
-                                                    <i slot="extra" class="icon mdi mdi-check"></i>
-                                                    {{tag.name}}
-                                                </PrettyCheck>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <!--   	상품태그  차량태그-->
-                                    <div class="uk-width-1-3@s">
-                                        <ul class="uk-list">
-                                            <h6>상품태그</h6>
-                                            <li v-for="tag in productTag" :key="tag.id">
-                                                <PrettyCheck v-model="sendData.productTag" :value="tag.value"
-                                                             class="p-icon">
-                                                    <i slot="extra" class="icon mdi mdi-check"></i>
-                                                    {{tag.name}}
-                                                </PrettyCheck>
-                                            </li>
-
-                                            <h6>차량태그</h6>
-                                            <li v-for="tag in carTag" :key="tag.id">
-                                                <PrettyCheck v-model="sendData.carTag" :value="tag.value"
-                                                             class="p-icon">
-                                                    <i slot="extra" class="icon mdi mdi-check"></i>
-                                                    {{tag.name}}
-                                                </PrettyCheck>
-                                            </li>
-                                        </ul>
+                                    <div class="uk-width-1-2">
+                                        <div class="uk-width-1-2">
+                                            <h6>판매여부</h6>
+                                            <input id="switch-css-buy" v-model="sendData.isBuy" type="checkbox"
+                                                   class="sc-switch-input">
+                                            <label for="switch-css-buy" class="sc-switch-label"
+                                                   style="margin-top:15px;margin-left:15px;">
+                                                <span class="sc-switch-toggle-on">판매가능</span>
+                                                <span class="sc-switch-toggle-off">판매불가능</span>
+                                            </label>
+                                        </div>
+                                        <div class="uk-width-1-2">
+                                            <h6>평가여부</h6>
+                                            <input id="switch-css-rate" v-model="sendData.isRate" type="checkbox"
+                                                   class="sc-switch-input">
+                                            <label for="switch-css-rate" class="sc-switch-label"
+                                                   style="margin-top:15px;margin-left:15px;">
+                                                <span class="sc-switch-toggle-on">평가가능</span>
+                                                <span class="sc-switch-toggle-off">평가불가능</span>
+                                            </label>
+                                        </div>
                                     </div>
                                     <!--    옵션태그-->
                                     <div class="uk-width-auto">
@@ -414,7 +392,9 @@
                     carTag: [],
                     picture: [],
                     siteOpts: [],
-                    operationTime: ''
+                    operationTime: '',
+                    isBuy: true,
+                    isRate: false
                 }
             }
         },
