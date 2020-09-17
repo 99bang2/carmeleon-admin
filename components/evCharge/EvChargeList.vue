@@ -250,7 +250,7 @@
                                 limit: params.endRow - params.startRow,
                                 order: order
                             }
-                            await context.$axios.$get(this.config.apiUrl + '/evCharges', {
+                            await context.$axios.$get(this.config.apiUrl + '/evChargeStations', {
                                 params: {
                                     searchChargeType: context.searchChargeType,
                                     searchStat: context.searchStat,
@@ -311,7 +311,7 @@
                 let seletedCnt = selectedUids.length
                 if (seletedCnt) {
                     UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-                        this.$axios.$post(this.config.apiUrl + '/evCharges/bulkDelete', {
+                        this.$axios.$post(this.config.apiUrl + '/evChargeStations/bulkDelete', {
                             uids: selectedUids
                         }).then(res => {
                             this.callNotification('삭제하였습니다.')

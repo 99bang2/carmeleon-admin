@@ -60,6 +60,11 @@
                         :grid-options="gridOptions"
                         :pagination="true"
                         :pagination-page-size="10"
+                        :row-model-type="'infinite'"
+                        :cache-overflow-size="10"
+                        :cache-block-size="10"
+                        :max-concurrent-datasource-requests="1"
+                        :max-blocks-in-cache="10"
                         :framework-components="frameworkComponents"
                 >
                 </ag-grid-vue>
@@ -243,20 +248,10 @@
         },
         watch: {
             'searchSiteType': function (newValue) {
-                let filterComponent = this.gridOptions.api.getFilterInstance('siteType')
-                filterComponent.setModel({
-                    type: 'equals',
-                    filter: newValue
-                })
-                this.gridOptions.api.onFilterChanged()
+                this.fetchData()
             },
             'searchActive': function (newValue) {
-                let filterComponent = this.gridOptions.api.getFilterInstance('isActive')
-                filterComponent.setModel({
-                    type: 'equals',
-                    filter: newValue
-                })
-                this.gridOptions.api.onFilterChanged()
+                this.fetchData()
             },
             'searchRating': function (newValue) {
                 let start = parseInt(newValue.split(";")[0])
@@ -282,7 +277,7 @@
                 this.gridOptions.api.onFilterChanged()
             },
             'searchKeyword': function (newValue) {
-                this.gridOptions.api.setQuickFilter(newValue)
+                this.fetchData()
             },
         },
         created() {
@@ -302,6 +297,45 @@
             await this.fetchData()
         },
         methods: {
+            async onGridReady(params) {
+                const updateData = async context => {
+                    let dataSource = {
+                        rowCount: null,
+                        getRows: async (params) => {
+                            let lastRow = -1
+                            let order = []
+                            for (let sort of params.sortModel) {
+                                order.push([sort.colId, sort.sort])
+                            }
+                            let parameters = {
+                                offset: params.startRow,
+                                limit: params.endRow - params.startRow,
+                                order: order
+                            }
+                            await context.$axios.$get(this.config.apiUrl + '/parkings', {
+                                params: {
+                                    searchSiteType: context.searchSiteType,
+                                    searchActive: context.searchActive,
+                                    searchRating: context.searchRating,
+                                    searchKeyword: context.searchKeyword,
+                                    offset: parameters.offset,
+                                    limit: parameters.limit,
+                                    order: parameters.order,
+                                }
+                            }).then(response => {
+                                let rowsThisPage = response.data.rows
+                                lastRow = response.data.count
+                                params.successCallback(rowsThisPage, lastRow)
+                            })
+                        }
+                    }
+                    params.api.setDatasource(dataSource)
+                }
+                updateData(this)
+                let pageSize = params.api.gridOptionsWrapper.gridOptions.paginationPageSize
+                let rowHeight = params.api.gridOptionsWrapper.gridOptions.rowHeight
+                params.api.rowRenderer.rowContainers.body.eWrapper.style.minHeight = pageSize * rowHeight + 'px'
+            },
             refreshFilter() {
                 this.searchSiteType = ""
                 this.searchActive = ""
@@ -326,22 +360,7 @@
                 this.gridOptions.api.redrawRows()
             },
             async fetchData(selectUid) {
-                // API 연동
-                let res = await this.$axios.$get(this.config.apiUrl + '/parkings')
-                if (this.gridOptions.api) {
-                    this.gridOptions.api.setRowData(res.data)
-                    if (selectUid) {
-                        this.gridOptions.api.forEachNode((node) => {
-                            if (node.data.uid === selectUid) {
-                                this.onRowClicked({
-                                    node: node,
-                                    data: node.data
-                                })
-                            }
-                        })
-                    }
-                }
-
+                this.gridOptions.api.onFilterChanged()
             },
             resetSelection() {
                 this.gridOptions.api.forEachNode((node) => {

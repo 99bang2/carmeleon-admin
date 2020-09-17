@@ -168,7 +168,7 @@
                                         전기차충전소 정보
                                     </h5>
                                     <div class="uk-width-1-1">
-                                        <div v-if="sendData.evChargers.length > 0">
+                                        <div v-if="sendData.evChargers.length >= 0">
                                             <div v-for="(items, index) in sendData.evChargers" :key="index">
                                                 {{items.chgerId}} {{items.statName}} {{items.chgerTypeName}} {{items.statUpdDt}}
                                             </div>

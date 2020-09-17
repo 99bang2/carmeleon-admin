@@ -239,6 +239,17 @@
                                             <label>요금 안내 입력</label>
                                         </ScTextarea>
                                     </div>
+                                    <div class="uk-width-1-1">
+                                        <ScTextarea
+                                                v-model="sendData.message"
+                                                :cols="30"
+                                                :rows="4"
+                                                :autosize="true"
+                                                mode="outline"
+                                        >
+                                            <label>경고 문구 입력</label>
+                                        </ScTextarea>
+                                    </div>
                                     <div class="uk-width-1-2">
                                         <div class="uk-width-1-2">
                                             <h6>판매여부</h6>
@@ -393,6 +404,7 @@
                     picture: [],
                     siteOpts: [],
                     operationTime: '',
+                    message: '',
                     isBuy: true,
                     isRate: false
                 }
@@ -589,6 +601,7 @@
                 })
             },
             putForm() {
+                console.log(this.sendData)
                 this.$axios.$put(this.config.apiUrl + '/parkings/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('수정하였습니다.')
                     this.$nuxt.$emit('fetch-parking-list', res.data.uid)
