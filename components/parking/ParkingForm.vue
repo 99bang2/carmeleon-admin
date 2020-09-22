@@ -250,8 +250,8 @@
                                             <label>경고 문구 입력</label>
                                         </ScTextarea>
                                     </div>
-                                    <div class="uk-width-1-2">
-                                        <div class="uk-width-1-2">
+                                    <div class="uk-width-1-2" style="display: flex; flex-direction: column; justify-content: flex-start">
+                                        <div style="margin-bottom:30%">
                                             <h6>판매여부</h6>
                                             <input id="switch-css-buy" v-model="sendData.isBuy" type="checkbox"
                                                    class="sc-switch-input">
@@ -261,7 +261,7 @@
                                                 <span class="sc-switch-toggle-off">판매불가능</span>
                                             </label>
                                         </div>
-                                        <div class="uk-width-1-2">
+                                        <div>
                                             <h6>평가여부</h6>
                                             <input id="switch-css-rate" v-model="sendData.isRate" type="checkbox"
                                                    class="sc-switch-input">
