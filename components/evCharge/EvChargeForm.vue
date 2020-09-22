@@ -168,9 +168,23 @@
                                         전기차충전소 정보
                                     </h5>
                                     <div class="uk-width-1-1">
-                                        <div v-if="sendData.evChargers.length >= 0">
+                                        <div v-if="sendData.evChargers.length > 0">
                                             <div v-for="(items, index) in sendData.evChargers" :key="index">
-                                                {{items.chgerId}} {{items.statName}} {{items.chgerTypeName}} {{items.statUpdDt}}
+                                                <div v-if="items.stat ===2" class="uk-card uk-card-primary uk-card-header uk-flex uk-flex-around" style="padding:20px 0; margin: 5px 0;text-align: center;">
+                                                    <div style="flex-grow:1; flex-basis: 0; color:white">{{items.chgerId}}</div>
+                                                    <div style="flex-grow:2; flex-basis: 0; color:white">{{items.statName}}</div>
+                                                    <div style="flex-grow:3; flex-basis: 0; color:white">{{items.chgerTypeName}}</div>
+                                                </div>
+                                                <div v-else-if="items.stat===3" class="uk-card uk-card-secondary uk-card-header uk-flex uk-flex-around" style="padding:20px 0; margin: 5px 0;text-align: center;">
+                                                    <div style="flex-grow:1; flex-basis: 0; color:white">{{items.chgerId}}</div>
+                                                    <div style="flex-grow:2; flex-basis: 0; color:white">{{items.statName}}</div>
+                                                    <div style="flex-grow:3; flex-basis: 0; color:white">{{items.chgerTypeName}}</div>
+                                                </div>
+                                                <div v-else class="uk-card uk-card-default uk-card-header uk-flex uk-flex-around" style="padding:20px 0; margin: 5px 0;text-align: center;">
+                                                    <div style="flex-grow:1; flex-basis: 0; color:darkslategray">{{items.chgerId}}</div>
+                                                    <div style="flex-grow:2; flex-basis: 0; color:darkslategray">{{items.statName}}</div>
+                                                    <div style="flex-grow:3; flex-basis: 0; color:darkslategray">{{items.chgerTypeName}}</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -197,6 +211,7 @@
     import RatingList from "@/components/common/RatingList"
     import Select2 from "@/components/Select2";
     import Convert from "@/plugins/convertJson";
+    import moment from "@/plugins/moment"
 
     if (process.client) {
         require('~/plugins/inputmask');
@@ -281,13 +296,8 @@
                     this.sendData.lat = res.data.addresses[0].x
                     this.sendData.lon = res.data.addresses[0].y
                     let tmpAddr = res.data.addresses[0].jibunAddress.split(" ")
-                    if (tmpAddr[0] === '세종특별자치시') {
-                        this.sendData.sido = tmpAddr[0]
-                        this.sendData.sigungu = tmpAddr[0]
-                    } else {
-                        this.sendData.sido = tmpAddr[0]
-                        this.sendData.sigungu = tmpAddr[1]
-                    }
+                    this.sendData.sido = tmpAddr[0]
+                    tmpAddr[0] === '세종특별자치시' ? this.sendData.sigungu = tmpAddr[0] : this.sendData.sigungu = tmpAddr[1]
                     this.searchAddr = []
                 }).finally(() => {
                     this.submitStatus = 'OK'
@@ -400,7 +410,7 @@
                 }
             },
             postForm() {
-                this.$axios.$post(this.config.apiUrl + '/evChargeStation', this.sendData).then(async res => {
+                this.$axios.$post(this.config.apiUrl + '/evChargeStations', this.sendData).then(async res => {
                     this.callNotification('계정을 생성하였습니다.')
                     this.$nuxt.$emit('fetch-evCharge-list', res.data.uid)
                 }).finally(() => {
@@ -408,7 +418,7 @@
                 })
             },
             putForm() {
-                this.$axios.$put(this.config.apiUrl + '/evChargeStation/' + this.sendData.uid, this.sendData).then(async res => {
+                this.$axios.$put(this.config.apiUrl + '/evChargeStations/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('수정하였습니다.')
                     this.$nuxt.$emit('fetch-evCharge-list', res.data.uid)
                 }).finally(() => {

@@ -127,75 +127,11 @@
                     {
                         headerName: '전기차충전소명',
                         field: 'statNm',
-                        width: 170,
-                    }, {
-                        headerName: '충전기타입',
-                        field: 'chgerType',
-                        width: 200,
-                        cellRenderer: (obj) => {
-                            if (obj.data) {
-                                let text = ''
-                                switch (obj.value) {
-                                    case '01':
-                                        text = 'DC 차데모'
-                                        break
-                                    case '02':
-                                        text = 'AC 완속'
-                                        break
-                                    case '03':
-                                        text = 'DC 차데모+AC 3상'
-                                        break
-                                    case '04':
-                                        text = 'DC 콤보'
-                                        break
-                                    case '05':
-                                        text = 'DC 차데모+DC 콤보'
-                                        break
-                                    case '06':
-                                        text = 'DC 차데모+AC 3상\n' +
-                                                '+DC 콤보'
-                                        break
-                                    case '07':
-                                        text = 'AC 3상'
-                                        break
-                                }
-                                return text
-                            }
-                        }
-                    }, {
-                        headerName: '충전기상태',
-                        field: 'stat',
-                        width: 120,
-                        cellRenderer: (obj) => {
-                            if (obj.data) {
-                                let text = ''
-                                switch (obj.value) {
-                                    case 1 :
-                                        text = '통신이상'
-                                        break
-                                    case 2 :
-                                        text = '충전대기'
-                                        break
-                                    case 3 :
-                                        text = '충전중'
-                                        break
-                                    case 4 :
-                                        text = '운영중지'
-                                        break
-                                    case 5:
-                                        text = '점검중'
-                                        break
-                                    case 9:
-                                        text = '상태미확인'
-                                        break
-                                }
-                                return text
-                            }
-                        }
+                        width: 250,
                     }, {
                         headerName: '위치정보',
                         field: 'addr',
-                        width: 300
+                        width: 550
                     }, {
                         headerName: '등록일시',
                         field: 'createdAt',

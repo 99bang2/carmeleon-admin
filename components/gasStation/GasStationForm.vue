@@ -110,26 +110,31 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="uk-width-1-3@s">
-                                        <PrettyCheck v-model="sendData.isCarWash" class="p-switch">
-                                            {{sendData.isCarWash?"세차장 있음":"세차장 없음"}}
-                                        </PrettyCheck>
-                                    </div>
-                                    <div class="uk-width-1-3@s">
-                                        <PrettyCheck v-model="sendData.isConvenience" class="p-switch">
-                                            {{sendData.isConvenience?"편의점 있음":"편의점 없음"}}
-                                        </PrettyCheck>
-                                    </div>
-                                    <div class="uk-width-1-3@s">
-                                        <PrettyCheck v-model="sendData.isKpetro" class="p-switch">
-                                            {{sendData.isKpetro?"품질인증":"미인증"}}
-                                        </PrettyCheck>
+                                    <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+                                        태그 정보
+                                    </h5>
+                                    <div class="uk-width-1-1" style="display: flex; justify-content: space-around; padding: 10px 0;">
+                                        <div>
+                                            <PrettyCheck v-model="sendData.isCarWash" class="p-switch">
+                                                {{sendData.isCarWash?"세차장 있음":"세차장 없음"}}
+                                            </PrettyCheck>
+                                        </div>
+                                        <div>
+                                            <PrettyCheck v-model="sendData.isConvenience" class="p-switch">
+                                                {{sendData.isConvenience?"편의점 있음":"편의점 없음"}}
+                                            </PrettyCheck>
+                                        </div>
+                                        <div>
+                                            <PrettyCheck v-model="sendData.isKpetro" class="p-switch">
+                                                {{sendData.isKpetro?"품질인증":"&nbsp;미인증&nbsp;"}}
+                                            </PrettyCheck>
+                                        </div>
                                     </div>
                                     <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
                                         유가 정보
                                     </h5>
                                     <div class="uk-width-1-2">
-                                        <ScInput v-model="sendData.oilPrice[0].PRICE">
+                                        <ScInput v-model="sendData.Gasoline">
                                             <label>
                                                 휘발유 가격
                                             </label>
@@ -138,7 +143,7 @@
                                         </ScInput>
                                     </div>
                                     <div class="uk-width-1-2">
-                                        <ScInput v-model="sendData.oilPrice[1].PRICE">
+                                        <ScInput v-model="sendData.Diesel">
                                             <label>
                                                 경유 가격
                                             </label>
@@ -146,8 +151,8 @@
                                                   data-uk-icon="icon: tag"/>
                                         </ScInput>
                                     </div>
-                                    <div class="uk-width-1-3">
-                                        <ScInput v-model="sendData.oilPrice[2].PRICE">
+                                    <div class="uk-width-1-2">
+                                        <ScInput v-model="sendData.PremiumGasoline">
                                             <label>
                                                 고급휘발유 가격
                                             </label>
@@ -155,19 +160,10 @@
                                                   data-uk-icon="icon: tag"/>
                                         </ScInput>
                                     </div>
-                                    <div class="uk-width-1-3">
-                                        <ScInput v-model="sendData.oilPrice[3].PRICE">
+                                    <div class="uk-width-1-2">
+                                        <ScInput v-model="sendData.lpg">
                                             <label>
-                                                실내등유 가격
-                                            </label>
-                                            <span slot="icon" class="uk-form-icon uk-form-icon-flip"
-                                                  data-uk-icon="icon: tag"/>
-                                        </ScInput>
-                                    </div>
-                                    <div class="uk-width-1-3">
-                                        <ScInput v-model="sendData.oilPrice[4].PRICE">
-                                            <label>
-                                                자동차부탄 가격
+                                                LPG
                                             </label>
                                             <span slot="icon" class="uk-form-icon uk-form-icon-flip"
                                                   data-uk-icon="icon: tag"/>
@@ -303,27 +299,10 @@
                     isConvenience: true,
                     isKpetro: true,
                     picture: [],
-                    oilPrice: [
-                        {
-                            PRODCD: 'B027', //휘발유
-                            PRICE: 0
-                        },
-                        {
-                            PRODCD: 'D047', //경유
-                            PRICE: 0
-                        },
-                        {
-                            PRODCD: 'B034', //고급휘발유
-                            PRICE: 0
-                        },
-                        {
-                            PRODCD: 'C004', //실내등유
-                            PRICE: 0
-                        },
-                        {
-                            PRODCD: 'K015', //자동차부탄
-                            PRICE: 0
-                        }],
+                    Gasoline: null,
+                    Diesel: null,
+                    PremiumGasoline: null,
+                    lpg:null,
                     brandCodeOpts: [],
                     gasStationTypeOpts: []
                 }
@@ -441,31 +420,6 @@
                 this.tempImage = []
                 if (props) {
                     this.sendData = JSON.parse(JSON.stringify(props.data))
-                    let oilPrice = this.sendData.oilPrice
-                    if (oilPrice === null) {
-                        this.sendData.oilPrice = this.defaultForm.oilPrice
-                    } else {
-                        let tempArr = this.defaultForm.oilPrice
-                        oilPrice.find((item, idx) => {
-                            if (item.PRODCD === 'B027') {
-                                tempArr.splice(0, 1, {PROCD: 'B027', PRICE: item.PRICE})
-                            }
-                            if (item.PRODCD === 'D047') {
-                                tempArr.splice(1, 1, {PROCD: 'D047', PRICE: item.PRICE})
-                            }
-                            if (item.PRODCD === 'B034') {
-                                tempArr.splice(2, 1, {PROCD: 'B034', PRICE: item.PRICE})
-                            }
-                            if (item.PRODCD === 'C004') {
-                                tempArr.splice(3, 1, {PROCD: 'C004', PRICE: item.PRICE})
-                            }
-                            if (item.PRODCD === 'K015') {
-                                tempArr.splice(4, 1, {PROCD: 'K015', PRICE: item.PRICE})
-                            }
-                        })
-                        this.sendData.oilPrice = tempArr
-                    }
-
                     // vue-upload-multiple-image 패키지 사용
                     // 주차장 상세보기 할 때, upload된 영역 불러올때 사용
                     if (this.sendData.picture !== null) {
