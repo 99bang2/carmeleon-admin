@@ -38,15 +38,7 @@
                         </ScInput>
                     </div>
                 </div>
-                <div v-if="sendData.ticketType==='1'" class="uk-width-1-4">
-                    <ScInput v-model="sendData.ticketTime">
-                        <label>
-                            시간권 시간
-                        </label>
-                        <span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
-                    </ScInput>
-                </div>
-                <div class="uk-width-1-4">
+                <div class="uk-width-1-2">
                     <ScInput v-model="sendData.ticketPrice" :error-state="$v.sendData.ticketPrice.$error"
                              :validator="$v.sendData.ticketPrice">
                         <label>
@@ -63,7 +55,7 @@
                         </li>
                     </ul>
                 </div>
-                <div :class="sendData.ticketType!=='1'?'uk-width-1-3':'uk-width-1-4'">
+                <div class="uk-width-1-2">
                     <ScInput v-model="sendData.ticketCount">
                         <label>
                             재고
@@ -71,11 +63,21 @@
                         <span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
                     </ScInput>
                 </div>
-                <div :class="sendData.ticketType==='1'?'uk-width-1-4':'uk-width-1-3'"
-                     style="text-align: center; line-height: 50px">
-                    <PrettyCheck v-model="sendData.isActive" class="p-switch">
-                        {{sendData.isActive?"활성":"비활성"}}
-                    </PrettyCheck>
+                <div style="width: 100%; display: flex;  align-items: center">
+                    <div class="uk-width-1-2" style="text-align: center">
+                        <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 0; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>상태</span></div>
+                        <PrettyCheck v-model="sendData.isActive" class="p-switch" color="primary">
+                            {{sendData.isActive?"활성":"비활성"}}
+                        </PrettyCheck>
+                    </div>
+                    <div v-if="sendData.ticketType==='1'" class="uk-width-1-2">
+                        <ScInput v-model="sendData.ticketTime">
+                            <label>
+                                시간권 시간
+                            </label>
+                            <span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
+                        </ScInput>
+                    </div>
                 </div>
             </form>
         </div>

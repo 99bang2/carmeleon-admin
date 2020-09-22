@@ -538,6 +538,7 @@
                 this.tempImage = []
                 if (props) {
                     this.sendData = JSON.parse(JSON.stringify(props.data))
+                    this.sendData.parkingLot = this.sendData.parkingLot | 0
                     // vue-upload-multiple-image 패키지 사용
                     // 주차장 상세보기 할 때, upload된 영역 불러올때 사용
                     if (this.sendData.picture !== null) {
