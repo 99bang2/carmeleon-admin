@@ -102,6 +102,7 @@
                 searchActive: '',
                 searchRating: '',
                 searchKeyword: '',
+                resUid: 0
             }
         },
         computed: {
@@ -254,27 +255,7 @@
                 this.fetchData()
             },
             'searchRating': function (newValue) {
-                let start = parseInt(newValue.split(";")[0])
-                let end = parseInt(newValue.split(";")[1])
-                let filterComponent = this.gridOptions.api.getFilterInstance('rate')
-                filterComponent.setModel({
-                    operator: 'OR',
-                    condition1: {
-                        type: 'inRange',
-                        filter: start,
-                        filterTo: end
-                    },
-                    condition2: {
-                        type: 'equals',
-                        filter: start,
-                    },
-                    condition3: {
-                        type: 'equals',
-                        filter: end
-                    },
-
-                })
-                this.gridOptions.api.onFilterChanged()
+                this.fetchData()
             },
             'searchKeyword': function (newValue) {
                 this.fetchData()
@@ -286,7 +267,8 @@
                 vm.resetSelection()
             })
             this.$nuxt.$on('fetch-parking-list', (uid) => {
-                vm.fetchData(uid)
+                this.resUid = uid
+                vm.fetchData()
             })
         },
         beforeDestroy() {
@@ -326,6 +308,16 @@
                                 let rowsThisPage = response.data.rows
                                 lastRow = response.data.count
                                 params.successCallback(rowsThisPage, lastRow)
+                                if(context.resUid) {
+                                    context.gridOptions.api.forEachNode((node) => {
+                                        if(node.data.uid === context.resUid) {
+                                            context.openNewForm({
+                                                node: node,
+                                                data: node.data
+                                            })
+                                        }
+                                    })
+                                }
                             })
                         }
                     }
@@ -359,7 +351,7 @@
                 this.cardFormClosed = true
                 this.gridOptions.api.redrawRows()
             },
-            async fetchData(selectUid) {
+            async fetchData() {
                 this.gridOptions.api.onFilterChanged()
             },
             resetSelection() {
