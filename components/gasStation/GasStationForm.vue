@@ -282,6 +282,7 @@
                 submitStatus: null,
                 sendData: {},
                 tempImage: [],
+                file_list:[],
                 searchAddr: [],
                 defaultForm: {
                     uid: '',
@@ -390,23 +391,21 @@
             },
             //multi image upload////////////////////////////////////////////////
             uploadImageSuccess(formData, index, fileList) {
-                formData.append('dir', 'gasStation')
-                this.$axios.$post(this.config.apiUrl + '/uploads/', formData).then(response => {
-                    this.sendData.picture[index] = response.data;
-                })
+                for(let item of formData.entries()) {
+                    this.file_list.push(item [1]); // key, value를 각각 출력
+                }
             },
             beforeRemove(index, done, fileList) {
                 if (confirm("remove image")) {
                     done()
-                    this.sendData.picture.splice(index, 1);
+                    this.file_list.splice(index, 1)
                 } else {
                 }
             },
             editImage(formData, index, fileList) {
-                formData.append('dir', 'gasStation')
-                this.$axios.$post(this.config.apiUrl + '/uploads/', formData).then(response => {
-                    this.sendData.picture[index] = response.data;
-                })
+                for(let item of formData.entries()) {
+                    this.file_list[index] = item [1]; // key, value를 각각 출력
+                }
             },
             markIsPrimary(index, fileList) {
                 let temp = this.sendData.picture[0]
@@ -450,7 +449,14 @@
                 this.cardFormClosed = true
                 this.$nuxt.$emit('reset-gasStation-list')
             },
-            deleteForm() {
+            async deleteForm() {
+                if (this.sendData.picture.length > 0) {
+                    for (let index in this.sendData.picture) {
+                        let url = new URL(this.sendData.picture[index])
+                        let key = url.pathname.replace('/carmeleon/', '')
+                        await this.$objectStorage.deleteObject(key)
+                    }
+                }
                 this.$axios.$delete(this.config.apiUrl + '/gasStations/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('삭제하였습니다.')
                     this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)
@@ -473,7 +479,27 @@
                     }
                 }
             },
-            postForm() {
+            async postForm() {
+                if(this.file_list.length > 0){
+                    for(let i =0 ; i< this.file_list.length; i++){
+                        if(this.file_list[i] !== undefined){
+                            if (this.isFileImage(this.file_list[i])) {
+                                let prefix = this.uuidV4()
+                                let url = await this.$objectStorage.uploadFile('gasStation', this.file_list[i], prefix)
+
+                                if (url) {
+                                    this.sendData.picture.push(url)
+                                } else {
+                                    //todo: file upload error
+                                }
+                            } else {
+                                //todo: not image file error
+                            }
+                        }
+                    }
+                }else{
+                    this.callAlertError('사진을 등록해주세요')
+                }
                 this.$axios.$post(this.config.apiUrl + '/gasStations', this.sendData).then(async res => {
                     this.callNotification('계정을 생성하였습니다.')
                     this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)
@@ -481,7 +507,36 @@
                     this.submitStatus = 'OK'
                 })
             },
-            putForm() {
+            async putForm() {
+                // 삭제
+                if (this.sendData.picture.length > 0) {
+                    for (let index in this.sendData.picture) {
+                        let url = new URL(this.sendData.picture[index])
+                        let key = url.pathname.replace('/carmeleon/', '')
+                        await this.$objectStorage.deleteObject(key)
+                    }
+                }
+                // 재 업로드
+                if(this.file_list.length > 0 || this.sendData.picture.length > 0){
+                    this.sendData.picture = []
+                    for(let i =0 ; i< this.file_list.length; i++){
+                        if(this.file_list[i] !== undefined){
+                            if (this.isFileImage(this.file_list[i])) {
+                                let prefix = this.uuidV4()
+                                let url = await this.$objectStorage.uploadFile('gasStation', this.file_list[i], prefix)
+                                if (url) {
+                                    this.sendData.picture.push(url)
+                                } else {
+                                    //todo: file upload error
+                                }
+                            } else {
+                                //todo: not image file error
+                            }
+                        }
+                    }
+                }else{
+                    this.callAlertError('사진을 등록해주세요')
+                }
                 this.$axios.$put(this.config.apiUrl + '/gasStations/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('수정하였습니다.')
                     this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)

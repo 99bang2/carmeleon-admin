@@ -15,6 +15,16 @@ Vue.mixin({
 		])
 	},
 	methods: {
+		isFileImage(file) {
+			return file && file.type.split('/')[0] === 'image'
+		},
+		uuidV4() {
+			return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+				let r = Math.random() * 16 | 0,
+					v = c === 'x' ? r : (r & 0x3 | 0x8)
+				return v.toString(16)
+			})
+		},
 		callNotification(msg) {
 			UIkit.notification(`<div class="uk-flex uk-flex-middle"><i class="mdi mdi-check-all uk-margin-right md-color-light-green-400"></i>${msg}</div>`)
 		},

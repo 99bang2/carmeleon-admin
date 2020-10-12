@@ -22,6 +22,7 @@
 		"ag-grid-community": "^22.1.1",
 		"ag-grid-vue": "^22.1.1",
 		"autosize": "^4.0.2",
+		"aws-sdk": "^2.348.0",
 		"axios": "^0.19.2",
 		"base64-img": "^1.0.4",
 		"billboard.js": "~1.10",

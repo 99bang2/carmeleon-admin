@@ -114,6 +114,7 @@ module.exports = {
 		{src: '~/plugins/ag-grid.js', ssr: false},
 		{src: '~plugins/axios.js', ssr: true},
 		{src: '~plugins/moment.js'},
+		{ src: '~/plugins/naverStorage.js' },
 	],
 	router: {
 		middleware: ['redirect', 'util'],
