@@ -89,6 +89,7 @@
                 },
                 searchType: '',
                 searchKeyword: '',
+                resUid: 0
             }
         },
         computed: {
@@ -207,7 +208,8 @@
                 vm.resetSelection()
             })
             this.$nuxt.$on('fetch-carWash-list', (uid) => {
-                vm.fetchData(uid)
+                this.resUid = uid
+                vm.fetchData()
             })
         },
         beforeDestroy() {
@@ -245,6 +247,16 @@
                                 let rowsThisPage = response.data.rows
                                 lastRow = response.data.count
                                 params.successCallback(rowsThisPage, lastRow)
+                                if(context.resUid) {
+                                    context.gridOptions.api.forEachNode((node) => {
+                                        if(node.data.uid === context.resUid) {
+                                            context.openNewForm({
+                                                node: node,
+                                                data: node.data
+                                            })
+                                        }
+                                    })
+                                }
                             })
                         }
                     }
@@ -277,7 +289,7 @@
                 this.cardFormClosed = true
                 this.gridOptions.api.redrawRows()
             },
-            async fetchData(selectUid) {
+            async fetchData() {
                 this.gridOptions.api.onFilterChanged()
             },
             resetSelection() {

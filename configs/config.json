@@ -3,6 +3,6 @@
 		"apiUrl": "http://localhost:3030/api/admin"
 	},
 	"production": {
-		"apiUrl": "https://carmeleon.rocketlaunch.co.kr:3000/api/admin"
+		"apiUrl": "https://api.carmeleon.co.kr/api/admin"
 	}
 }
