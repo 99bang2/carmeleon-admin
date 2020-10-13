@@ -190,6 +190,18 @@
                                             <span data-uk-icon="icon: search"></span>
                                         </a>
                                     </div>
+                                    <div v-if="searchAddr" class="uk-width-1-1" style="margin: 15px; padding: 0px;">
+                                        <ul class="uk-list uk-list-divider uk-list-collapse">
+                                            <li class="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index
+                                                style="justify-content: space-between" type="button"
+                                                @click="selectAddr(item)">
+                                                <span v-html="item.title"></span>
+                                                <span class="selectIcon" data-uk-icon="icon: check"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!--    운영사 유형    -->
                                     <div v-if="this.$auth.$storage.state.user.grade === 0" class="uk-width-1-1">
                                         <Select2
                                                 v-model="sendData.siteType"
@@ -200,16 +212,6 @@
                                         <ul class="sc-vue-errors">
                                             <li v-if="!$v.sendData.siteType.required">
                                                 운영사 유형을 선택하세요.
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div v-if="searchAddr" class="uk-width-1-1" style="margin: 15px; padding: 0px;">
-                                        <ul class="uk-list uk-list-divider uk-list-collapse">
-                                            <li class="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index
-                                                style="justify-content: space-between" type="button"
-                                                @click="selectAddr(item)">
-                                                <span v-html="item.title"></span>
-                                                <span class="selectIcon" data-uk-icon="icon: check"></span>
                                             </li>
                                         </ul>
                                     </div>
@@ -509,7 +511,6 @@
             openDicountForm(siteUid) {
                 this.$nuxt.$emit('open-discount-list', siteUid)
             },
-            //multi image upload////////////////////////////////////////////////
             async uploadImageSuccess(formData, index, fileList) {
                 for(let item of formData.entries()) {
                     this.file_list.push(item [1]);
@@ -538,7 +539,6 @@
                 this.sendData.picture[0] = this.sendData.picture[index]
                 this.sendData.picture[index] = temp
             },
-            //multi image upload////////////////////////////////////////////////
 
             settingForm(props) {
                 this.$v.$reset()

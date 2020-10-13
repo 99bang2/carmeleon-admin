@@ -129,6 +129,11 @@
                                                 {{sendData.isKpetro?"품질인증":"&nbsp;미인증&nbsp;"}}
                                             </PrettyCheck>
                                         </div>
+                                        <div>
+                                            <PrettyCheck v-model="sendData.isSelf" class="p-switch">
+                                                {{sendData.isSelf?"셀프":"&nbsp;셀프아님&nbsp;"}}
+                                            </PrettyCheck>
+                                        </div>
                                     </div>
                                     <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
                                         유가 정보
@@ -298,16 +303,18 @@
                     tel: '', //전화번호
                     lat: null, //위도
                     lon: null, //경도
-                    isCarWash: true,
-                    isConvenience: true,
-                    isKpetro: true,
+                    isCarWash: false, //"세차장 , carWash"
+                    isConvenience: false, // "편의점 , cvs"
+                    isKpetro: false, // "품질인증, kpetro"
+                    isSelf: false, // "셀프주유소 , self"
                     picture: [],
                     Gasoline: null,
                     Diesel: null,
                     PremiumGasoline: null,
                     lpg:null,
                     brandCodeOpts: [],
-                    gasStationTypeOpts: []
+                    gasStationTypeOpts: [],
+                    tag:[]
                 }
             }
         },
@@ -447,6 +454,7 @@
                 } else {
                     this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
                 }
+                console.log(this.sendData)
                 this.cardFormClosed = true
                 setTimeout(() => {
                     this.cardFormClosed = false
@@ -487,6 +495,18 @@
                 }
             },
             async postForm() {
+                if(this.isCarWash){
+                    this.tag.push("carWash")
+                }
+                if(this.isConvenience){
+                    this.tag.push("cvs")
+                }
+                if(this.isKpetro){
+                    this.tag.push("kpetro")
+                }
+                if(this.isSelf){
+                    this.tag.push("self")
+                }
                 if(this.file_list.length > 0){
                     for(let i =0 ; i< this.file_list.length; i++){
                         if(this.file_list[i] !== undefined){
