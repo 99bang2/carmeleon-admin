@@ -380,6 +380,8 @@
                 sendData: {},
                 tempImage: [],
                 file_list: [],
+                deleteArray: [],
+                editArray: [],
                 searchAddr: [],
                 defaultForm: {
                     uid: null,
@@ -510,19 +512,25 @@
             //multi image upload////////////////////////////////////////////////
             async uploadImageSuccess(formData, index, fileList) {
                 for(let item of formData.entries()) {
-                    this.file_list.push(item [1]); // key, value를 각각 출력
+                    this.file_list.push(item [1]);
                 }
             },
             beforeRemove(index, done, fileList) {
                 if (confirm("remove image")) {
                     done()
+                    if(typeof this.file_list[index] === 'string'){
+                        this.deleteArray.push(this.file_list[index])
+                    }
                     this.file_list.splice(index, 1)
                 } else {
                 }
             },
             editImage(formData, index, fileList) {
+                if(typeof this.file_list[index] === 'string'){
+                    this.editArray[index] = this.file_list[index]
+                }
                 for(let item of formData.entries()) {
-                    this.file_list[index] = item [1]; // key, value를 각각 출력
+                    this.file_list[index] = item [1];
                 }
             },
             markIsPrimary(index, fileList) {
@@ -538,8 +546,7 @@
                 if (props) {
                     this.sendData = JSON.parse(JSON.stringify(props.data))
                     this.sendData.parkingLot = this.sendData.parkingLot | 0
-                    // vue-upload-multiple-image 패키지 사용
-                    // 주차장 상세보기 할 때, upload된 영역 불러올때 사용
+                    this.file_list = this.sendData.picture
                     if (this.sendData.picture !== null) {
                         for (let i = 0; i < this.sendData.picture.length; i++) {
                             let img = {}
@@ -606,7 +613,6 @@
                             if (this.isFileImage(this.file_list[i])) {
                                 let prefix = this.uuidV4()
                                 let url = await this.$objectStorage.uploadFile('parking', this.file_list[i], prefix)
-
                                 if (url) {
                                     this.sendData.picture.push(url)
                                 } else {
@@ -617,8 +623,6 @@
                             }
                         }
                     }
-                }else{
-                    this.callAlertError('사진을 등록해주세요')
                 }
 
                 this.$axios.$post(this.config.apiUrl + '/parkings', this.sendData).then(async res => {
@@ -629,21 +633,20 @@
                 })
             },
             async putForm() {
-                // 삭제
-                if (this.sendData.picture.length > 0) {
-                    for (let index in this.sendData.picture) {
-                        let url = new URL(this.sendData.picture[index])
-                        let key = url.pathname.replace('/carmeleon/', '')
-                        await this.$objectStorage.deleteObject(key)
-                    }
-                }
-                // 재 업로드
-                if(this.file_list.length > 0 || this.sendData.picture.length > 0){
-                    this.sendData.picture = []
+                if(this.file_list.length > 0){
+                    this.sendData.picture=[]
                     for(let i =0 ; i< this.file_list.length; i++){
                         if(this.file_list[i] !== undefined){
-                            if (this.isFileImage(this.file_list[i])) {
-                                let prefix = this.uuidV4()
+                            if (typeof this.file_list[i] !== 'string' && this.isFileImage(this.file_list[i])) {
+                                let prefix
+                                if(typeof this.editArray[i] !== 'undefined'){
+                                    let url = new URL(this.editArray[i])
+                                    let modify_string = url.pathname.replace('/carmeleon/admin/parking/', '')
+                                    let _lastDot = modify_string.lastIndexOf('.');
+                                    prefix = modify_string.substring(0, _lastDot)
+                                }else{
+                                    prefix= this.uuidV4()
+                                }
                                 let url = await this.$objectStorage.uploadFile('parking', this.file_list[i], prefix)
                                 if (url) {
                                     this.sendData.picture.push(url)
@@ -652,12 +655,20 @@
                                 }
                             } else {
                                 //todo: not image file error
+                                this.sendData.picture.push(this.file_list[i])
                             }
                         }
                     }
-                }else{
-                    this.callAlertError('사진을 등록해주세요')
                 }
+
+                if (this.deleteArray.length > 0) {
+                    for (let index in this.deleteArray) {
+                        let url = new URL(this.deleteArray[index])
+                        let key = url.pathname.replace('/carmeleon/', '')
+                        await this.$objectStorage.deleteObject(key)
+                    }
+                }
+
                 this.$axios.$put(this.config.apiUrl + '/parkings/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('수정하였습니다.')
                     this.$nuxt.$emit('fetch-parking-list', res.data.uid)

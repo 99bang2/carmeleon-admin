@@ -43,7 +43,7 @@
                                            @change="onChangeBannerImageFile">
                                     <input class="uk-visible@s uk-input uk-form-width-medium" type="text"
                                            placeholder="Select file" disabled>
-                                    <div class="uk-width-1-1 image-preview" v-if="sendData.bannerImage">
+                                    <div class="uk-width-1-1 image-preview" v-if="bannerImageData">
                                         <img class="preview" :src="bannerImageData">
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                                     <input type="file" accept="image/*" ref="mainImage" @change="onChangeMainImageFile">
                                     <input class="uk-visible@s uk-input uk-form-width-medium" type="text"
                                            placeholder="Select file" disabled>
-                                    <div class="uk-width-1-1 image-preview" v-if="sendData.mainImage">
+                                    <div class="uk-width-1-1 image-preview" v-if="mainImageData">
                                         <img class="preview" :src="mainImageData">
                                     </div>
                                 </div>
@@ -147,6 +147,8 @@
                     {id: 0, text: '팝업적용'},
                     {id: 1, text: '팝업미적용'}
                 ],
+                editBannerImage:"",
+                editMainImage:"",
                 bannerImageData: "",
                 mainImageData: "",
                 cardFormClosed: true,
@@ -158,7 +160,7 @@
                     title: '',
                     bannerImage: '',
                     mainImage: '',
-                    accountUid: 0,
+                    accountUid: this.$auth.user.uid,
                     startDate: '',
                     endDate: '',
                     eventType: '',
@@ -214,9 +216,9 @@
         },
         methods: {
             onChangeBannerImageFile(event) {
-                var input = event.target;
+                let input = event.target;
                 if (input.files && input.files[0]) {
-                    var reader = new FileReader();
+                    let reader = new FileReader();
                     reader.onload = e => {
                         this.bannerImageData = e.target.result;
                     }
@@ -227,6 +229,7 @@
                     }
                     reader.readAsDataURL(input.files[0]);
                 }
+                this.editBannerImage = this.sendData.bannerImage
                 this.sendData.bannerImage = this.$refs.bannerImage.files[0];
             },
             onChangeMainImageFile(event) {
@@ -243,6 +246,7 @@
                     }
                     reader.readAsDataURL(input.files[0]);
                 }
+                this.editMainImage = this.sendData.mainImage
                 this.sendData.mainImage = this.$refs.mainImage.files[0];
             },
             settingForm(props) {
@@ -269,6 +273,11 @@
                 this.$nuxt.$emit('reset-event-list')
             },
             deleteForm() {
+                let mainKey = new URL(this.sendData.mainImage).pathname.replace('/carmeleon/', '')
+                let bannerKey = new URL(this.sendData.bannerImage).pathname.replace('/carmeleon/','')
+                this.$objectStorage.deleteObject(mainKey)
+                this.$objectStorage.deleteObject(bannerKey)
+
                 this.$axios.$delete(this.config.apiUrl + '/events/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('삭제하였습니다.')
                     this.$nuxt.$emit('fetch-event-list')
@@ -291,50 +300,74 @@
                     }
                 }
             },
-            postForm() {
-                //-- 파일 전송을 위한 FormData 정의 --//
-                const formData = new FormData()
-                formData.append("bannerImage", this.sendData.bannerImage)
-                formData.append("mainImage", this.sendData.mainImage)
+            async postForm() {
+                let mainFile = this.$refs.mainImage.files[0]
+                let bannerFile = this.$refs.bannerImage.files[0]
+                if(this.isFileImage(mainFile)){
+                    let prefix = this.uuidV4()
+                    let mainFile_url = await this.$objectStorage.uploadFile('event', mainFile, prefix)
 
-                //---- 기타 파라미터 항목들 추가 ----//
-                formData.append("accountUid", this.$auth.user.uid)
-                formData.append("title", this.sendData.title)
-                formData.append("startDate", this.sendData.startDate)
-                formData.append("endDate", this.sendData.endDate)
-                formData.append("eventType", this.sendData.eventType)
-                formData.append("isOpen", this.sendData.isOpen)
-
-                this.$axios.$post(this.config.apiUrl + '/events', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
+                    if(mainFile_url){
+                        this.sendData.mainImage = mainFile_url
                     }
-                }).then(async res => {
+                }
+
+                if(this.isFileImage(bannerFile)){
+                    let prefix = this.uuidV4()
+                    let bannerFile_url = await this.$objectStorage.uploadFile('event', bannerFile, prefix)
+
+                    if(bannerFile_url){
+                        this.sendData.bannerImage = bannerFile_url
+                    }
+                }
+
+                this.$axios.$post(this.config.apiUrl + '/events', this.sendData).then(async res => {
                     this.callNotification('등록하였습니다.')
                     this.$nuxt.$emit('fetch-event-list')
                 }).finally(() => {
                     this.submitStatus = 'OK'
                 })
             },
-            putForm() {
-                const formData = new FormData()
-                formData.append("bannerImage", this.sendData.bannerImage)
-                formData.append("mainImage", this.sendData.mainImage)
+            async putForm() {
+                // let url, modify_string, _lastDot, prefix;
+                if(this.$refs.mainImage.files[0]) {
+                    this.sendData.mainImage = ""
+                    let mainKey = new URL(this.editMainImage).pathname.replace('/carmeleon/', '')
+                    this.$objectStorage.deleteObject(mainKey)
+                    let mainFile = this.$refs.mainImage.files[0]
+                    if(this.isFileImage(mainFile)){
+                        let prefix = this.uuidV4()
+                        let mainFile_url = await this.$objectStorage.uploadFile('event', mainFile, prefix)
 
-                //---- 기타 파라미터 항목들 추가 ----//
-                formData.append("accountUid", this.$auth.user.uid)
-                formData.append("title", this.sendData.title)
-                formData.append("startDate", this.sendData.startDate)
-                formData.append("endDate", this.sendData.endDate)
-                formData.append("eventType", this.sendData.eventType)
-                formData.append("isOpen", this.sendData.isOpen)
+                        if(mainFile_url){
+                            this.sendData.mainImage = mainFile_url
+                        }
+                    }
+                }
 
-                this.$axios.$put(this.config.apiUrl + '/events/' + this.sendData.uid, formData).then(async res => {
-                    this.callNotification('수정하였습니다.')
-                    this.$nuxt.$emit('fetch-event-list')
-                }).finally(() => {
-                    this.submitStatus = 'OK'
-                })
+                if(this.$refs.bannerImage.files[0]) {
+                    this.sendData.bannerImage = ""
+                    let bannerKey = new URL(this.editBannerImage).pathname.replace('/carmeleon/', '')
+                    this.$objectStorage.deleteObject(bannerKey)
+                    let bannerFile = this.$refs.bannerImage.files[0]
+                    if(this.isFileImage(bannerFile)){
+                        let prefix = this.uuidV4()
+                        let bannerFile_url = await this.$objectStorage.uploadFile('event', bannerFile, prefix)
+
+                        if(bannerFile_url){
+                            this.sendData.bannerImage = bannerFile_url
+                        }
+                    }
+                }
+
+                if(this.sendData.mainImage && this.sendData.bannerImage){
+                    this.$axios.$put(this.config.apiUrl + '/events/' + this.sendData.uid, this.sendData).then(async res => {
+                        this.callNotification('수정하였습니다.')
+                        this.$nuxt.$emit('fetch-event-list')
+                    }).finally(() => {
+                        this.submitStatus = 'OK'
+                    })
+                }
             },
         },
     }
