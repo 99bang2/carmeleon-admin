@@ -22,6 +22,13 @@ export const menuEntries = [
             },
             {
                 id: uniqueID(),
+                title: "EvCharges",
+                icon: "mdi mdi-battery-charging",
+                page: "/spots/evCharges",
+                grade: ['0']
+            },
+            {
+                id: uniqueID(),
                 title: "GasStations",
                 icon: "mdi mdi-gas-station",
                 page: "/spots/gasStations",
@@ -32,13 +39,6 @@ export const menuEntries = [
                 title: "CarWashes",
                 icon: "mdi mdi-car-wash",
                 page: "/spots/carWashes",
-                grade: ['0']
-            },
-            {
-                id: uniqueID(),
-                title: "EvCharges",
-                icon: "mdi mdi-battery-charging",
-                page: "/spots/evCharges",
                 grade: ['0']
             },
         ]

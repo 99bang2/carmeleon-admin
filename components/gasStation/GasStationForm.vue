@@ -291,6 +291,12 @@
                 deleteArray: [],
                 editArray: [],
                 searchAddr: [],
+                tagDetect:[
+                    {tagBoolean : "isCarWash", tagName: "carWash"},
+                    {tagBoolean : "isConvenience", tagName: "cvs"},
+                    {tagBoolean : "isKpetro", tagName: "kpetro"},
+                    {tagBoolean : "isSelf", tagName: "self"}
+                    ],
                 defaultForm: {
                     uid: '',
                     gasStationName: '', //주유소명
@@ -398,7 +404,6 @@
             openNewForm(siteUid, type) {
                 this.$nuxt.$emit('open-rate-list', siteUid, type)
             },
-            //multi image upload////////////////////////////////////////////////
             uploadImageSuccess(formData, index, fileList) {
                 for(let item of formData.entries()) {
                     this.file_list.push(item [1]);
@@ -427,13 +432,18 @@
                 this.sendData.picture[0] = this.sendData.picture[index]
                 this.sendData.picture[index] = temp
             },
-            //multi image upload////////////////////////////////////////////////
 
             settingForm(props) {
                 this.$v.$reset()
                 this.tempImage = []
                 if (props) {
                     this.sendData = JSON.parse(JSON.stringify(props.data))
+                    this.tagDetect.map(t => {
+                        console.log(t)
+                        if(this.sendData.tag.includes(t.tagName)){
+                            this.sendData[t.tagBoolean] = true
+                        }
+                    })
                     this.file_list = this.sendData.picture
                     if (this.sendData.picture !== null) {
                         for (let i = 0; i < this.sendData.picture.length; i++) {
@@ -495,18 +505,11 @@
                 }
             },
             async postForm() {
-                if(this.isCarWash){
-                    this.tag.push("carWash")
-                }
-                if(this.isConvenience){
-                    this.tag.push("cvs")
-                }
-                if(this.isKpetro){
-                    this.tag.push("kpetro")
-                }
-                if(this.isSelf){
-                    this.tag.push("self")
-                }
+                this.tagDetect.map(t => {
+                    if(this.sendData[t.tagBoolean]){
+                        this.sendData.tag.push(t.tagName)
+                    }
+                })
                 if(this.file_list.length > 0){
                     for(let i =0 ; i< this.file_list.length; i++){
                         if(this.file_list[i] !== undefined){
@@ -533,6 +536,17 @@
                 })
             },
             async putForm() {
+                this.tagDetect.map(t => {
+                    if(this.sendData[t.tagBoolean]){
+                        if(!this.sendData.tag.includes(t.tagName)){
+                            this.sendData.tag.push(t.tagName)
+                        }
+                    }else {
+                        if(this.sendData.tag.includes(t.tagName)) {
+                            this.sendData.tag.splice(this.sendData.tag.indexOf(t.tagName), 1)
+                        }
+                    }
+                })
                 if(this.file_list.length > 0){
                     this.sendData.picture = []
                     for(let i =0 ; i< this.file_list.length; i++){
