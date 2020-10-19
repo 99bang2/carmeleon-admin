@@ -513,7 +513,7 @@
             },
             async uploadImageSuccess(formData, index, fileList) {
                 for(let item of formData.entries()) {
-                    this.file_list.push(item [1]);
+                    this.file_list.push(item[1]);
                 }
             },
             beforeRemove(index, done, fileList) {
@@ -531,7 +531,7 @@
                     this.editArray[index] = this.file_list[index]
                 }
                 for(let item of formData.entries()) {
-                    this.file_list[index] = item [1];
+                    this.file_list[index] = item[1];
                 }
             },
             markIsPrimary(index, fileList) {
@@ -546,7 +546,7 @@
                 if (props) {
                     this.sendData = JSON.parse(JSON.stringify(props.data))
                     this.sendData.parkingLot = this.sendData.parkingLot | 0
-                    this.file_list = this.sendData.picture
+                    this.file_list = this.sendData.picture || []
                     if (this.sendData.picture !== null) {
                         for (let i = 0; i < this.sendData.picture.length; i++) {
                             let img = {}
