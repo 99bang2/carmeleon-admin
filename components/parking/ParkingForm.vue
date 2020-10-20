@@ -547,6 +547,7 @@
                     this.sendData = JSON.parse(JSON.stringify(props.data))
                     this.sendData.parkingLot = this.sendData.parkingLot | 0
                     this.file_list = this.sendData.picture || []
+                    this.sendData.optionTag = this.sendData.optionTag || []
                     if (this.sendData.picture !== null) {
                         for (let i = 0; i < this.sendData.picture.length; i++) {
                             let img = {}

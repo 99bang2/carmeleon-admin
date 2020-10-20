@@ -88,6 +88,12 @@ export const menuEntries = [
                 icon: "mdi mdi-coin",
                 page: "/operations/pointProducts"
             },
+            {
+                id: uniqueID(),
+                title: "Questions",
+                icon: "mdi mdi-comment-question-outline",
+                page: "/operations/questions"
+            }
             // {
             //     id: uniqueID(),
             //     title: "Tutorials",
