@@ -16,7 +16,7 @@ Vue.mixin({
 	},
 	methods: {
 		isFileImage(file) {
-			return file && file.type.split('/')[0] === 'image'
+			return file
 		},
 		uuidV4() {
 			return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

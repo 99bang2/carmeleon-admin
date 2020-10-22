@@ -480,8 +480,8 @@
                 this.$axios.$post(this.config.apiUrl + '/searchLocal', {address: searchItem.address}).then(async res => {
                     this.callNotification("검색을 완료하였습니다.")
                     this.sendData.address = res.data.addresses[0].jibunAddress
-                    this.sendData.lat = res.data.addresses[0].x
-                    this.sendData.lon = res.data.addresses[0].y
+                    this.sendData.lat = res.data.addresses[0].y
+                    this.sendData.lon = res.data.addresses[0].x
                     this.searchAddr = []
                 }).finally(() => {
                     this.submitStatus = 'OK'
