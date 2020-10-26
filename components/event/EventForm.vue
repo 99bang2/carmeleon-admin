@@ -38,6 +38,7 @@
                             </div>
                             <!--	bannerImage 이미지 1-->
                             <div class="uk-width-1-2">
+                                <h5 class="uk-heading-bullet uk-margin-top">Banner Image</h5>
                                 <div data-uk-form-custom="target: true">
                                     <input type="file" accept="image/*" ref="bannerImage"
                                            @change="onChangeBannerImageFile">
@@ -50,6 +51,7 @@
                             </div>
                             <!--	mainImage	이미지 2-->
                             <div class="uk-width-1-2">
+                                <h5 class="uk-heading-bullet uk-margin-top">Main Image</h5>
                                 <div data-uk-form-custom="target: true">
                                     <input type="file" accept="image/*" ref="mainImage" @change="onChangeMainImageFile">
                                     <input class="uk-visible@s uk-input uk-form-width-medium" type="text"
