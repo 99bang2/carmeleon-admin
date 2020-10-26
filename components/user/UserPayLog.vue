@@ -17,6 +17,13 @@
                     </div>
                 </ScCardHeader>
                 <ScCardBody>
+                    <div class="uk-flex uk-flex-around">
+                        <button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-danger uk-width-1-1"
+                                @click="cancelPayment">
+                            <span class="mdi mdi-cancel mdi-18px md-color-red-600 uk-margin-small-right"></span>
+                            <span>결제취소</span>
+                        </button>
+                    </div>
                     <ag-grid-vue
                             style="width: 100%"
                             class="ag-theme-material"
@@ -60,12 +67,27 @@
                     getRowStyle: this.getRowStyle
                 },
                 cardFormClosed: true,
-                userName: ''
+                userName: '',
+                userUid:''
             }
         },
         computed: {
             columnDefs() {
                 return [
+                    {
+                        headerName: "",
+                        field: "",
+                        width: 50,
+                        resizable: false,
+                        headerCheckboxSelection: true,
+                        headerCheckboxSelectionFilteredOnly: true,
+                        checkboxSelection: true,
+                        suppressMovable: false,
+                        onCellClicked: false,
+                        cellStyle: {
+                            'text-align': 'center',
+                        }
+                    },
                     {
                         headerName: '주차장명',
                         field: 'parkingSite.name',
@@ -130,12 +152,34 @@
         methods: {
             async fetchData(data) {
                 this.cardFormClosed = false
+                this.userUid = data
                 let res = await this.$axios.$get(this.config.apiUrl + '/userPayLogs/' + data)
                 this.gridOptions.api.setRowData(res.data)
             },
             closeForm() {
                 this.cardFormClosed = true
                 this.$nuxt.$emit('reset-user-list')
+            },
+            cancelPayment() {
+                let selected = this.gridOptions.api.getSelectedRows()
+                let selectedUids = selected.map(({uid}) => uid)
+                let selectedCnt = selectedUids.length
+                if(selectedCnt){
+                    let tmpCnt = 0;
+                    UIkit.modal.confirm(`선택한 항목을 결제 취소 하시겠습니까?`).then((res) => {
+                        selectedUids.forEach(uid => {
+                            this.$axios.$get(this.config.apiUrl + '/pg/'+uid).then(res=>{
+                                if(res)tmpCnt++
+                                if(tmpCnt === selectedCnt) {
+                                    this.callNotification('결제가 취소되었습니다.')
+                                    this.fetchData(this.userUid)
+                                }
+                            })
+                        })
+                    })
+                }else{
+                    this.callAlertError('결제를 취소할 항목을 선택해주세요')
+                }
             }
         }
     }
