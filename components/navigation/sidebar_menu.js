@@ -78,6 +78,12 @@ export const menuEntries = [
             },
             {
                 id: uniqueID(),
+                title: "Pushes",
+                icon: "mdi mdi-lightbulb-on",
+                page: "/operations/pushes",
+            },
+            {
+                id: uniqueID(),
                 title: "ReviewTemplates",
                 icon: "mdi mdi-file-document",
                 page: "/operations/reviewTemplates"

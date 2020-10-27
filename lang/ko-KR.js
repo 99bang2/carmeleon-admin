@@ -11,6 +11,7 @@ export default {
 	'Accounts': '계정 관리',
 	'Events':'이벤트',
 	'Notices':'공지사항',
+	'Pushes':'푸시알림',
 	'ReviewTemplates' : '리뷰템플릿 관리',
 	'PointProducts':'포인트상품 관리',
 	'Tutorials':'튜토리얼 관리',
