@@ -112,17 +112,21 @@
                                 let badge = ''
                                 let status = ''
                                 switch (obj.value) {
-                                    case 0 :
+                                    case 10 :
                                         badge = 'md-bg-green-500'
                                         status = '결제완료'
                                         break
-                                    case 1 :
+                                    case -10 :
+                                        badge = 'md-bg-red-500'
+                                        status = '결제실패'
+                                        break
+                                    case -20 :
                                         badge = 'md-bg-red-500'
                                         status = '결제취소'
                                         break
                                     default :
                                         badge = 'md-bg-gray-500'
-                                        status = '기타'
+                                        status = '결제대기중'
                                 }
                                 return `<span class="uk-badge ${badge}">${status}</span>`
                             }
