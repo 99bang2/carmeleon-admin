@@ -172,9 +172,9 @@
                         width: 200
                     },
                     {
-                        headerName: '예약자번호',
+                        headerName: '예약자정보',
                         field: 'phoneNumber',
-                        width: 190
+                        width: 190,
                     },
                     {
                         headerName: '차량번호',
@@ -205,17 +205,21 @@
                                 let badge = ''
                                 let status = ''
                                 switch (obj.value) {
-                                    case 0 :
+                                    case 10 :
                                         badge = 'md-bg-green-500'
                                         status = '결제완료'
                                         break
-                                    case 1 :
+                                    case -10 :
+                                        badge = 'md-bg-red-500'
+                                        status = '결제실패'
+                                        break
+                                    case -20 :
                                         badge = 'md-bg-red-500'
                                         status = '결제취소'
                                         break
                                     default :
                                         badge = 'md-bg-gray-500'
-                                        status = '기타'
+                                        status = '결제대기중'
                                 }
                                 return `<span class="uk-badge ${badge}">${status}</span>`
                             }
@@ -259,6 +263,7 @@
                         searchData: searchData
                     }
                 })
+                console.log(res.data)
                 if (this.gridOptions.api) {
                     this.gridOptions.api.setRowData(res.data.rows)
                     this.gridOptions.api.forEachNode((node) => {
@@ -319,18 +324,18 @@
                 this.totalSum = null
                 this.totalCnt = null
                 this.gridOptions.api.forEachNodeAfterFilter((node) => {
-                    if (node.data.status === 0) {
-                        this.completeSum += node.data.discountPrice
+                    if (node.data.status === 10) {
+                        this.completeSum += node.data.totalPrice
                         this.completeCnt++
-                        this.totalSum += node.data.discountPrice
+                        this.totalSum += node.data.totalPrice
                         this.totalCnt++
-                    } else if (node.data.status === 1) {
-                        this.cancelSum += node.data.discountPrice
+                    } else if (node.data.status === -20) {
+                        this.cancelSum += node.data.totalPrice
                         this.cancelCnt++
-                        this.totalSum += node.data.discountPrice
+                        this.totalSum += node.data.totalPrice
                         this.totalCnt++
                     } else {
-                        this.totalSum += node.data.discountPrice
+                        this.totalSum += node.data.totalPrice
                         this.totalCnt++
                     }
                 })
