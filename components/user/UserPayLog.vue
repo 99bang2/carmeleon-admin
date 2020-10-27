@@ -18,7 +18,8 @@
                 </ScCardHeader>
                 <ScCardBody>
                     <div class="uk-flex uk-flex-around">
-                        <button v-waves.button.light class="sc-button sc-button-outline sc-button-outline-danger uk-width-1-1"
+                        <button v-waves.button.light
+                                class="sc-button sc-button-outline sc-button-outline-danger uk-width-1-1"
                                 @click="cancelPayment">
                             <span class="mdi mdi-cancel mdi-18px md-color-red-600 uk-margin-small-right"></span>
                             <span>결제취소</span>
@@ -68,7 +69,7 @@
                 },
                 cardFormClosed: true,
                 userName: '',
-                userUid:''
+                userUid: ''
             }
         },
         computed: {
@@ -168,20 +169,23 @@
                 let selected = this.gridOptions.api.getSelectedRows()
                 let selectedUids = selected.map(({uid}) => uid)
                 let selectedCnt = selectedUids.length
-                if(selectedCnt){
+                if (selectedCnt) {
                     let tmpCnt = 0;
                     UIkit.modal.confirm(`선택한 항목을 결제 취소 하시겠습니까?`).then((res) => {
-                        selectedUids.forEach(uid => {
-                            this.$axios.$get(this.config.apiUrl + '/pg/'+uid).then(res=>{
-                                if(res)tmpCnt++
-                                if(tmpCnt === selectedCnt) {
-                                    this.callNotification('결제가 취소되었습니다.')
-                                    this.fetchData(this.userUid)
-                                }
+                        const promises = new Promise((resolve) => {
+                            selectedUids.forEach(uid => {
+                                this.$axios.$get(this.config.apiUrl + '/pg/' + uid).then(res => {
+                                    if (res.data.result) tmpCnt++
+                                })
+                                    .then(() => resolve())
                             })
                         })
+                        Promise.all([promises]).then(()=>{
+                            this.callNotification(`${selectedCnt}중 ${tmpCnt}건의 결제가 취소되었습니다.`)
+                            this.fetchData(this.userUid)
+                        })
                     })
-                }else{
+                } else {
                     this.callAlertError('결제를 취소할 항목을 선택해주세요')
                 }
             }
