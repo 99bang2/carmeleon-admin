@@ -172,9 +172,14 @@
                         width: 200
                     },
                     {
-                        headerName: '예약자정보',
+                        headerName: '연락처',
                         field: 'phoneNumber',
-                        width: 190,
+                        width: 150,
+                    },
+                    {
+                        headerName: '이메일',
+                        field: 'email',
+                        width: 150,
                     },
                     {
                         headerName: '차량번호',
@@ -263,7 +268,6 @@
                         searchData: searchData
                     }
                 })
-                console.log(res.data)
                 if (this.gridOptions.api) {
                     this.gridOptions.api.setRowData(res.data.rows)
                     this.gridOptions.api.forEachNode((node) => {
