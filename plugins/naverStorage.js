@@ -43,7 +43,6 @@ const objectStorageApi = {
         }
 
         try {
-            console.log(param)
             let pms = await S3.putObject(param).promise()
             return storage_url + '/' + bucket_name + pms.$response.request.httpRequest.path
         } catch (err) {

@@ -439,7 +439,6 @@
                 if (props) {
                     this.sendData = JSON.parse(JSON.stringify(props.data))
                     this.tagDetect.map(t => {
-                        console.log(t)
                         if(this.sendData.tag.includes(t.tagName)){
                             this.sendData[t.tagBoolean] = true
                         }
@@ -464,7 +463,6 @@
                 } else {
                     this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
                 }
-                console.log(this.sendData)
                 this.cardFormClosed = true
                 setTimeout(() => {
                     this.cardFormClosed = false

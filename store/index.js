@@ -48,7 +48,6 @@ export const mutations = {
 		state.vxPageFixed = fixed
 	},
 	setAppTheme (state, theme) {
-		console.log(theme);
 		state.vxAppTheme = theme
 	},
 	setOffcanvasPresent (state, present) {

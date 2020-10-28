@@ -560,7 +560,6 @@ JQVMap.prototype.bindZoomButtons = function () {
 };
 
 JQVMap.prototype.deselect = function (cc, path) {
-	console.log(cc);
 	if(cc) {
 		cc = cc.toLowerCase();
 		path = path || jQuery('#' + this.getCountryId(cc))[0];
