@@ -87,6 +87,16 @@ Vue.mixin({
 			document.body.removeChild(div1);
 			document.body.removeChild(div2);
 			return scrollbarWidth;
+		},
+		nowDateTime(){
+			let today = new Date();
+			let year=today.getFullYear()
+			let month = today.getMonth() +1
+			let date = today.getDate()
+			let hours = today.getHours()
+			let minutes = today.getMinutes()
+			let seconds = today.getSeconds()
+			return year+'-'+month+'-'+date+' '+hours+':'+minutes+':'+seconds
 		}
 	}
 });

@@ -113,10 +113,10 @@
                                     typeName = "긴급"
                                     break;
                                 case 1:
-                                    typeName = "필수"
+                                    typeName = "단일"
                                     break;
                                 case 2:
-                                    typeName = "일반"
+                                    typeName = "전체"
                                     break;
                             }
                             return typeName
@@ -128,16 +128,11 @@
                         suppressSizeToFit: false,
                     },
                     {
-                        headerName: '작성자',
-                        field: 'account.name',
-                        width: 160
-                    },
-                    {
-                        headerName: '활성',
-                        field: 'isOpen',
-                        width: 60,
+                        headerName: '발송결과',
+                        field: 'status',
+                        width: 200,
                         cellRenderer: (obj) => {
-                            return obj.value ? '<i class="mdi mdi-check-circle" style="font-size:8px;"></i>' : ''
+                            return obj.value === 1 ? '<i class="mdi mdi-check-circle" style="font-size:8px;"></i>' : '아직 대기중입니다.'
                         }
                     },
                     {
@@ -198,12 +193,9 @@
             },
             async fetchData(selectUid) {
                 //API 연동
-                // let res = await this.$axios.$get(this.config.apiUrl + '/pushes')
-                let fake = [
-
-                ]
+                let res = await this.$axios.$get(this.config.apiUrl + '/pushes')
                 if (this.gridOptions.api) {
-                    this.gridOptions.api.setRowData(fake)
+                    this.gridOptions.api.setRowData(res.data)
                 }
             },
             resetSelection() {

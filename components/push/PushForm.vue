@@ -36,56 +36,50 @@
                             </div>
                             <div class="uk-width-1-1 uk-margin-top">
                                 <ScTextarea
-                                        v-model="sendData.content"
+                                        v-model="sendData.body"
                                         :cols="30"
                                         :rows="9"
                                         :autosize="true"
                                         mode="outline"
-                                        :error-state="$v.sendData.content.$error"
-                                        :validator="$v.sendData.content"
+                                        :error-state="$v.sendData.body.$error"
+                                        :validator="$v.sendData.body"
                                 >
                                     <label>
                                         내용
                                     </label>
                                 </ScTextarea>
                                 <ul class="sc-vue-errors">
-                                    <li v-if="!$v.sendData.content.required">
+                                    <li v-if="!$v.sendData.body.required">
                                         내용을 입력하세요.
                                     </li>
                                 </ul>
                             </div>
-                            <div class="uk-width-1-2@s">
+                            <div class="uk-width-1-1@s">
                                 <Select2
                                         v-model="sendData.pushType"
                                         :options="pushOpts"
-                                        :settings="{'width': '100%', 'placeholder':'공지사항 분류'}"
+                                        :settings="{'width': '100%', 'placeholder':'푸시타입 분류'}"
                                         :error-state="$v.sendData.pushType.$error"
                                 />
                                 <ul class="sc-vue-errors">
                                     <li v-if="!$v.sendData.pushType.required">
-                                        공지사항 분류를 선택하세요.
+                                        푸시타입을 선택하세요.
                                     </li>
                                 </ul>
                             </div>
-                            <div class="uk-width-1-2@s">
-                                <input id="switch-css" v-model="sendData.isOpen" type="checkbox"
-                                       class="sc-switch-input">
-                                <label for="switch-css" class="sc-switch-label"
-                                       style="margin-top:15px;margin-left:15px;">
-                                    <span class="sc-switch-toggle-on">활성</span>
-                                    <span class="sc-switch-toggle-off">비활성</span>
-                                </label>
+                            <div class="uk-width-1-1@s">
+                                <ScInput v-model="sendData.sendDate" v-flatpickr="dpTimePicker" placeholder="Pick a date and time..." mode="outline"></ScInput>
                             </div>
                         </form>
                     </div>
                     <div class="uk-margin-top uk-text-center">
-                        <button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
-                                @click="submitForm">
-                            {{ sendData.uid ? '수정': '등록' }}
-                        </button>
                         <button v-if="sendData.uid" class="sc-button sc-button-primary"
                                 :disabled="submitStatus === 'PENDING'" @click="deleteForm">
                             삭제
+                        </button>
+                        <button v-else class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
+                                @click="submitForm">
+                            등록
                         </button>
                     </div>
                 </ScCardBody>
@@ -101,6 +95,7 @@
     import ScTextarea from '~/components/Textarea'
     import Select2 from '~/components/Select2'
     import Convert from '@/plugins/convertJson'
+    import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
 
     export default {
         components: {
@@ -119,7 +114,6 @@
         },
         data() {
             return {
-
                 cardFormClosed: true,
                 submitStatus: null,
                 deleteStatus: null,
@@ -128,9 +122,10 @@
                     uid: null,
                     accountUid: 0,
                     title: '',
-                    content: '',
+                    body: '',
+                    sendDate:'',
+                    status: 0,
                     pushType: '',
-                    isOpen: false
                 },
                 pushOpts: []
             }
@@ -140,7 +135,7 @@
                 title: {
                     required
                 },
-                content: {
+                body: {
                     required
                 },
                 pushType: {
@@ -148,8 +143,22 @@
                 }
             }
         },
+        computed:{
+            dpTimePicker () {
+                const self = this;
+                return {
+                    enableTime: true,
+                    time_24hr: true,
+                    plugins: [new confirmDatePlugin({
+                        confirmIcon: "<i class='mdi mdi-check'></i>",
+                        confirmText: ""
+                    })],
+                    dateFormat: "Y-m-d H:i:ss",
+                    defaultDate: self.$moment().format('YYYY-MM-DD H:m')
+                }
+            },
+        },
         created() {
-
             let vm = this
             this.$nuxt.$on('open-push-form', (data) => {
                 vm.settingForm(data)
@@ -165,7 +174,7 @@
         async beforeMount() {
             this.sendData = this.defaultForm
             let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-            this.pushOpts = Convert.convertJson(code.data.notice, 'select') // 코드 추가시 변경
+            this.pushOpts = Convert.convertJson(code.data.push, 'select') // 코드 추가시 변경
         },
         methods: {
             settingForm(props) {
@@ -185,7 +194,7 @@
                 this.$nuxt.$emit('reset-push-list')
             },
             deleteForm() {
-                this.$axios.$delete(this.config.apiUrl + '/pushs/' + this.sendData.uid, this.sendData).then(async res => {
+                this.$axios.$delete(this.config.apiUrl + '/pushes/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('삭제하였습니다.')
                     this.$nuxt.$emit('fetch-push-list')
                 }).finally(() => {
@@ -208,8 +217,10 @@
                 }
             },
             postForm() {
+                this.sendData.sendDate = this.sendData.sendDate || this.nowDateTime()
                 this.sendData.accountUid = this.$auth.user.uid;
-                this.$axios.$post(this.config.apiUrl + '/pushs', this.sendData).then(async res => {
+                console.log(this.sendData)
+                this.$axios.$post(this.config.apiUrl + '/pushes', this.sendData).then(async res => {
                     this.callNotification('등록하였습니다.')
                     this.$nuxt.$emit('fetch-push-list')
                 }).finally(() => {
@@ -218,7 +229,7 @@
                 })
             },
             putForm() {
-                this.$axios.$put(this.config.apiUrl + '/pushs/' + this.sendData.uid, this.sendData).then(async res => {
+                this.$axios.$put(this.config.apiUrl + '/pushes/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('수정하였습니다.')
                     this.$nuxt.$emit('fetch-push-list')
                 }).finally(() => {
