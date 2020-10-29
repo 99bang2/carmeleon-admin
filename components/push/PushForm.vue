@@ -127,7 +127,6 @@
         },
         computed:{
             dpTimePicker () {
-                let vm = this;
                 return {
                     enableTime: true,
                     time_24hr: true,
@@ -197,7 +196,7 @@
                 }
             },
             postForm() {
-                this.sendData.sendDate = this.sendData.sendDate || this.nowDateTime()
+                this.sendData.sendDate = this.sendData.sendDate || this.$moment().format('YYYY-MM-DD HH:mm:ss')
                 this.sendData.accountUid = this.$auth.user.uid;
                 console.log(this.sendData)
                 this.$axios.$post(this.config.apiUrl + '/pushes', this.sendData).then(async res => {
