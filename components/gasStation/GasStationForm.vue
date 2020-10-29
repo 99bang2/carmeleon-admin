@@ -69,7 +69,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="uk-width-1-1">
+                                    <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.tel" :error-state="$v.sendData.tel.$error"
                                                  :validator="$v.sendData.tel">
                                             <label>
@@ -83,6 +83,15 @@
                                                 전화번호를 입력하세요
                                             </li>
                                         </ul>
+                                    </div>
+                                    <div class="uk-width-1-2">
+                                        <input id="switch-css-rate" v-model="sendData.isRate" type="checkbox"
+                                               class="sc-switch-input">
+                                        <label for="switch-css-rate" class="sc-switch-label"
+                                               style="margin-top:15px;margin-left:15px;">
+                                            <span class="sc-switch-toggle-on">평가가능</span>
+                                            <span class="sc-switch-toggle-off">평가불가능</span>
+                                        </label>
                                     </div>
                                     <div class="uk-width-1-2">
                                         <Select2
@@ -320,7 +329,8 @@
                     lpg:null,
                     brandCodeOpts: [],
                     gasStationTypeOpts: [],
-                    tag:[]
+                    tag:[],
+                    isRate: false
                 }
             }
         },
