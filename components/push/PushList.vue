@@ -25,9 +25,8 @@
                             <div class="uk-width-1-3@s">
                                 <select v-model="searchType" class="uk-select">
                                     <option value="">푸시알림 구분</option>
-                                    <option value="0">긴급</option>
-                                    <option value="1">필수</option>
-                                    <option value="2">일반</option>
+                                    <option value="1">단일</option>
+                                    <option value="2">전체</option>
                                 </select>
                             </div>
                         </div>
@@ -109,9 +108,6 @@
                         cellRenderer: (obj) => {
                             let typeName = ""
                             switch (obj.value) {
-                                case 0:
-                                    typeName = "긴급"
-                                    break;
                                 case 1:
                                     typeName = "단일"
                                     break;

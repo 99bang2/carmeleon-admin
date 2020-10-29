@@ -55,20 +55,8 @@
                                 </ul>
                             </div>
                             <div class="uk-width-1-1@s">
-                                <Select2
-                                        v-model="sendData.pushType"
-                                        :options="pushOpts"
-                                        :settings="{'width': '100%', 'placeholder':'푸시타입 분류'}"
-                                        :error-state="$v.sendData.pushType.$error"
-                                />
-                                <ul class="sc-vue-errors">
-                                    <li v-if="!$v.sendData.pushType.required">
-                                        푸시타입을 선택하세요.
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="uk-width-1-1@s">
-                                <ScInput v-model="sendData.sendDate" v-flatpickr="dpTimePicker" placeholder="Pick a date and time..." mode="outline"></ScInput>
+                                <ScInput v-model="sendData.sendDate" v-flatpickr="dpTimePicker" placeholder="시간을 입력해주세요" mode="outline"></ScInput>
+                                <div style="padding-left: 10px; color:red; font-size: 12px">(시간을 입력하지 않을 경우 현재 시간으로 등록됩니다.)</div>
                             </div>
                         </form>
                     </div>
@@ -93,15 +81,12 @@
     import {required} from 'vuelidate/lib/validators'
     import ScInput from '~/components/Input'
     import ScTextarea from '~/components/Textarea'
-    import Select2 from '~/components/Select2'
-    import Convert from '@/plugins/convertJson'
     import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
 
     export default {
         components: {
             ScInput,
             ScTextarea,
-            Select2
         },
         mixins: [
             validationMixin,
@@ -125,7 +110,7 @@
                     body: '',
                     sendDate:'',
                     status: 0,
-                    pushType: '',
+                    pushType: 2,
                 },
                 pushOpts: []
             }
@@ -138,14 +123,11 @@
                 body: {
                     required
                 },
-                pushType: {
-                    required
-                }
             }
         },
         computed:{
             dpTimePicker () {
-                const self = this;
+                let vm = this;
                 return {
                     enableTime: true,
                     time_24hr: true,
@@ -154,7 +136,7 @@
                         confirmText: ""
                     })],
                     dateFormat: "Y-m-d H:i:ss",
-                    defaultDate: self.$moment().format('YYYY-MM-DD H:m')
+                    defaultDate: ''
                 }
             },
         },
@@ -173,8 +155,6 @@
         },
         async beforeMount() {
             this.sendData = this.defaultForm
-            let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-            this.pushOpts = Convert.convertJson(code.data.push, 'select') // 코드 추가시 변경
         },
         methods: {
             settingForm(props) {
