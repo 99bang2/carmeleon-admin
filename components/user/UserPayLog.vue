@@ -172,15 +172,17 @@
                 if (selectedCnt) {
                     let tmpCnt = 0;
                     UIkit.modal.confirm(`선택한 항목을 결제 취소 하시겠습니까?`).then((res) => {
-                        const promises = new Promise((resolve) => {
-                            selectedUids.forEach(uid => {
-                                this.$axios.$get(this.config.apiUrl + '/pg/' + uid).then(res => {
-                                    if (res.data.result) tmpCnt++
+                        let promiseList = []
+                        selectedUids.forEach(uid => {
+                            promiseList.push(
+                                new Promise(resolve => {
+                                    this.$axios.$get(this.config.apiUrl + '/pg/' + uid).then(res => {
+                                        if (res.data.result) tmpCnt++
+                                    }).then(() => resolve())
                                 })
-                                    .then(() => resolve())
-                            })
+                            )
                         })
-                        Promise.all([promises]).then(()=>{
+                        Promise.all(promiseList).then(() => {
                             this.callNotification(`${selectedCnt}중 ${tmpCnt}건의 결제가 취소되었습니다.`)
                             this.fetchData(this.userUid)
                         })
