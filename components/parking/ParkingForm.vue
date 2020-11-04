@@ -41,8 +41,113 @@
                     </ul>
                     <ul class="uk-switcher">
                         <li>
+                            <div class="uk-margin-top uk-text-center">
+                                <button class="sc-button sc-button-primary uk-width-1-1" :disabled="submitStatus === 'PENDING'"
+                                        @click="submitForm">
+                                    {{ sendData.uid ? '수정': '생성' }}
+                                </button>
+<!--                                <button v-if="sendData.uid" class="sc-button sc-button-primary"-->
+<!--                                        :disabled="submitStatus === 'PENDING'"-->
+<!--                                        @click="deleteForm">-->
+<!--                                    삭제-->
+<!--                                </button>-->
+                            </div>
                             <div class="uk-accordion-content">
                                 <form class="uk-grid-small uk-grid" data-uk-grid>
+                                    <!-- 가격  -->
+                                    <div class="uk-width-1-1">
+                                        <ScInput v-model="sendData.price" :error-state="$v.sendData.price.$error"
+                                                 :validator="$v.sendData.price">
+                                            <label>
+                                                기준가격
+                                            </label>
+                                            <span slot="icon" class="uk-form-icon uk-form-icon-flip"
+                                                  data-uk-icon="icon: tag"/>
+                                        </ScInput>
+                                        <ul class="sc-vue-errors">
+                                            <li v-if="!$v.sendData.price.required">
+                                                가격을 입력해주세요.
+                                            </li>
+                                            <li v-if="!$v.sendData.price.integerFormatCheck">
+                                                올바른 형식이 아닙니다.
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!--	주소입력 -->
+                                    <div class="uk-width-1-1 uk-flex"
+                                         style="justify-content: space-around; align-items: center">
+                                        <div class="uk-width-5-6">
+                                            <ScInput v-model="sendData.address" class="uk-flex-1"
+                                                     :error-state="$v.sendData.address.$error"
+                                                     :validator="$v.sendData.address">
+                                                <label>
+                                                    주소
+                                                </label>
+                                            </ScInput>
+                                            <ul class="sc-vue-errors">
+                                                <li v-if="!$v.sendData.address.required">
+                                                    주소를 입력하세요.
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <a href="javascript:void(0)"
+                                           class="sc-button sc-button-icon sc-button-outline sc-button-large"
+                                           @click.prevent="searchPlace(sendData.address)">
+                                            <span data-uk-icon="icon: search"></span>
+                                        </a>
+                                    </div>
+                                    <div v-if="searchAddr" class="uk-width-1-1" style="margin: 15px; padding: 0px;">
+                                        <ul class="uk-list uk-list-divider uk-list-collapse">
+                                            <li class="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index
+                                                style="justify-content: space-between" type="button"
+                                                @click="selectAddr(item)">
+                                                <span v-html="item.title"></span>
+                                                <span class="selectIcon" data-uk-icon="icon: check"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!--    주차장 안내             -->
+                                    <div class="uk-width-1-2">
+                                        <ScTextarea
+                                                v-model="sendData.info"
+                                                :cols="30"
+                                                :rows="4"
+                                                :autosize="true"
+                                                mode="outline"
+                                        >
+                                            <label>주차장 안내 입력</label>
+                                        </ScTextarea>
+                                    </div>
+                                    <!--    요금 안내               -->
+                                    <div class="uk-width-1-2">
+                                        <ScTextarea
+                                                v-model="sendData.priceInfo"
+                                                :cols="30"
+                                                :rows="4"
+                                                :autosize="true"
+                                                mode="outline"
+                                        >
+                                            <label>요금 안내 입력</label>
+                                        </ScTextarea>
+                                    </div>
+                                    <!--    주차장 이미지           -->
+                                    <div class="uk-width-1-1">
+                                        <h6>주차장 이미지 등록</h6>
+                                        <div style="display: flex; justify-content: center;">
+                                            <VueUploadMultipleImage
+                                                    @upload-success="uploadImageSuccess"
+                                                    @before-remove="beforeRemove"
+                                                    @edit-image="editImage"
+                                                    @mark-is-primary="markIsPrimary"
+                                                    :data-images="tempImage"
+                                                    dragText="Drag Image"
+                                                    browseText="Browse Image"
+                                                    primaryText="Primary Image"
+                                                    markIsPrimaryText="Set Primary Image"
+                                            ></VueUploadMultipleImage>
+                                        </div>
+                                    </div>
+
                                     <!--	siteType, name , isActive -->
                                     <div class="uk-width-4-5">
                                         <ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error"
@@ -68,7 +173,7 @@
                                             <span class="sc-switch-toggle-off">미운영</span>
                                         </label>
                                     </div>
-                                    <!--	최대 가용 대수 , 가격  -->
+                                    <!--	최대 가용 대수   -->
                                     <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.parkingLot"
                                                  :error-state="$v.sendData.parkingLot.$error"
@@ -84,24 +189,6 @@
                                                 최대가용대수를 입력하세요.
                                             </li>
                                             <li v-if="!$v.sendData.parkingLot.integerFormatCheck">
-                                                올바른 형식이 아닙니다.
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="uk-width-1-2">
-                                        <ScInput v-model="sendData.price" :error-state="$v.sendData.price.$error"
-                                                 :validator="$v.sendData.price">
-                                            <label>
-                                                기준가격
-                                            </label>
-                                            <span slot="icon" class="uk-form-icon uk-form-icon-flip"
-                                                  data-uk-icon="icon: tag"/>
-                                        </ScInput>
-                                        <ul class="sc-vue-errors">
-                                            <li v-if="!$v.sendData.price.required">
-                                                가격을 입력해주세요.
-                                            </li>
-                                            <li v-if="!$v.sendData.price.integerFormatCheck">
                                                 올바른 형식이 아닙니다.
                                             </li>
                                         </ul>
@@ -167,40 +254,6 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <!--	주소입력 -->
-                                    <div class="uk-width-1-1 uk-flex"
-                                         style="justify-content: space-around; align-items: center">
-                                        <div class="uk-width-5-6">
-                                            <ScInput v-model="sendData.address" class="uk-flex-1"
-                                                     :error-state="$v.sendData.address.$error"
-                                                     :validator="$v.sendData.address">
-                                                <label>
-                                                    주소
-                                                </label>
-                                            </ScInput>
-                                            <ul class="sc-vue-errors">
-                                                <li v-if="!$v.sendData.address.required">
-                                                    주소를 입력하세요.
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <a href="javascript:void(0)"
-                                           class="sc-button sc-button-icon sc-button-outline sc-button-large"
-                                           @click.prevent="searchPlace(sendData.address)">
-                                            <span data-uk-icon="icon: search"></span>
-                                        </a>
-                                    </div>
-                                    <div v-if="searchAddr" class="uk-width-1-1" style="margin: 15px; padding: 0px;">
-                                        <ul class="uk-list uk-list-divider uk-list-collapse">
-                                            <li class="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index
-                                                style="justify-content: space-between" type="button"
-                                                @click="selectAddr(item)">
-                                                <span v-html="item.title"></span>
-                                                <span class="selectIcon" data-uk-icon="icon: check"></span>
-                                            </li>
-                                        </ul>
-                                    </div>
-
                                     <!--    운영사 유형    -->
                                     <div v-if="this.$auth.$storage.state.user.grade === 0" class="uk-width-1-1">
                                         <Select2
@@ -214,32 +267,6 @@
                                                 운영사 유형을 선택하세요.
                                             </li>
                                         </ul>
-                                    </div>
-
-
-                                    <!--    주차장 안내             -->
-                                    <div class="uk-width-1-1">
-                                        <ScTextarea
-                                                v-model="sendData.info"
-                                                :cols="30"
-                                                :rows="4"
-                                                :autosize="true"
-                                                mode="outline"
-                                        >
-                                            <label>주차장 안내 입력</label>
-                                        </ScTextarea>
-                                    </div>
-                                    <!--    요금 안내               -->
-                                    <div class="uk-width-1-1">
-                                        <ScTextarea
-                                                v-model="sendData.priceInfo"
-                                                :cols="30"
-                                                :rows="4"
-                                                :autosize="true"
-                                                mode="outline"
-                                        >
-                                            <label>요금 안내 입력</label>
-                                        </ScTextarea>
                                     </div>
                                     <div class="uk-width-1-1">
                                         <ScTextarea
@@ -287,36 +314,9 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <!--    주차장 이미지           -->
-                                    <div class="uk-width-1-1">
-                                        <h4>주차장 이미지 등록</h4>
-                                        <div style="display: flex; justify-content: center;">
-                                            <VueUploadMultipleImage
-                                                    @upload-success="uploadImageSuccess"
-                                                    @before-remove="beforeRemove"
-                                                    @edit-image="editImage"
-                                                    @mark-is-primary="markIsPrimary"
-                                                    :data-images="tempImage"
-                                                    dragText="Drag Image"
-                                                    browseText="Browse Image"
-                                                    primaryText="Primary Image"
-                                                    markIsPrimaryText="Set Primary Image"
-                                            ></VueUploadMultipleImage>
-                                        </div>
-                                    </div>
                                 </form>
                             </div>
-                            <div class="uk-margin-top uk-text-center">
-                                <button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
-                                        @click="submitForm">
-                                    {{ sendData.uid ? '수정': '생성' }}
-                                </button>
-                                <button v-if="sendData.uid" class="sc-button sc-button-primary"
-                                        :disabled="submitStatus === 'PENDING'"
-                                        @click="deleteForm">
-                                    삭제
-                                </button>
-                            </div>
+
                         </li>
                         <li>
                             <RatingList></RatingList>
