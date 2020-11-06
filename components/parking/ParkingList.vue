@@ -1,4 +1,4 @@
-<template>
+npm <template>
     <div>
         <ScCard>
             <ScCardHeader class="uk-flex uk-flex-middle sc-theme-bg-dark sc-light" separator>
@@ -16,13 +16,13 @@
             </ScCardHeader>
             <ScCardBody>
                 <div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
-                    <div class="uk-width-4-5@s">
+                    <div class="uk-width-3-5@s">
                         <div class="uk-grid-small uk-grid" data-uk-grid>
                             <a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
                                style="height:40px;" @click.prevent="refreshFilter">
                                 <i class="mdi mdi-refresh"></i>
                             </a>
-                            <div class="uk-width-1-5@s">
+                            <div class="uk-width-1-4@s">
                                 <select v-model="searchSiteType" class="uk-select">
                                     <option value="">주차장 유형</option>
                                     <option value="0">하이파킹</option>
@@ -30,7 +30,7 @@
                                     <option value="2">일반</option>
                                 </select>
                             </div>
-                            <div class="uk-width-1-5@s">
+                            <div class="uk-width-1-4@s">
                                 <select v-model="searchActive" class="uk-select">
                                     <option value="">운영 상태</option>
                                     <option value="true">운영중</option>
@@ -38,14 +38,14 @@
                                 </select>
                             </div>
                             <div style="width: 10px"></div>
-                            <div class="uk-width-1-5@s">
+                            <div class="uk-width-1-4@s">
                                 <IonRangeSlider v-model="searchRating"
                                                 :settings="{type: 'double',from:0, to:10, values:[0,1,2,3,4,5,6,7,8,9,10], prefix: 'rate '}"></IonRangeSlider>
                             </div>
                         </div>
                     </div>
-                    <div class="uk-width-1-5@s">
-                        <ScInput v-model="searchKeyword" placeholder="주차장 이름, 태그">
+                    <div class="uk-width-2-5@s">
+                        <ScInput v-model="searchKeyword" placeholder="주차장 이름, 주차장 주소">
                             <span slot="icon" class="uk-form-icon" data-uk-icon="search"/>
                         </ScInput>
                     </div>
