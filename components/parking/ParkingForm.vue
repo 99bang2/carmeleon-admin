@@ -106,16 +106,16 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <!--    주차장 안내             -->
+                                    <!--    시간 안내             -->
                                     <div class="uk-width-1-2">
                                         <ScTextarea
-                                                v-model="sendData.info"
+                                                v-model="sendData.timeInfo"
                                                 :cols="30"
                                                 :rows="4"
                                                 :autosize="true"
                                                 mode="outline"
                                         >
-                                            <label>주차장 안내 입력</label>
+                                            <label>시간 안내 입력</label>
                                         </ScTextarea>
                                     </div>
                                     <!--    요금 안내               -->
@@ -131,7 +131,7 @@
                                         </ScTextarea>
                                     </div>
                                     <!--    주차장 이미지           -->
-                                    <div class="uk-width-1-1">
+                                    <div class="uk-width-1-2">
                                         <h6>주차장 이미지 등록</h6>
                                         <div style="display: flex; justify-content: center;">
                                             <VueUploadMultipleImage
@@ -147,9 +147,27 @@
                                             ></VueUploadMultipleImage>
                                         </div>
                                     </div>
-
-                                    <!--	siteType, name , isActive -->
-                                    <div class="uk-width-4-5">
+                                    <!--  평가여부     추천여부     -->
+                                    <div class="uk-width-1-2">
+                                        <h6>평가여부</h6>
+                                        <input id="switch-css-rate" v-model="sendData.isRate" type="checkbox"
+                                               class="sc-switch-input">
+                                        <label for="switch-css-rate" class="sc-switch-label"
+                                               style="margin-top:15px;margin-left:15px;">
+                                            <span class="sc-switch-toggle-on">평가가능</span>
+                                            <span class="sc-switch-toggle-off">평가불가능</span>
+                                        </label>
+                                        <h6>추천여부</h6>
+                                        <input id="switch-css-recommend" v-model="sendData.isRecommend" type="checkbox"
+                                               class="sc-switch-input">
+                                        <label for="switch-css-recommend" class="sc-switch-label"
+                                               style="margin-top:15px;margin-left:15px;">
+                                            <span class="sc-switch-toggle-on">추천</span>
+                                            <span class="sc-switch-toggle-off">미추천</span>
+                                        </label>
+                                    </div>
+                                    <!--	siteType, name  -->
+                                    <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.name" :error-state="$v.sendData.name.$error"
                                                  :validator="$v.sendData.name">
                                             <label>
@@ -163,15 +181,6 @@
                                                 주차장 이름을 입력하세요.
                                             </li>
                                         </ul>
-                                    </div>
-                                    <div class="uk-width-1-5">
-                                        <input id="switch-css" v-model="sendData.isActive" type="checkbox"
-                                               class="sc-switch-input">
-                                        <label for="switch-css" class="sc-switch-label"
-                                               style="margin-top:15px;margin-left:15px;">
-                                            <span class="sc-switch-toggle-on">운영중</span>
-                                            <span class="sc-switch-toggle-off">미운영</span>
-                                        </label>
                                     </div>
                                     <!--	최대 가용 대수   -->
                                     <div class="uk-width-1-2">
@@ -203,6 +212,7 @@
                                                   data-uk-icon="icon: receiver"/>
                                         </ScInput>
                                     </div>
+                                    <!--	휴대전화     -->
                                     <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.phone">
                                             <label>
@@ -212,7 +222,7 @@
                                                   data-uk-icon="icon: phone"/>
                                         </ScInput>
                                     </div>
-                                    <!--	이메일, 담당자이름      -->
+                                    <!--	이메일     -->
                                     <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.email" :error-state="$v.sendData.email.$error"
                                                  :validator="$v.sendData.email">
@@ -228,6 +238,7 @@
                                             </li>
                                         </ul>
                                     </div>
+                                    <!--    담당자이름  -->
                                     <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.manager">
                                             <label>
@@ -268,7 +279,8 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="uk-width-1-1">
+                                    <!--    경고문구           -->
+                                    <div class="uk-width-1-2">
                                         <ScTextarea
                                                 v-model="sendData.message"
                                                 :cols="30"
@@ -279,6 +291,19 @@
                                             <label>경고 문구 입력</label>
                                         </ScTextarea>
                                     </div>
+                                    <!--    주차장 안내             -->
+                                    <div class="uk-width-1-2">
+                                        <ScTextarea
+                                                v-model="sendData.info"
+                                                :cols="30"
+                                                :rows="4"
+                                                :autosize="true"
+                                                mode="outline"
+                                        >
+                                            <label>주차장 안내 입력</label>
+                                        </ScTextarea>
+                                    </div>
+                                    <!--    판매여부  운영여부   -->
                                     <div class="uk-width-1-2" style="display: flex; flex-direction: column; justify-content: flex-start">
                                         <div style="margin-bottom:30%">
                                             <h6>판매여부</h6>
@@ -291,13 +316,13 @@
                                             </label>
                                         </div>
                                         <div>
-                                            <h6>평가여부</h6>
-                                            <input id="switch-css-rate" v-model="sendData.isRate" type="checkbox"
+                                            <h6>운영여부</h6>
+                                            <input id="switch-css" v-model="sendData.isActive" type="checkbox"
                                                    class="sc-switch-input">
-                                            <label for="switch-css-rate" class="sc-switch-label"
+                                            <label for="switch-css" class="sc-switch-label"
                                                    style="margin-top:15px;margin-left:15px;">
-                                                <span class="sc-switch-toggle-on">평가가능</span>
-                                                <span class="sc-switch-toggle-off">평가불가능</span>
+                                                <span class="sc-switch-toggle-on">운영중</span>
+                                                <span class="sc-switch-toggle-off">미운영</span>
                                             </label>
                                         </div>
                                     </div>
@@ -400,6 +425,7 @@
                     address: '',
                     info: '',
                     priceInfo: '',
+                    timeInfo:'',
                     accountUid: 0,
                     paymentTag: [],
                     brandTag: [],
@@ -411,7 +437,8 @@
                     operationTime: '',
                     message: '',
                     isBuy: true,
-                    isRate: false
+                    isRate: false,
+                    isRecommend: false
                 }
             }
         },

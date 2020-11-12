@@ -123,7 +123,7 @@
                                         </div>
                                     </div>
                                     <!-- 세차 요금정보 , 세차장 전화번호-->
-                                    <div class="uk-width-1-3">
+                                    <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.carWashChargeInfo"
                                                  :error-state="$v.sendData.carWashChargeInfo.$error"
                                                  :validator="$v.sendData.carWashChargeInfo">
@@ -142,7 +142,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="uk-width-1-3">
+                                    <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.phoneNumber"
                                                  :error-state="$v.sendData.phoneNumber.$error"
                                                  :validator="$v.sendData.phoneNumber">
@@ -158,13 +158,22 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="uk-width-1-3">
+                                    <div class="uk-width-1-2">
                                         <input id="switch-css-rate" v-model="sendData.isRate" type="checkbox"
                                                class="sc-switch-input">
                                         <label for="switch-css-rate" class="sc-switch-label"
                                                style="margin-top:15px;margin-left:15px;">
                                             <span class="sc-switch-toggle-on">평가가능</span>
                                             <span class="sc-switch-toggle-off">평가불가능</span>
+                                        </label>
+                                    </div>
+                                    <div class="uk-width-1-2">
+                                        <input id="switch-css-recommend" v-model="sendData.isRecommend" type="checkbox"
+                                               class="sc-switch-input">
+                                        <label for="switch-css-recommend" class="sc-switch-label"
+                                               style="margin-top:15px;margin-left:15px;">
+                                            <span class="sc-switch-toggle-on">추천</span>
+                                            <span class="sc-switch-toggle-off">미추천</span>
                                         </label>
                                     </div>
                                     <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
@@ -308,7 +317,8 @@
                     picture: [],
                     industryOpts: [],
                     carWashTypeOpts: [],
-                    isRate: false
+                    isRate: false,
+                    isRecommend:false
                 }
             }
         },
