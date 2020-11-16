@@ -165,18 +165,40 @@
                 this.cardFormClosed = true
                 this.$nuxt.$emit('reset-user-list')
             },
+            // addPoints() {
+            //     let selected = this.gridOptions.api.getSelectedRows()
+            //     let selectedUids = selected.map(({uid}) => uid)
+            //     let selectedCnt = selectedUids.length
+            //     if (selectedCnt) {
+            //         UIkit.modal.prompt(`적용할 추가포인트(%)를 입력해주세요`, this.addPoint).then((pointPercent) => {
+            //             this.$axios.$post(this.config.apiUrl + '/pointProducts/addPoint', {
+            //                 addPoint: pointPercent,
+            //                 uids: selectedUids
+            //             }).then(res => {
+            //                 this.callNotification('적용했습니다.')
+            //                 this.$nuxt.$emit('close-pointProduct-form')
+            //                 this.fetchData()
+            //             })
+            //         })
+            //     } else {
+            //         this.callAlertError('적용할 항목을 선택해주세요.')
+            //     }
+            // },
             cancelPayment() {
                 let selected = this.gridOptions.api.getSelectedRows()
                 let selectedUids = selected.map(({uid}) => uid)
                 let selectedCnt = selectedUids.length
                 if (selectedCnt) {
                     let tmpCnt = 0;
-                    UIkit.modal.confirm(`선택한 항목을 결제 취소 하시겠습니까?`).then((res) => {
+                    UIkit.modal.prompt(`결제 취소 사유를 작성해주세요`, this.reason).then((cancelReason) => {
                         let promiseList = []
                         selectedUids.forEach(uid => {
                             promiseList.push(
                                 new Promise(resolve => {
-                                    this.$axios.$get(this.config.apiUrl + '/pg/' + uid).then(res => {
+                                    this.$axios.$post(this.config.apiUrl + '/pg',{
+                                        reason: cancelReason,
+                                        uids: selectedUids
+                                    }).then(res => {
                                         if (res.data.result) tmpCnt++
                                     }).then(() => resolve())
                                 })
