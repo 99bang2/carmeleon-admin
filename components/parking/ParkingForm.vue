@@ -644,7 +644,7 @@
                                 if (url) {
                                     this.sendData.picture.push(url)
                                 } else {
-                                    //todo: file upload error
+                                    this.callAlertError("파일 업로드에 실패했습니다.")
                                 }
                             } else {
                                 //todo: not image file error
@@ -677,7 +677,13 @@
                                 }
                                 let url = await this.$objectStorage.uploadFile('parking', this.file_list[i], prefix)
                                 if (url) {
-                                    this.sendData.picture.push(url)
+                                    await fetch(url).then(res => {
+                                        if(res.status === 200){
+                                            this.sendData.picture.push(url)
+                                        }else {
+                                            this.callAlertError("유효하지 않은 주소입니다.")
+                                        }
+                                    })
                                 } else {
                                     //todo: file upload error
                                 }
