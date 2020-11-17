@@ -665,8 +665,10 @@
                     this.sendData.picture=[]
                     for(let i =0 ; i< this.file_list.length; i++){
                         if(this.file_list[i] !== undefined){
+
                             if (typeof this.file_list[i] !== 'string' && this.isFileImage(this.file_list[i])) {
                                 let prefix
+                                console.log(this.editArray)
                                 if(typeof this.editArray[i] !== 'undefined'){
                                     let url = new URL(this.editArray[i])
                                     let modify_string = url.pathname.replace('/carmeleon/admin/parking/', '')
@@ -675,6 +677,7 @@
                                 }else{
                                     prefix= this.uuidV4()
                                 }
+                                console.log(prefix)
                                 let url = await this.$objectStorage.uploadFile('parking', this.file_list[i], prefix)
                                 if (url) {
                                     await fetch(url).then(res => {
