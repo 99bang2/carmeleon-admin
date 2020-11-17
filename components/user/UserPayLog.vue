@@ -69,7 +69,8 @@
                 },
                 cardFormClosed: true,
                 userName: '',
-                userUid: ''
+                userUid: '',
+                reason: null
             }
         },
         computed: {
@@ -197,7 +198,7 @@
                                 new Promise(resolve => {
                                     this.$axios.$post(this.config.apiUrl + '/pg',{
                                         reason: cancelReason,
-                                        uids: selectedUids
+                                        uids: uid
                                     }).then(res => {
                                         if (res.data.result) tmpCnt++
                                     }).then(() => resolve())
