@@ -666,24 +666,20 @@
                     for(let i =0 ; i< this.file_list.length; i++){
                         if(this.file_list[i] !== undefined){
                             if (typeof this.file_list[i] !== 'string' && this.isFileImage(this.file_list[i])) {
-                                let prefix
-                                if(typeof this.editArray[i] !== 'undefined'){
-                                    let url = new URL(this.editArray[i])
-                                    let modify_string = url.pathname.replace('/carmeleon/admin/parking/', '')
-                                    let _lastDot = modify_string.lastIndexOf('.');
-                                    prefix = modify_string.substring(0, _lastDot)
-                                }else{
-                                    prefix= this.uuidV4()
-                                }
+                                console.log(this.editArray)
+                                let prefix= this.uuidV4()
+                                // if(typeof this.editArray[i] !== 'undefined'){
+                                //     let url = new URL(this.editArray[i])
+                                //     let modify_string = url.pathname.replace('/carmeleon/admin/parking/', '')
+                                //     let _lastDot = modify_string.lastIndexOf('.');
+                                //     prefix = modify_string.substring(0, _lastDot)
+                                // }else{
+                                //     prefix= this.uuidV4()
+                                // }
                                 let url = await this.$objectStorage.uploadFile('parking', this.file_list[i], prefix)
+                                console.log(prefix)
                                 if (url) {
-                                    await fetch(url).then(res => {
-                                        if(res.status === 200){
-                                            this.sendData.picture.push(url)
-                                        }else {
-                                            this.callAlertError("유효하지 않은 주소입니다.")
-                                        }
-                                    })
+                                    this.sendData.picture.push(url)
                                 } else {
                                     //todo: file upload error
                                 }
