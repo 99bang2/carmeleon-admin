@@ -665,6 +665,7 @@
                     this.sendData.picture=[]
                     for(let i =0 ; i< this.file_list.length; i++){
                         if(this.file_list[i] !== undefined){
+
                             if (typeof this.file_list[i] !== 'string' && this.isFileImage(this.file_list[i])) {
                                 console.log(this.editArray)
                                 let prefix= this.uuidV4()
