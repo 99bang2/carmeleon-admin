@@ -570,6 +570,9 @@
             settingForm(props) {
                 this.$v.$reset()
                 this.tempImage = []
+                this.file_list = []
+                this.editArray = []
+                this.deleteArray = []
                 if (props) {
                     this.sendData = JSON.parse(JSON.stringify(props.data))
                     this.sendData.parkingLot = this.sendData.parkingLot | 0

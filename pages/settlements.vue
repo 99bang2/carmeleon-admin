@@ -67,6 +67,7 @@
                                         <th style="background-color: rgba(102,187,106,0.5); font-weight: bold">완료</th>
                                         <th style="background-color: rgba(244,143,177,0.5); font-weight: bold">취소</th>
                                         <th style="background-color: rgba(130,177,255,0.5); font-weight: bold">종합</th>
+                                        <th style="background-color: rgba(130,177,126,0.5); font-weight: bold">정산금액</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -75,11 +76,13 @@
                                         <td>{{completeSum ? completeSum : "0"}}원</td>
                                         <td>{{cancelSum ? cancelSum : "0"}}원</td>
                                         <td>{{totalSum ? totalSum : "0"}}원</td>
+                                        <td>{{totalSum ? totalSum : "0"}}원</td>
                                     </tr>
                                     <tr>
                                         <td>건수</td>
                                         <td>{{completeCnt? completeCnt :"0" }}건</td>
                                         <td>{{cancelCnt? cancelCnt : "0"}}건</td>
+                                        <td>{{totalCnt? totalCnt : "0"}}건</td>
                                         <td>{{totalCnt? totalCnt : "0"}}건</td>
                                     </tr>
                                     </tbody>
@@ -273,6 +276,8 @@
                     this.gridOptions.api.forEachNode((node) => {
                         if (node.data.parkingSite !== null) {
                             this.siteOpts.push(node.data.parkingSite.name)
+                            //중복 된 배열 객체 삭제//
+                            this.siteOpts = Array.from(new Set(this.siteOpts))
                         }
                     })
                     this.totalCount = this.gridOptions.api.getDisplayedRowCount()

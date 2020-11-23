@@ -197,6 +197,7 @@
                 this.resUid = uid
                 vm.fetchData()
             })
+            this.defaultColDef.sortable = false
         },
         beforeDestroy() {
             this.$nuxt.$off('reset-gasStation-list')

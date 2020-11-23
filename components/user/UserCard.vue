@@ -68,13 +68,8 @@
                 return [
                     {
                         headerName: '카드번호',
-                        field: 'cardInfo.cardNumber',
-                        width: 150
-                    },
-                    {
-                        headerName: '사용자 닉네임',
-                        field: 'nickname',
-                        width: 120
+                        field: 'maskingCardNumber',
+                        suppressSizeToFit: false,
                     },
                     {
                         headerName: '주사용여부',

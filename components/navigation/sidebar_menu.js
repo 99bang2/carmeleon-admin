@@ -82,12 +82,12 @@ export const menuEntries = [
                 icon: "mdi mdi-lightbulb-on",
                 page: "/operations/pushes",
             },
-            {
-                id: uniqueID(),
-                title: "ReviewTemplates",
-                icon: "mdi mdi-file-document",
-                page: "/operations/reviewTemplates"
-            },
+            // {
+            //     id: uniqueID(),
+            //     title: "ReviewTemplates",
+            //     icon: "mdi mdi-file-document",
+            //     page: "/operations/reviewTemplates"
+            // },
             {
                 id: uniqueID(),
                 title: "PointProducts",
@@ -107,6 +107,13 @@ export const menuEntries = [
             //     page: "/operations/tutorials"
             // },
         ]
+    },
+    {
+        id: uniqueID(),
+        title: "PayLogs",
+        icon: "mdi mdi-calendar-text",
+        page: "/payLogs",
+        grade: ['0']
     },
     {
         id: uniqueID(),
