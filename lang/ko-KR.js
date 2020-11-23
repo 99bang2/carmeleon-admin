@@ -4,9 +4,8 @@ export default {
 	'CarWashes':'세차장 관리',
 	'GasStations':'주유소 관리',
 	'EvCharges':'전기차충전소 관리',
-
 	'Users':'유저 관리',
-
+    'PayLogs': '이용내역 관리',
 	'Operations':'운영 관리',
 	'Accounts': '계정 관리',
 	'Events':'이벤트',
@@ -16,6 +15,5 @@ export default {
 	'PointProducts':'포인트상품 관리',
 	'Tutorials':'튜토리얼 관리',
 	'Questions':'문의사항 관리',
-
 	'Settlements':'정산 관리'
 }

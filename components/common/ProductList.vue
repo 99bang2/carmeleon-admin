@@ -64,12 +64,22 @@
                     </ScInput>
                 </div>
                 <div style="width: 100%; display: flex;  align-items: center">
+                    <div class="uk-width-1-2">
+                        <ScInput v-model="sendData.fee">
+                            <label>
+                                정산 수수료 설정(%)
+                            </label>
+                            <span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+                        </ScInput>
+                    </div>
                     <div class="uk-width-1-2" style="text-align: center">
                         <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 0; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>상태</span></div>
                         <PrettyCheck v-model="sendData.isActive" class="p-switch" color="primary">
                             {{sendData.isActive?"활성":"비활성"}}
                         </PrettyCheck>
                     </div>
+                </div>
+                <div style="width: 100%; display: flex;  align-items: center">
                     <div v-if="sendData.ticketType==='1'" class="uk-width-1-2">
                         <ScInput v-model="sendData.ticketTime">
                             <label>
@@ -177,7 +187,8 @@
                     isActive: true,
                     ticketStartDate: '',
                     ticketEndDate: '',
-                    ticketCount: null
+                    ticketCount: null,
+                    fee: 10
                 },
                 ticketDate: '',
                 ticketDayTypeOpts: [],

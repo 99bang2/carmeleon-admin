@@ -270,6 +270,7 @@ npm <template>
                 this.resUid = uid
                 vm.fetchData()
             })
+            this.defaultColDef.sortable = false
         },
         beforeDestroy() {
             this.$nuxt.$off('reset-parking-list')
