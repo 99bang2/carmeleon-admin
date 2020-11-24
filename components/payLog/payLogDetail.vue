@@ -47,7 +47,7 @@
                         </div>
                         <div class="payLog-block uk-width-1-2">
                             <h5 class="uk-heading-bullet uk-margin-top">결제상태</h5>
-                            <div class="payLog-block__content">{{defaultDetail.statusName}} <button v-if="defaultDetail.status === 10" @click="cancelPayment(defaultDetail.uid)">결제 취소</button></div>
+                            <div class="payLog-block__content">{{defaultDetail.statusName}} <button v-if="defaultDetail.status === 10 && defaultDetail.cancelStatus < 0" @click="cancelPayment(defaultDetail.uid)">결제 취소</button></div>
 
                         </div>
                         <div class="payLog-block uk-width-1-2">
@@ -57,6 +57,14 @@
                         <div class="payLog-block uk-width-1-2">
                             <h5 class="uk-heading-bullet uk-margin-top">할인가격</h5>
                             <div class="payLog-block__content">{{defaultDetail.discountPrice}}원</div>
+                        </div>
+                        <div class="payLog-block uk-width-1-2">
+                            <h5 class="uk-heading-bullet uk-margin-top">사용 포인트</h5>
+                            <div class="payLog-block__content">{{defaultDetail.point}}p</div>
+                        </div>
+                        <div class="payLog-block uk-width-1-2">
+                            <h5 class="uk-heading-bullet uk-margin-top">구매 가격</h5>
+                            <div class="payLog-block__content">{{defaultDetail.sellingPrice}}원</div>
                         </div>
                         <div class="payLog-block uk-width-1-2">
                             <h5 class="uk-heading-bullet uk-margin-top">결제가격</h5>
@@ -76,7 +84,7 @@
                         </div>
                         <div v-if="defaultDetail.cancelStatus >= 0"  class="payLog-block uk-width-1-2">
                             <h5 class="uk-heading-bullet uk-margin-top">환불상태</h5>
-                            <div class="payLog-block__content">{{defaultDetail.cancelStatusName}} <button v-if="defaultDetail.cancelStatus === 0" @click="refundProcess(defaultDetail.uid)">환불 수락</button></div>
+                            <div class="payLog-block__content">{{defaultDetail.cancelStatusName}} <button v-if="defaultDetail.cancelStatus === 0 && defaultDetail.status !== -20" @click="refundProcess(defaultDetail.uid)">승인</button> <button v-if="defaultDetail.cancelStatus === 0 && defaultDetail.status !== -20" @click="refundReject(defaultDetail.uid)">거절</button></div>
 
                         </div>
                         <div v-if="defaultDetail.cancelStatus >= 0"  class="payLog-block uk-width-1-2">
@@ -145,7 +153,10 @@ export default {
                 },
                 discountTicket: {
                     ticketTitle: '',
-                }
+                },
+                point: null,
+                sellingPrice: null,
+
             },
         }
     },
@@ -237,14 +248,29 @@ export default {
             })
         },
         refundProcess(uid) {
-            UIkit.modal.confirm(`환불 하시겠습니까?`, this.reason).then((cancelReason) => {
+            UIkit.modal.confirm(`승인 하시겠습니까?`, this.reason).then((cancelReason) => {
                 new Promise(resolve => {
-                    this.$axios.$post(this.config.apiUrl + '/pg',{
+                    this.$axios.$post(this.config.apiUrl + '/refundApprove',{
                         reason: this.defaultDetail.cancelReason,
                         uids: uid
                     }).then(res => {
                         if (res.data.result){
                             this.callNotification(`정상적으로 취소되었습니다.`)
+                            this.$nuxt.$emit('fetch-paylog-list')
+                        }
+                    }).then(() => resolve())
+                })
+            })
+        },
+        refundReject(uid) {
+            UIkit.modal.confirm(`거절 하시겠습니까?`, this.reason).then((cancelReason) => {
+                new Promise(resolve => {
+                    this.$axios.$post(this.config.apiUrl + '/refundReject',{
+                        reason: this.defaultDetail.cancelReason,
+                        uids: uid
+                    }).then(res => {
+                        if (res.data.result){
+                            this.callNotification(`정상적으로 거절되었습니다.`)
                             this.$nuxt.$emit('fetch-paylog-list')
                         }
                     }).then(() => resolve())
