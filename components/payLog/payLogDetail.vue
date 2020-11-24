@@ -235,7 +235,7 @@ export default {
         cancelPayment(uid) {
             UIkit.modal.prompt(`결제 취소 사유를 작성해주세요`, this.reason).then((cancelReason) => {
                 new Promise(resolve => {
-                    this.$axios.$post(this.config.apiUrl + '/pg',{
+                    this.$axios.$post(this.config.apiUrl + '/refundApprove',{
                         reason: cancelReason,
                         uids: uid
                     }).then(res => {
