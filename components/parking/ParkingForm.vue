@@ -305,7 +305,7 @@
                                     </div>
                                     <!--    판매여부  운영여부   -->
                                     <div class="uk-width-1-2" style="display: flex; flex-direction: column; justify-content: flex-start">
-                                        <div style="margin-bottom:30%">
+                                        <div style="margin-bottom:5%">
                                             <h6>판매여부</h6>
                                             <input id="switch-css-buy" v-model="sendData.isBuy" type="checkbox"
                                                    class="sc-switch-input">
@@ -315,7 +315,7 @@
                                                 <span class="sc-switch-toggle-off">판매불가능</span>
                                             </label>
                                         </div>
-                                        <div>
+                                        <div style="margin-bottom:5%">
                                             <h6>운영여부</h6>
                                             <input id="switch-css" v-model="sendData.isActive" type="checkbox"
                                                    class="sc-switch-input">
@@ -324,6 +324,15 @@
                                                 <span class="sc-switch-toggle-on">운영중</span>
                                                 <span class="sc-switch-toggle-off">미운영</span>
                                             </label>
+                                        </div>
+                                        <div>
+                                            <h6>발렛주차여부</h6>
+                                            <Select2
+                                                    v-model="sendData.valetType"
+                                                    :options="valetOpts"
+                                                    :settings="{ 'width': '80%', 'placeholder': '발렛주차여부' }"
+                                                    :error-state="$v.sendData.valetType.$error"
+                                            />
                                         </div>
                                     </div>
                                     <!--    옵션태그-->
@@ -434,11 +443,13 @@
                     carTag: [],
                     picture: [],
                     siteOpts: [],
+                    valetOpts: [],
                     operationTime: '',
                     message: '',
                     isBuy: true,
                     isRate: false,
-                    isRecommend: false
+                    isRecommend: false,
+                    valetType: 0
                 }
             }
         },
@@ -472,6 +483,9 @@
                 },
                 operationTime: {
                     required
+                },
+                valetType: {
+                    required
                 }
             }
         },
@@ -497,6 +511,20 @@
             this.productTag = Convert.convertJson(code.data.productTag)
             this.optionTag = Convert.convertJson(code.data.optionTag)
             this.carTag = Convert.convertJson(code.data.carTag)
+            this.valetOpts = [
+                {
+                    id: 0,
+                    text: "일반"
+                },
+                {
+                    id: 1,
+                    text: "발렛 주차 가능"
+                },
+                {
+                    id: 2,
+                    text: "발렛만 가능"
+                }
+            ]
         },
         beforeDestroy() {
             this.$nuxt.$off('open-parking-form')
@@ -578,6 +606,7 @@
                     this.sendData.parkingLot = this.sendData.parkingLot | 0
                     this.file_list = this.sendData.picture || []
                     this.sendData.optionTag = this.sendData.optionTag || []
+                    this.sendData.valetType = this.sendData.valetType || 0
                     if (this.sendData.picture !== null) {
                         for (let i = 0; i < this.sendData.picture.length; i++) {
                             let img = {}

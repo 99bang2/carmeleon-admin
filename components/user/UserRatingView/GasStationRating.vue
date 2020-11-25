@@ -41,7 +41,7 @@
                 return [
                     {
                         headerName: '장소명',
-                        field: 'gasStation.gasStationName',
+                        field: 'place.name',
                         width: 140
                     },
                     {
@@ -51,7 +51,7 @@
                     },
                     {
                         headerName: '리뷰',
-                        field: 'review',
+                        field: 'reviewContent',
                         width: 250
                     }
                 ]

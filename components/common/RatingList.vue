@@ -73,7 +73,7 @@
                     },
                     {
                         headerName: '리뷰',
-                        field: 'review',
+                        field: 'reviewContent',
                         width: 280,
                     },
                     {

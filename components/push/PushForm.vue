@@ -134,7 +134,7 @@
                         confirmIcon: "<i class='mdi mdi-check'></i>",
                         confirmText: ""
                     })],
-                    dateFormat: "Y-m-d H:i:ss",
+                    dateFormat: "Y-m-d H:i:S",
                     defaultDate: ''
                 }
             },

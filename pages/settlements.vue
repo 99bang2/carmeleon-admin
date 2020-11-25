@@ -67,7 +67,7 @@
                                         <th style="background-color: rgba(102,187,106,0.5); font-weight: bold">완료</th>
                                         <th style="background-color: rgba(244,143,177,0.5); font-weight: bold">취소</th>
                                         <th style="background-color: rgba(130,177,255,0.5); font-weight: bold">종합</th>
-                                        <th style="background-color: rgba(130,177,126,0.5); font-weight: bold">정산금액</th>
+                                        <th style="background-color: rgba(130,177,126,0.5); font-weight: bold">정산 수수료</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -76,14 +76,14 @@
                                         <td>{{completeSum ? completeSum : "0"}}원</td>
                                         <td>{{cancelSum ? cancelSum : "0"}}원</td>
                                         <td>{{totalSum ? totalSum : "0"}}원</td>
-                                        <td>{{totalSum ? totalSum : "0"}}원</td>
+                                        <td>{{totalFee ? totalFee : "0"}}원</td>
                                     </tr>
                                     <tr>
                                         <td>건수</td>
                                         <td>{{completeCnt? completeCnt :"0" }}건</td>
                                         <td>{{cancelCnt? cancelCnt : "0"}}건</td>
                                         <td>{{totalCnt? totalCnt : "0"}}건</td>
-                                        <td>{{totalCnt? totalCnt : "0"}}건</td>
+                                        <td>{{feeCnt? feeCnt : "0"}}건</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -156,6 +156,8 @@
                 cancelCnt: null,
                 totalSum: null,
                 totalCnt: null,
+                totalFee: null,
+                feeCnt: null
             }
         },
         computed: {
@@ -202,6 +204,11 @@
                     {
                         headerName: '정산금액',
                         field: 'totalPrice',
+                        width: 190
+                    },
+                    {
+                        headerName: '수수료',
+                        field: 'fee',
                         width: 190
                     },
                     {
@@ -332,12 +339,16 @@
                 this.cancelCnt = null
                 this.totalSum = null
                 this.totalCnt = null
+                this.totalFee = null
+                this.feeCnt = null
                 this.gridOptions.api.forEachNodeAfterFilter((node) => {
                     if (node.data.status === 10) {
                         this.completeSum += node.data.totalPrice
                         this.completeCnt++
                         this.totalSum += node.data.totalPrice
                         this.totalCnt++
+                        this.totalFee += node.data.fee
+                        this.feeCnt++
                     } else if (node.data.status === -20) {
                         this.cancelSum += node.data.totalPrice
                         this.cancelCnt++
