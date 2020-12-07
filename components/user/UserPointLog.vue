@@ -76,17 +76,7 @@
                     {
                         headerName: '이유',
                         field: 'reason',
-                        width: 220,
-                        cellRenderer: (obj) => {
-                            if(obj){
-                                switch (obj.value){
-                                    case 1000: return "회원 가입"
-                                    case 2000: return "리뷰 작성 (텍스트)"
-                                    case 2100: return "리뷰 작성 (텍스트+이미지)"
-                                    case 5000: return "포인트 사용(주차권 구매)"
-                                }
-                            }
-                        }
+                        width: 220
                     },
                     {
                         headerName: '등록일시',

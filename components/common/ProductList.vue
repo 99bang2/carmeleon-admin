@@ -92,11 +92,11 @@
             </form>
         </div>
         <div class="uk-margin-top uk-text-center">
-            <button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'" @click="submitForm">
+            <button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING' || (!sendData.uid && this.$auth.user.grade > 0)" @click="submitForm">
                 {{ sendData.uid ? '수정': '생성' }}
             </button>
             <button v-if="sendData.uid" class="sc-button sc-button-secondary"
-                    :disabled="submitStatus === 'PENDING'"
+                    :disabled="submitStatus === 'PENDING' || this.$auth.user.grade > 0"
                     @click="deleteForm">
                 삭제
             </button>
@@ -118,8 +118,7 @@
                             </div>
                             <div v-else="" class="uk-text-bold uk-text-secondary">{{product.ticketDayTypeName}}</div>
                             <!-- 상품가격 -->
-                            <div
-                                    v-if="product.ticketPriceDiscountPercent === null || product.ticketPriceDiscountPercent ===0">
+                            <div v-if="product.ticketPriceDiscountPercent === null || product.ticketPriceDiscountPercent ===0">
                                 {{product.ticketPrice}}원
                             </div>
                             <div v-else="">
@@ -205,6 +204,10 @@
                     required
                 },
                 ticketPrice: {
+                    required,
+                    integer
+                },
+                fee: {
                     required,
                     integer
                 },

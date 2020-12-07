@@ -95,13 +95,11 @@
             }
         },
         async mounted() {
-
             await this.fetchData(this.$auth.user.uid)
         },
         methods: {
             async fetchData(selectUid) {
                 let user = await this.$axios.$get(this.config.apiUrl + '/accounts/' + selectUid)
-
                 this.userData = user.data
             },
             submitForm(e) {

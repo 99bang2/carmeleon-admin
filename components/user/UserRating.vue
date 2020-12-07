@@ -25,17 +25,17 @@
                         </li>
                         <li>
                             <a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,1)">
-                                주유소
+                                전기차충전소
                             </a>
                         </li>
                         <li>
                             <a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,2)">
-                                세차장
+                                주유소
                             </a>
                         </li>
                         <li>
                             <a href="javascript:void(0)" @click.prevent="switchNewList(targetUid,3)">
-                                전기차충전소
+                                세차장
                             </a>
                         </li>
                     </ul>

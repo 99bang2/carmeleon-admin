@@ -244,6 +244,11 @@ npm <template>
                         field: 'siteTypeName',
                         hide: true
                     },
+                    {
+                        headerName: '계정',
+                        field: 'accountUid',
+                        hide: true
+                    }
                 ]
             }
         },
@@ -295,8 +300,8 @@ npm <template>
                                 limit: params.endRow - params.startRow,
                                 order: order
                             }
-                            await context.$axios.$get(this.config.apiUrl + '/parkings', {
-                                params: {
+                            let searchData = {
+                                params:{
                                     searchSiteType: context.searchSiteType,
                                     searchActive: context.searchActive,
                                     searchRating: context.searchRating,
@@ -305,7 +310,11 @@ npm <template>
                                     limit: parameters.limit,
                                     order: parameters.order,
                                 }
-                            }).then(response => {
+                            }
+                            if(this.$auth.user.grade > 0){
+                                searchData.params.accountUid = this.$auth.user.uid
+                            }
+                            await context.$axios.$get(this.config.apiUrl + '/parkings', searchData).then(response => {
                                 let rowsThisPage = response.data.rows
                                 lastRow = response.data.count
                                 params.successCallback(rowsThisPage, lastRow)
@@ -324,7 +333,7 @@ npm <template>
                     }
                     params.api.setDatasource(dataSource)
                 }
-                updateData(this)
+                await updateData(this)
                 let pageSize = params.api.gridOptionsWrapper.gridOptions.paginationPageSize
                 let rowHeight = params.api.gridOptionsWrapper.gridOptions.rowHeight
                 params.api.rowRenderer.rowContainers.body.eWrapper.style.minHeight = pageSize * rowHeight + 'px'
