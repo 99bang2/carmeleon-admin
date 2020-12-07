@@ -1,12 +1,27 @@
 <template>
     <div>
         <div class="uk-accordion-content">
-            <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+            <h5 class="uk-heading-bullet uk-width-1-1">
                 상품등록
             </h5>
             <form class="uk-grid-small uk-grid" data-uk-grid>
-                <div class="uk-width-1-2">
+                <div class="uk-width-1-2 uk-margin-small-bottom">
                     <Select2
+                            divStyle="padding:0"
+                            v-model="sendData.ticketCategory"
+                            :options="ticketCategoryOpts"
+                            :settings="{ 'width': '100%', 'placeholder': '상품 구분' }"
+                            :error-state="$v.sendData.ticketCategory.$error"
+                    />
+                    <ul class="sc-vue-errors">
+                        <li v-if="!$v.sendData.ticketCategory.required">
+                            상품 구분을 선택하세요.
+                        </li>
+                    </ul>
+                </div>
+                <div class="uk-width-1-2 uk-margin-small-bottom">
+                    <Select2
+                            divStyle="padding:0"
                             v-model="sendData.ticketType"
                             :options="ticketTypeOpts"
                             :settings="{ 'width': '100%', 'placeholder': '상품 유형' }"
@@ -18,8 +33,9 @@
                         </li>
                     </ul>
                 </div>
-                <div class="uk-width-1-2">
+                <div class="uk-width-1-2 uk-margin-small-bottom">
                     <Select2
+                            divStyle="padding:0"
                             v-model="sendData.ticketDayType"
                             :options="ticketDayTypeOpts"
                             :settings="{ 'width': '100%', 'placeholder': '상품날짜 유형' }"
@@ -31,13 +47,97 @@
                         </li>
                     </ul>
                 </div>
-                <div class="uk-width-1-1@s">
+                <div class="uk-width-1-2 uk-margin-small-bottom">
                     <div class="uk-grid-small uk-grid" data-uk-grid>
                         <ScInput v-model="ticketDate" v-flatpickr="dpRange" placeholder="판매 기간">
                             <span slot="icon" class="uk-form-icon" data-uk-icon="calendar"></span>
                         </ScInput>
                     </div>
                 </div>
+                <div class="uk-width-1-3 uk-margin-small-bottom">
+                    <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 0; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>발렛</span></div>
+                    <PrettyCheck v-model="sendData.includeValet" class="p-switch" color="primary">
+                        {{sendData.includeValet?"포함":"미포함"}}
+                    </PrettyCheck>
+                </div>
+                <div class="uk-width-1-1 uk-margin-small-bottom">
+                    <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 0; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>주차가능시간</span></div>
+                    <div style="display: flex;">
+                        <PrettyCheck v-model="alwaysParkingTime" class="p-switch" color="primary">{{ alwaysParkingTime ? "항상":"시간대지정" }}</PrettyCheck>
+                        <div v-if="!alwaysParkingTime" style="display: flex; align-items: center; margin-left: 20px;">
+                            <select v-model="sendData.parkingStartTimeHour" class="uk-select" style="width: 25%;">
+                                <option value="">시간</option>
+                                <option v-for="i in 24" :key="i" :value="i-1 < 10 ? `0${i-1}` : `${i-1}`">{{i-1}}시</option>
+                            </select>
+                            <span style="padding:0 2px;">:</span>
+                            <select v-model="sendData.parkingStartTimeMinute" class="uk-select" style="width: 25%;">
+                                <option value="">분</option>
+                                <option value="00">00분</option>
+                                <option value="10">10분</option>
+                                <option value="20">20분</option>
+                                <option value="30">30분</option>
+                                <option value="40">40분</option>
+                                <option value="50">50분</option>
+                            </select>
+                            <span style="padding:0 5px;">~</span>
+                            <select v-model="sendData.parkingEndTimeHour" class="uk-select" style="width: 25%;">
+                                <option value="">시간</option>
+                                <option v-for="i in 24" :key="i" :value="i-1 < 10 ? `0${i-1}` : `${i-1}`">{{i-1}}시</option>
+                            </select>
+                            <span style="padding:0 2px;">:</span>
+                            <select v-model="sendData.parkingEndTimeMinute" class="uk-select" style="width: 25%;">
+                                <option value="">분</option>
+                                <option value="00">00분</option>
+                                <option value="10">10분</option>
+                                <option value="20">20분</option>
+                                <option value="30">30분</option>
+                                <option value="40">40분</option>
+                                <option value="50">50분</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-width-1-1 uk-margin-small-bottom">
+                    <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 0; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>구매가능시간</span></div>
+                    <div style="display: flex;">
+                        <PrettyCheck v-model="alwaysSellingTime" class="p-switch" color="primary">{{ alwaysSellingTime ? "항상":"시간대지정" }}</PrettyCheck>
+                        <div v-if="!alwaysSellingTime" style="display: flex; align-items: center; margin-left: 20px;">
+                            <select v-model="sendData.sellingStartTimeHour" class="uk-select" style="width: 25%;">
+                                <option value="">시간</option>
+                                <option v-for="i in 24" :key="i" :value="i-1 < 10 ? `0${i-1}` : `${i-1}`">{{i-1}}시</option>
+                            </select>
+                            <span style="padding:0 2px;">:</span>
+                            <select v-model="sendData.sellingStartTimeMinute" class="uk-select" style="width: 25%;">
+                                <option value="">분</option>
+                                <option value="00">00분</option>
+                                <option value="10">10분</option>
+                                <option value="20">20분</option>
+                                <option value="30">30분</option>
+                                <option value="40">40분</option>
+                                <option value="50">50분</option>
+                            </select>
+                            <span style="padding:0 5px;">~</span>
+                            <select v-model="sendData.sellingEndTimeHour" class="uk-select" style="width: 25%;">
+                                <option value="">시간</option>
+                                <option v-for="i in 24" :key="i" :value="i-1 < 10 ? `0${i-1}` : `${i-1}`">{{i-1}}시</option>
+                            </select>
+                            <span style="padding:0 2px;">:</span>
+                            <select v-model="sendData.sellingEndTimeMinute" class="uk-select" style="width: 25%;">
+                                <option value="">분</option>
+                                <option value="00">00분</option>
+                                <option value="10">10분</option>
+                                <option value="20">20분</option>
+                                <option value="30">30분</option>
+                                <option value="40">40분</option>
+                                <option value="50">50분</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+
+
+
                 <div class="uk-width-1-2">
                     <ScInput v-model="sendData.ticketPrice" :error-state="$v.sendData.ticketPrice.$error"
                              :validator="$v.sendData.ticketPrice">
@@ -63,31 +163,27 @@
                         <span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
                     </ScInput>
                 </div>
-                <div style="width: 100%; display: flex;  align-items: center">
-                    <div class="uk-width-1-2">
-                        <ScInput v-model="sendData.fee">
-                            <label>
-                                정산 수수료 설정(%)
-                            </label>
-                            <span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
-                        </ScInput>
-                    </div>
-                    <div class="uk-width-1-2" style="text-align: center">
-                        <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 0; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>상태</span></div>
-                        <PrettyCheck v-model="sendData.isActive" class="p-switch" color="primary">
-                            {{sendData.isActive?"활성":"비활성"}}
-                        </PrettyCheck>
-                    </div>
+                <div class="uk-width-1-2">
+                    <ScInput v-model="sendData.fee">
+                        <label>
+                            정산 수수료 설정(%)
+                        </label>
+                        <span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: tag"/>
+                    </ScInput>
                 </div>
-                <div style="width: 100%; display: flex;  align-items: center">
-                    <div v-if="sendData.ticketType==='1'" class="uk-width-1-2">
-                        <ScInput v-model="sendData.ticketTime">
-                            <label>
-                                시간권 시간
-                            </label>
-                            <span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
-                        </ScInput>
-                    </div>
+                <div class="uk-width-1-2" style="text-align: center">
+                    <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 0; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>상태</span></div>
+                    <PrettyCheck v-model="sendData.isActive" class="p-switch" color="primary">
+                        {{sendData.isActive?"활성":"비활성"}}
+                    </PrettyCheck>
+                </div>
+                <div v-if="sendData.ticketType==='1'" class="uk-width-1-2">
+                    <ScInput v-model="sendData.ticketTime">
+                        <label>
+                            시간권 시간
+                        </label>
+                        <span slot="icon" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: pencil"/>
+                    </ScInput>
                 </div>
             </form>
         </div>
@@ -178,6 +274,7 @@
                 defaultForm: {
                     uid: null,
                     siteUid: null,
+                    ticketCategory: null,
                     ticketType: null,
                     ticketDayType: null,
                     ticketTime: null,
@@ -185,19 +282,38 @@
                     ticketPriceDiscount: null,
                     ticketPriceDiscountPercent: null,
                     isActive: true,
+                    includeValet: false,
                     ticketStartDate: '',
                     ticketEndDate: '',
                     ticketCount: null,
-                    fee: 10
+                    fee: 10,
+                    parkingStartTime: null,
+                    parkingEndTime: null,
+                    sellingStartTime: null,
+                    sellingEndTime: null,
+                    parkingStartTimeHour: '',
+                    parkingStartTimeMinute: '',
+                    parkingEndTimeHour: '',
+                    parkingEndTimeMinute: '',
+                    sellingStartTimeHour: '',
+                    sellingStartTimeMinute: '',
+                    sellingEndTimeHour: '',
+                    sellingEndTimeMinute: '',
                 },
                 ticketDate: '',
                 ticketDayTypeOpts: [],
                 ticketTypeOpts: [],
-                productList: []
+                ticketCategoryOpts: [],
+                productList: [],
+                alwaysParkingTime: true,
+                alwaysSellingTime: true,
             }
         },
         validations: {
             sendData: {
+                ticketCategory: {
+                    required
+                },
                 ticketType: {
                     required
                 },
@@ -229,17 +345,20 @@
         created() {
             let vm = this
             this.$nuxt.$on('open-product-list', (uid) => {
-                vm.sendData = {}
+                this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
+                this.alwaysSellingTime = true
+                this.alwaysParkingTime = true
                 vm.siteUid = null
+                vm.ticketDate = ''
                 vm.$v.$reset()
                 vm.fetchData(uid)
                 vm.sendData.siteUid = uid
             })
         },
         async beforeMount() {
-            this.sendData = this.defaultForm
             let code = await this.$axios.$post(this.config.apiUrl + '/codes')
             this.ticketTypeOpts = Convert.convertJson(code.data.ticketTypeOpts, 'select')
+            this.ticketCategoryOpts = Convert.convertJson(code.data.ticketCategories, 'select')
             this.ticketDayTypeOpts = Convert.convertJson(code.data.ticketDayTypeOpts, 'select')
         },
         beforeDestroy() {
@@ -250,6 +369,10 @@
                 let res = await this.$axios.$get(this.config.apiUrl + '/discountTickets/' + selectUid)
                 this.sendData = res.data
                 this.sendData.ticketType = String(res.data.ticketType)
+                this.ticketDate = this.$moment(this.sendData.ticketStartDate).format('YYYY-MM-DD') + ' ~ ' + this.$moment(this.sendData.ticketEndDate).format('YYYY-MM-DD')
+                this.alwaysSellingTime = !(this.sendData.sellingEndTime && this.sendData.sellingStartTime)
+                this.alwaysParkingTime = !(this.sendData.parkingEndTime && this.sendData.parkingStartTime)
+                console.log(res.data)
             },
             async fetchData(siteUid) {
                 this.productList = []
@@ -269,6 +392,10 @@
                     this.submitStatus = 'ERROR'
                 } else {
                     this.submitStatus = 'PENDING'
+                    this.sendData.parkingStartTime = this.alwaysParkingTime ? null : this.sendData.parkingStartTimeHour + this.sendData.parkingStartTimeMinute
+                    this.sendData.parkingEndTime = this.alwaysParkingTime ? null : this.sendData.parkingEndTimeHour + this.sendData.parkingEndTimeMinute
+                    this.sendData.sellingStartTime = this.alwaysSellingTime ? null : this.sendData.sellingStartTimeHour + this.sendData.sellingStartTimeMinute
+                    this.sendData.sellingEndTime = this.alwaysSellingTime ? null : this.sendData.sellingEndTimeHour + this.sendData.sellingEndTimeMinute
                     if (this.sendData.uid) {
                         this.putForm()
                     } else {
