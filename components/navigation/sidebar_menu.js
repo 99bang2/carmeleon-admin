@@ -67,10 +67,17 @@ export const menuEntries = [
             },
             {
                 id: uniqueID(),
+                title: "Popups",
+                icon: "mdi mdi-alert-box-outline",
+                page: "/operations/popups",
+            },
+            {
+                id: uniqueID(),
                 title: "Events",
                 icon: "mdi mdi-calendar-check",
                 page: "/operations/events",
-            }, {
+            },
+            {
                 id: uniqueID(),
                 title: "Notices",
                 icon: "mdi mdi-alarm-light",

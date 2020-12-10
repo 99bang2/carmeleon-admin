@@ -15,5 +15,6 @@ export default {
 	'PointProducts':'포인트상품 관리',
 	'Tutorials':'튜토리얼 관리',
 	'Questions':'문의사항 관리',
-	'Settlements':'정산 관리'
+	'Settlements':'정산 관리',
+	'Popups':'팝업 관리'
 }
