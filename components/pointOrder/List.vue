@@ -4,12 +4,8 @@
             <ScCardHeader class="uk-flex uk-flex-middle sc-theme-bg-dark sc-light" separator>
                 <div class="uk-flex-1">
                     <ScCardTitle>
-                        <slot><i class="mdi mdi-coin"/>포인트상품목록</slot>
+                        <slot><i class="mdi mdi-cart"/> 포인트 상품 주문</slot>
                     </ScCardTitle>
-                </div>
-                <div class="uk-text-nowrap">
-                    <a href="javascript:void(0)" class="sc-actions-icon mdi mdi-shape-circle-plus" style="display: inline-block" @click.prevent="openNewForm" data-uk-tooltip="포인트상품생성"/>
-                    <a href="javascript:void(0)" class="sc-actions-icon mdi mdi-trash-can-outline" style="display: inline-block" @click.prevent="deleteDatas" data-uk-tooltip="포인트상품삭제"/>
                 </div>
             </ScCardHeader>
             <ScCardBody>
@@ -85,29 +81,14 @@
                         }
                     },
                     {
-                        headerName: "상품구분",
-                        field: "productTypeName",
-                        width: 100,
-                    },
-                    {
-                        headerName: "카테고리",
-                        field: "category",
-                        width: 100,
-                    },
-                    {
-                        headerName: "상품명",
-                        field: "title",
-                        suppressSizeToFit: false
-                    },
-                    {
-                        headerName: "노출",
-                        field: "isActive",
-                        width: 80
-                    },
-                    {
-                        headerName: "매진",
-                        field: "isSoldOut",
-                        width: 80
+                        headerName: "주문상품",
+                        field: "product",
+                        suppressSizeToFit: false,
+                        cellRenderer: obj => {
+                            if(obj.data) {
+                                return `[${obj.data.category}] ${obj.data.title}`
+                            }
+                        }
                     },
                     {
                         headerName: "가격",
@@ -118,7 +99,22 @@
                         }
                     },
                     {
-                        headerName: '등록일시',
+                        headerName: "주문자",
+                        field: "name",
+                        width: 120
+                    },
+                    {
+                        headerName: "전화번호",
+                        field: "phone",
+                        width: 150
+                    },
+                    {
+                        headerName: "상태",
+                        field: "statusName",
+                        width: 150
+                    },
+                    {
+                        headerName: '주문일시',
                         field: 'createdAt',
                         width: 160,
                         valueFormatter: obj => {
@@ -135,27 +131,23 @@
         },
         created() {
             let vm = this
-            this.$nuxt.$on('reset-pointProduct-list', () => {
+            this.$nuxt.$on('reset-pointOrder-list', () => {
                 vm.resetSelection()
             })
-            this.$nuxt.$on('fetch-pointProduct-list', () => {
+            this.$nuxt.$on('fetch-pointOrder-list', () => {
                 vm.fetchData()
             })
         },
         beforeDestroy() {
-            this.$nuxt.$off('reset-pointProduct-list')
-            this.$nuxt.$off('fetch-pointProduct-list')
+            this.$nuxt.$off('reset-pointOrder-list')
+            this.$nuxt.$off('fetch-pointOrder-list')
         },
         async mounted() {
             await this.fetchData()
         },
         methods: {
-            openNewForm() {
-                this.resetSelection()
-                this.$nuxt.$emit('open-pointProduct-form')
-            },
             onRowClicked(props) {
-                this.$nuxt.$emit('open-pointProduct-form', props)
+                this.$nuxt.$emit('open-pointOrder-form', props)
                 this.resetSelection()
                 props.node.detail = true
                 this.gridOptions.api.redrawRows()
@@ -169,7 +161,7 @@
             },
             async fetchData(selectUid) {
                 // API 연동
-                let res = await this.$axios.$get(this.config.apiUrl + '/pointProducts')
+                let res = await this.$axios.$get(this.config.apiUrl + '/pointOrders')
                 if (this.gridOptions.api) {
                     this.gridOptions.api.setRowData(res.data)
                 }
@@ -179,43 +171,6 @@
                     node.detail = false
                 })
                 this.gridOptions.api.redrawRows()
-            },
-            addPoints() {
-                let selected = this.gridOptions.api.getSelectedRows()
-                let selectedUids = selected.map(({uid}) => uid)
-                let selectedCnt = selectedUids.length
-                if (selectedCnt) {
-                    UIkit.modal.prompt(`적용할 추가포인트(%)를 입력해주세요`, this.addPoint).then((pointPercent) => {
-                        this.$axios.$post(this.config.apiUrl + '/pointProducts/addPoint', {
-                            addPoint: pointPercent,
-                            uids: selectedUids
-                        }).then(res => {
-                            this.callNotification('적용했습니다.')
-                            this.$nuxt.$emit('close-pointProduct-form')
-                            this.fetchData()
-                        })
-                    })
-                } else {
-                    this.callAlertError('적용할 항목을 선택해주세요.')
-                }
-            },
-            deleteDatas() {
-                let selected = this.gridOptions.api.getSelectedRows()
-                let selectedUids = selected.map(({uid}) => uid)
-                let selectedCnt = selectedUids.length
-                if (selectedCnt) {
-                    UIkit.modal.confirm(`선택한 항목 : ${selectedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-                        this.$axios.$post(this.config.apiUrl + '/pointProducts/bulkDelete', {
-                            uids: selectedUids
-                        }).then(res => {
-                            this.callNotification('삭제하였습니다.')
-                            this.$nuxt.$emit('close-pointProduct-form')
-                            this.fetchData()
-                        })
-                    })
-                } else {
-                    this.callAlertError('삭제할 항목을 선택해주세요.')
-                }
             },
         }
     }

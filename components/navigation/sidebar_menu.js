@@ -103,6 +103,12 @@ export const menuEntries = [
             },
             {
                 id: uniqueID(),
+                title: "PointOrder",
+                icon: "mdi mdi-cart",
+                page: "/operations/pointOrders"
+            },
+            {
+                id: uniqueID(),
                 title: "Questions",
                 icon: "mdi mdi-comment-question-outline",
                 page: "/operations/questions"
