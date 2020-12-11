@@ -137,9 +137,6 @@
                                             <li v-if="!$v.sendData.carWashChargeInfo.required">
                                                 세차요금정보를 입력하세요
                                             </li>
-                                            <li v-if="!$v.sendData.carWashChargeInfo.integer">
-                                                올바른 형식이 아닙니다.
-                                            </li>
                                         </ul>
                                     </div>
                                     <div class="uk-width-1-2">
@@ -340,15 +337,8 @@
                 carWashName: {
                     required
                 },
-                carWashIndustry: {
-                    required
-                },
-                carWashType: {
-                    required
-                },
                 carWashChargeInfo: {
-                    required,
-                    integer
+                    required
                 },
                 phoneNumber: {
                     required,
