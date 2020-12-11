@@ -73,27 +73,27 @@
                                         <Select2
                                                 v-model="sendData.carWashIndustry"
                                                 :options="industryOpts"
-                                                :settings="{ 'width': '100%', 'placeholder': '사업장 업종명' }"
-                                                :error-state="$v.sendData.carWashIndustry.$error"
-                                        />
-                                        <ul class="sc-vue-errors">
-                                            <li v-if="!$v.sendData.carWashIndustry.required">
-                                                사업장 업종명을 선택하세요.
-                                            </li>
-                                        </ul>
+                                                :settings="{ 'width': '100%', 'placeholder': '사업장 업종명' }"  />
+<!--                                                :error-state="$v.sendData.carWashIndustry.$error"-->
+
+<!--                                        <ul class="sc-vue-errors">-->
+<!--                                            <li v-if="!$v.sendData.carWashIndustry.required">-->
+<!--                                                사업장 업종명을 선택하세요.-->
+<!--                                            </li>-->
+<!--                                        </ul>-->
                                     </div>
                                     <div class="uk-width-1-2">
                                         <Select2
                                                 v-model="sendData.carWashType"
                                                 :options="carWashTypeOpts"
-                                                :settings="{ 'width': '100%', 'placeholder': '세차유형' }"
-                                                :error-state="$v.sendData.carWashType.$error"
-                                        />
-                                        <ul class="sc-vue-errors">
-                                            <li v-if="!$v.sendData.carWashType.required">
-                                                세차유형을 선택하세요.
-                                            </li>
-                                        </ul>
+                                                :settings="{ 'width': '100%', 'placeholder': '세차유형' }"/>
+<!--                                                :error-state="$v.sendData.carWashType.$error"-->
+
+<!--                                        <ul class="sc-vue-errors">-->
+<!--                                            <li v-if="!$v.sendData.carWashType.required">-->
+<!--                                                세차유형을 선택하세요.-->
+<!--                                            </li>-->
+<!--                                        </ul>-->
                                     </div>
                                     <!-- 평일운영시간-->
                                     <div class="uk-width-1-1 uk-flex uk-flex-between">
