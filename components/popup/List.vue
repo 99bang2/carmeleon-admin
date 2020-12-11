@@ -4,7 +4,7 @@
             <ScCardHeader class="uk-flex uk-flex-middle sc-theme-bg-dark sc-light" separator>
                 <div class="uk-flex-1">
                     <ScCardTitle>
-                        <slot><i class="mdi mdi-alarm-light"/> 공지사항 목록</slot>
+                        <slot><i class="mdi mdi-alert-box-outline"/> 팝업 목록</slot>
                     </ScCardTitle>
                 </div>
                 <div class="uk-text-nowrap">
@@ -17,25 +17,11 @@
             <ScCardBody>
                 <div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
                     <div class="uk-width-2-5@s">
-                        <div class="uk-grid-small uk-grid" data-uk-grid>
-                            <a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
-                               style="height:40px;" @click.prevent="refreshFilter">
-                                <i class="mdi mdi-refresh"></i>
-                            </a>
-                            <div class="uk-width-1-3@s">
-                                <select v-model="searchType" class="uk-select">
-                                    <option value="">공지사항 분류</option>
-                                    <option value="0">긴급</option>
-                                    <option value="1">필수</option>
-                                    <option value="2">일반</option>
-                                </select>
-                            </div>
-                        </div>
                     </div>
                     <div class="uk-width-2-5@s">
                     </div>
                     <div class="uk-width-1-5@s">
-                        <ScInput v-model="searchKeyword" placeholder="공지사항명 검색">
+                        <ScInput v-model="searchKeyword" placeholder="검색">
                             <span slot="icon" class="uk-form-icon" data-uk-icon="search"/>
                         </ScInput>
                     </div>
@@ -103,41 +89,26 @@
                         }
                     },
                     {
-                        headerName: '분류',
-                        field: 'noticeType',
-                        width: 80,
-                        cellRenderer: (obj) => {
-                            let typeName = ""
-                            switch (obj.value) {
-                                case 0:
-                                    typeName = "긴급"
-                                    break;
-                                case 1:
-                                    typeName = "필수"
-                                    break;
-                                case 2:
-                                    typeName = "일반"
-                                    break;
-                            }
-                            return typeName
-                        }
-                    },
-                    {
                         headerName: '제목',
                         field: 'title',
                         suppressSizeToFit: false,
                     },
                     {
-                        headerName: '작성자',
-                        field: 'account.name',
-                        width: 160
+                        headerName: '공개',
+                        field: 'isOpen',
+                        width: 100,
+                        cellRenderer: (obj) => {
+                            return obj.value ? '<i class="mdi mdi-checkbox-marked-circle-outline"></i>' : '<i class="mdi mdi-close-circle-outline"></i>'
+                        }
                     },
                     {
-                        headerName: '활성',
-                        field: 'isOpen',
-                        width: 60,
-                        cellRenderer: (obj) => {
-                            return obj.value ? '<i class="mdi mdi-check-circle" style="font-size:8px;"></i>' : ''
+                        headerName: '게시기간',
+                        field: 'startDate',
+                        width: 280,
+                        cellRenderer: obj => {
+                            if(obj) {
+                                return this.$moment(obj.data.startDate).format('YYYY-MM-DD') + ' ~ ' + this.$moment(obj.data.endDate).format('YYYY-MM-DD')
+                            }
                         }
                     },
                     {
@@ -152,65 +123,42 @@
             }
         },
         watch: {
-            'searchType': function (newValue) {
-                let filterComponent = this.gridOptions.api.getFilterInstance('noticeType')
-                filterComponent.setModel({
-                    type: 'equals',
-                    filter: newValue
-                })
-                this.gridOptions.api.onFilterChanged()
-            },
             'searchKeyword': function (newValue) {
                 this.gridOptions.api.setQuickFilter(newValue)
             },
         },
         created() {
             let vm = this
-            this.$nuxt.$on('reset-notice-list', () => {
+            this.$nuxt.$on('reset-popup-list', () => {
                 vm.resetSelection()
             })
-            this.$nuxt.$on('fetch-notice-list', () => {
+            this.$nuxt.$on('fetch-popup-list', () => {
                 vm.fetchData()
             })
         },
         beforeDestroy() {
-            this.$nuxt.$off('reset-notice-list')
-            this.$nuxt.$off('fetch-notice-list')
+            this.$nuxt.$off('reset-popup-list')
+            this.$nuxt.$off('fetch-popup-list')
         },
         async mounted() {
             await this.fetchData()
         },
         methods: {
-            refreshFilter() {
-                this.searchKeyword = ""
-                this.searchType = ""
-                this.fetchData()
-            },
             openNewForm() {
                 this.resetSelection()
-                this.$nuxt.$emit('open-notice-form')
+                this.$nuxt.$emit('open-popup-form')
             },
             onRowClicked(props) {
-                this.$nuxt.$emit('open-notice-form', props)
+                this.$nuxt.$emit('open-popup-form', props)
                 this.resetSelection()
                 props.node.detail = true
                 this.gridOptions.api.redrawRows()
             },
             async fetchData(selectUid) {
                 //API 연동
-                let res = await this.$axios.$get(this.config.apiUrl + '/notices')
+                let res = await this.$axios.$get(this.config.apiUrl + '/popups')
                 if (this.gridOptions.api) {
                     this.gridOptions.api.setRowData(res.data)
-                    if (selectUid) {
-                        this.gridOptions.api.forEachNode((node) => {
-                            if (node.data.uid === selectUid) {
-                                this.onRowClicked({
-                                    node: node,
-                                    data: node.data
-                                })
-                            }
-                        })
-                    }
                 }
             },
             resetSelection() {
@@ -225,11 +173,11 @@
                 let seletedCnt = selectedUids.length
                 if (seletedCnt) {
                     UIkit.modal.confirm(`선택한 항목 : ${seletedCnt}<br/>정말 삭제하시겠습니까?`).then(() => {
-                        this.$axios.$post(this.config.apiUrl + '/notices/bulkDelete', {
+                        this.$axios.$post(this.config.apiUrl + '/popups/bulkDelete', {
                             uids: selectedUids
                         }).then(res => {
                             this.callNotification('삭제하였습니다.')
-                            this.$nuxt.$emit('close-notice-form')
+                            this.$nuxt.$emit('close-popup-form')
                             this.fetchData()
                         })
                     })
