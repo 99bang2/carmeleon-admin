@@ -23,6 +23,7 @@
                                  v-model="searchStatus"
                                  :options="statusOpts"
                                  :settings="{ 'width': '100%', 'placeholder': '상태' }"
+                                 disabled
                         />
                     </div>
                     <div class="uk-width-1-5@s">
@@ -86,6 +87,7 @@ export default {
             },
             searchStatus: '',
             searchKeyword: '',
+            searchParkingSite: '',
             statusOpt: [],
             resUid: 0
         }
@@ -205,8 +207,8 @@ export default {
         statusOpts() {
             return [
                 {
-                    id: "",
-                    text: ""
+                    id: " ",
+                    text: "전체"
                 },
                 {
                     id: "used",
@@ -280,9 +282,10 @@ export default {
                             params: {
                                 searchData: {
                                     searchDate: context.searchData.searchDate,
+                                    searchKeyword: context.searchKeyword,
+                                    searchStatus: context.searchStatus,
+                                    searchParkingSite: ''
                                 },
-                                searchKeyword: context.searchKeyword,
-                                searchStatus: context.searchStatus,
                                 offset: parameters.offset,
                                 limit: parameters.limit,
                                 order: parameters.order,

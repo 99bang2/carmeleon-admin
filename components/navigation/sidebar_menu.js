@@ -121,29 +121,29 @@ export const menuEntries = [
         icon: "mdi mdi-file-chart",
         page: "/settlements",
         grade: ['0', '1']
+    },
+    {
+    	id: uniqueID(),
+    	title: "Statistics",
+    	icon: "mdi mdi-chart-bar",
+    	page: "/statistics",
+    	isOpen: false,
+    	submenu: [
+    		{
+    			id: uniqueID(),
+    			title:"ParkingSiteStatistic",
+    			page: "/statistics/parkingSiteStatistic"
+    		},
+    		/*{
+    			id: uniqueID(),
+    			title: "CarStatistic",
+    			page: "/statistics/carStatistic"
+    		},
+    		{
+    			id: uniqueID(),
+    			title: "PointStatistic",
+    			page: "/statistics/pointStatistic"
+    		}*/
+    	]
     }
-    // {
-    // 	id: uniqueID(),
-    // 	title: "Statistics",
-    // 	icon: "mdi mdi-chart-bar",
-    // 	page: "/statistics",
-    // 	isOpen: false,
-    // 	submenu: [
-    // 		{
-    // 			id: uniqueID(),
-    // 			title:"ParkingSiteStatistic",
-    // 			page: "/statistics/parkingSiteStatistic"
-    // 		},
-    // 		{
-    // 			id: uniqueID(),
-    // 			title: "CarStatistic",
-    // 			page: "/statistics/carStatistic"
-    // 		},
-    // 		{
-    // 			id: uniqueID(),
-    // 			title: "PointStatistic",
-    // 			page: "/statistics/pointStatistic"
-    // 		}
-    // 	]
-    // }
 ]

@@ -25,11 +25,12 @@
                                                 @search="search"></SearchMenu>
                                 </div>
                                 <div class="uk-width-1-5@s">
-                                    <Select2 style="padding-top: 0px"
-                                             v-model="searchParkingSite"
-                                             :options="siteOpts"
-                                             :settings="{ 'width': '100%', 'placeholder': '주차장 명' }"
-                                    />
+                                    <select v-model="searchParkingSite" class="uk-select">
+                                        <option value="">전체</option>
+                                        <option v-for="siteOpts in siteOpts" :key="siteOpts.id" :value="siteOpts.id">
+                                            {{ siteOpts.text }}
+                                        </option>
+                                    </select>
                                 </div>
                                 <div class="uk-width-1-6@s"></div>
                                 <div class="uk-width-1-5@s">
@@ -63,6 +64,26 @@
                                 <table class="uk-table">
                                     <thead>
                                     <tr>
+                                        <th class="jb-th-1">주차권</th>
+                                        <th style="background-color: rgba(102,187,106,0.5); font-weight: bold">사용 완료</th>
+                                        <th style="background-color: rgba(244,143,177,0.5); font-weight: bold">미사용</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>건수</td>
+                                        <td>{{settleData.usedCount}}건</td>
+                                        <td>{{settleData.unusedCount}}건</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- -->
+                            <!-- 결산 table -->
+                            <div>
+                                <table class="uk-table">
+                                    <thead>
+                                    <tr>
                                         <th class="jb-th-1"></th>
                                         <th style="background-color: rgba(102,187,106,0.5); font-weight: bold">완료</th>
                                         <th style="background-color: rgba(244,143,177,0.5); font-weight: bold">취소</th>
@@ -73,27 +94,57 @@
                                     <tbody>
                                     <tr>
                                         <td>금액</td>
-                                        <td>{{completeSum ? completeSum : "0"}}원</td>
-                                        <td>{{cancelSum ? cancelSum : "0"}}원</td>
-                                        <td>{{totalSum ? totalSum : "0"}}원</td>
-                                        <td>{{totalFee ? totalFee : "0"}}원</td>
+                                        <td>{{settleData.totalPrice - settleData.refundCompletePrice}}원</td>
+                                        <td>{{settleData.refundCompletePrice}}원</td>
+                                        <td>{{settleData.totalPrice}}원</td>
+                                        <td>{{settleData.fee}}원</td>
                                     </tr>
                                     <tr>
                                         <td>건수</td>
-                                        <td>{{completeCnt? completeCnt :"0" }}건</td>
-                                        <td>{{cancelCnt? cancelCnt : "0"}}건</td>
-                                        <td>{{totalCnt? totalCnt : "0"}}건</td>
-                                        <td>{{feeCnt? feeCnt : "0"}}건</td>
+                                        <td>{{settleData.totalCount - settleData.refundCompleteCount}}건</td>
+                                        <td>{{settleData.refundCompleteCount}}건</td>
+                                        <td>{{settleData.totalCount}}건</td>
+                                        <td>{{settleData.feeCount}}건</td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <!-- -->
-
+                            <!-- 환불 관련 Table -->
+                            <div>
+                                <table class="uk-table">
+                                    <thead>
+                                    <tr>
+                                        <th class="jb-th-1"></th>
+                                        <th style="background-color: rgba(102,187,106,0.5); font-weight: bold">환불 요청</th>
+                                        <th style="background-color: rgba(244,143,177,0.5); font-weight: bold">환불 완료</th>
+                                        <th style="background-color: rgba(244,143,177,0.5); font-weight: bold">환불 거절</th>
+                                        <th style="background-color: rgba(130,177,255,0.5); font-weight: bold">종합</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>금액</td>
+                                        <td>{{settleData.refundPrice}}원</td>
+                                        <td>{{settleData.refundCompletePrice}}원</td>
+                                        <td>{{settleData.refundRejectPrice}}원</td>
+                                        <td>{{settleData.refundPrice+settleData.refundCompletePrice+settleData.refundRejectPrice}}원</td>
+                                    </tr>
+                                    <tr>
+                                        <td>건수</td>
+                                        <td>{{settleData.refundCount}}건</td>
+                                        <td>{{settleData.refundCompleteCount}}건</td>
+                                        <td>{{settleData.refundRejectCount}}건</td>
+                                        <td>{{settleData.refundCount+settleData.refundCompleteCount+settleData.refundRejectCount}}건</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- -->
                             <div style="height: 30px"></div>
 
                             <!-- 총 검색내역 -->
-                            <span class="uk-text-middle">총 {{totalCount}}개의 결제내역 조회</span>
+                            <span class="uk-text-middle">총 {{settleData.totalCount}}개의 결제내역 조회</span>
                             <!-- -->
 
                             <!-- 리스트 -->
@@ -107,6 +158,11 @@
                                     :grid-options="gridOptions"
                                     :pagination="true"
                                     :pagination-page-size="10"
+                                    :row-model-type="'infinite'"
+                                    :cache-overflow-size="10"
+                                    :cache-block-size="10"
+                                    :max-concurrent-datasource-requests="1"
+                                    :max-blocks-in-cache="10"
                                     :framework-components="frameworkComponents"
                             >
                             </ag-grid-vue>
@@ -120,14 +176,13 @@
 </template>
 
 <script>
-    import {agGridMixin} from "@/plugins/ag-grid.mixin";
-    import ScInput from '~/components/Input'
-    import Select2 from "@/components/Select2"
-    import SearchMenu from "~/components/common/SearchMenu";
-    import XLSX from 'xlsx'
+import {agGridMixin} from "@/plugins/ag-grid.mixin"
+import ScInput from '~/components/Input'
+import SearchMenu from "~/components/common/SearchMenu"
+import XLSX from 'xlsx'
 
-    export default {
-        components: {SearchMenu, ScInput, Select2},
+export default {
+        components: {SearchMenu, ScInput},
         mixins: [
             agGridMixin
         ],
@@ -136,7 +191,6 @@
                 searchData: {
                     searchDate: this.$moment(new Date()).add(-7, 'days').format('YYYY-MM-DD') + ' ~ ' + this.$moment(new Date()).format('YYYY-MM-DD'),
                 },
-                totalCount: null,
                 gridOptions: {
                     suppressRowClickSelection: true,
                     suppressMenuHide: true,
@@ -150,14 +204,29 @@
                 siteOpts: [],
                 searchKeyword: '',
                 searchParkingSite: '',
-                completeSum: null,
-                completeCnt: null,
-                cancelSum: null,
-                cancelCnt: null,
-                totalSum: null,
-                totalCnt: null,
-                totalFee: null,
-                feeCnt: null
+                settleData: {
+                    price: 0,
+                    sellingPrice: 0,
+                    totalPrice: 0,
+                    totalCount: 0,
+                    completePrice: 0,
+                    cancelPrice: 0,
+                    priceCount: 0,
+                    sellingPriceCount: 0,
+                    completePriceCount: 0,
+                    cancelPriceCount: 0,
+                    fee: 0,
+                    feeCount: 0,
+                    refundCount: 0,
+                    refundPrice: 0,
+                    refundRejectCount: 0,
+                    refundRejectPrice: 0,
+                    refundCompleteCount: 0,
+                    refundCompletePrice: 0,
+                    usedCount: 0,
+                    unusedCount: 0,
+                    expiredCount: 0
+                }
             }
         },
         computed: {
@@ -244,54 +313,120 @@
             }
         },
         watch: {
-            'searchKeyword': function (newValue) {
-                this.gridOptions.api.setQuickFilter(newValue)
-                this.totalCount = this.gridOptions.api.getDisplayedRowCount()
-                this.computeValue()
+            'searchKeyword': function() {
+                this.fetchData()
+                this.loadData()
             },
-            'searchParkingSite': function (newValue) {
-                let filterComponent = this.gridOptions.api.getFilterInstance('parkingSite.name')
-                filterComponent.setModel({
-                    type: 'equals',
-                    filter: newValue
-                })
-                this.gridOptions.api.onFilterChanged()
-                this.computeValue()
+            'searchParkingSite': function() {
+                this.fetchData()
+                this.loadData()
+            },
+            'searchDate': function() {
+                this.fetchData()
+                this.loadData()
             }
         },
         async mounted() {
+            await this.loadData()
             await this.fetchData()
+            await this.loadSite()
         },
         methods: {
+            async loadData(){
+                let searchData = {
+                    params : {
+                        accountUid: null,
+                        searchData: {
+                            searchParkingSite: this.searchParkingSite,
+                            searchDate: this.searchData.searchDate,
+                            searchKeyword: this.searchKeyword
+                        }
+                    }
+                }
+                if(this.$auth.user.grade > 0){
+                    searchData.params.accountUid = this.$auth.user.uid
+                }
+                //await this.$axios.$get(this.config.apiUrl + '/allPayLogs', searchData).then(response => {
+                await this.$axios.$get(this.config.apiUrl + '/allPayLogs', searchData).then(response => {
+                    if(response.data){
+                        this.settleData = response.data
+                    }
+                })
+            },
+            async loadSite(){
+                let params = {}
+                if(this.$auth.user.grade > 0){
+                    params.accountUid = this.$auth.user.uid
+                }
+                await this.$axios.$get(this.config.apiUrl + '/parkings', params).then(response => {
+                    //console.log(response)
+                    if(response.data){
+                        this.siteOpts = response.data.rows.map(function (obj) {
+                            return {
+                                id: obj.uid,
+                                text: obj.name
+                            }
+                        })
+                    }
+                })
+            },
+            async onGridReady(params) {
+                const updateData = async context => {
+                    let dataSource = {
+                        rowCount: null,
+                        getRows: async (params) => {
+                            let lastRow = -1
+                            let order = []
+                            for (let sort of params.sortModel) {
+                                order.push([sort.colId, sort.sort])
+                            }
+                            let parameters = {
+                                offset: params.startRow,
+                                limit: params.endRow - params.startRow,
+                                order: order
+                            }
+                            let searchData = {
+                                params:{
+                                    searchData: {
+                                        searchKeyword: context.searchKeyword,
+                                        searchParkingSite: context.searchParkingSite,
+                                        searchDate: context.searchData.searchDate,
+                                        offset: parameters.offset,
+                                        limit: parameters.limit,
+                                        order: parameters.order
+                                    }
+                                }
+                            }
+                            if(this.$auth.user.grade > 0){
+                                params.accountUid = this.$auth.user.uid
+                            }
+                            await context.$axios.$get(this.config.apiUrl + '/paylogs', searchData).then(response => {
+                                let rowsThisPage = response.data.rows
+                                lastRow = response.data.count
+                                params.successCallback(rowsThisPage, lastRow)
+                            })
+                        }
+                    }
+                    params.api.setDatasource(dataSource)
+                }
+                await updateData(this)
+                let pageSize = params.api.gridOptionsWrapper.gridOptions.paginationPageSize
+                let rowHeight = params.api.gridOptionsWrapper.gridOptions.rowHeight
+                params.api.rowRenderer.rowContainers.body.eWrapper.style.minHeight = pageSize * rowHeight + 'px'
+            },
+            async fetchData() {
+                this.gridOptions.api.onFilterChanged()
+            },
             refreshFilter() {
                 this.searchKeyword = ""
                 this.searchParkingSite = ""
                 this.searchData.searchDate = this.$moment(new Date()).add(-7, 'days').format('YYYY-MM-DD') + ' ~ ' + this.$moment(new Date()).format('YYYY-MM-DD')
                 this.fetchData()
+                this.loadData()
             },
             search() {
-                this.fetchData(this.searchData)
-            },
-            async fetchData(searchData) {
-                let res = await this.$axios.$get(this.config.apiUrl + '/payLogs', {
-                    params: {
-                        searchData: searchData
-                    }
-                })
-                if (this.gridOptions.api) {
-                    this.gridOptions.api.setRowData(res.data.rows)
-                    this.gridOptions.api.forEachNode((node) => {
-                        if (node.data.parkingSite !== null) {
-                            this.siteOpts.push(node.data.parkingSite.name)
-                            //중복 된 배열 객체 삭제//
-                            this.siteOpts = Array.from(new Set(this.siteOpts))
-                        }
-                    })
-                    this.totalCount = this.gridOptions.api.getDisplayedRowCount()
-                    this.computeValue()
-                }
-
-
+                this.fetchData()
+                this.loadData()
             },
             exportData() {
                 let aoaData = [
@@ -341,24 +476,6 @@
                 this.totalCnt = null
                 this.totalFee = null
                 this.feeCnt = null
-                this.gridOptions.api.forEachNodeAfterFilter((node) => {
-                    if (node.data.status === 10) {
-                        this.completeSum += node.data.totalPrice
-                        this.completeCnt++
-                        this.totalSum += node.data.totalPrice
-                        this.totalCnt++
-                        this.totalFee += node.data.fee
-                        this.feeCnt++
-                    } else if (node.data.status === -20) {
-                        this.cancelSum += node.data.totalPrice
-                        this.cancelCnt++
-                        this.totalSum += node.data.totalPrice
-                        this.totalCnt++
-                    } else {
-                        this.totalSum += node.data.totalPrice
-                        this.totalCnt++
-                    }
-                })
             }
         }
     }

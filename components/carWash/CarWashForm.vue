@@ -211,6 +211,31 @@
                                             </li>
                                         </ul>
                                     </div>
+                                    <!--    옵션태그-->
+                                    <div class="uk-width-1-2">
+                                        <ul class="uk-list">
+                                            <h6>옵션태그</h6>
+                                            <li v-for="tag in carWashTypeTag" :key="tag.id">
+                                                <PrettyCheck v-model="sendData.carWashTypeTag" :value="tag.value"
+                                                             class="p-icon">
+                                                    <i slot="extra" class="icon mdi mdi-check"></i>
+                                                    {{tag.name}}
+                                                </PrettyCheck>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="uk-width-1-2">
+                                        <ul class="uk-list">
+                                            <h6>옵션태그</h6>
+                                            <li v-for="tag in carWashTimeTag" :key="tag.id">
+                                                <PrettyCheck v-model="sendData.carWashTypeTag" :value="tag.value"
+                                                             class="p-icon">
+                                                    <i slot="extra" class="icon mdi mdi-check"></i>
+                                                    {{tag.name}}
+                                                </PrettyCheck>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <!--    세차장 이미지           -->
                                     <div class="uk-width-1-1">
                                         <h5 class="uk-heading-bullet uk-margin-top">세차장 이미지 등록</h5>
@@ -262,6 +287,7 @@
     import RatingList from "@/components/common/RatingList"
     import Select2 from "@/components/Select2";
     import Convert from "@/plugins/convertJson";
+    import PrettyCheck from "pretty-checkbox-vue/check"
 
     if (process.client) {
         require('~/plugins/flatpickr');
@@ -275,6 +301,7 @@
             ScInput,
             ScCard,
             VueUploadMultipleImage,
+            PrettyCheck,
             ScCardAction,
             RatingList,
         },
@@ -317,6 +344,8 @@
                     picture: [],
                     industryOpts: [],
                     carWashTypeOpts: [],
+                    carWashTypeTag: [],
+                    carWashTimeTag: [],
                     isRate: false,
                     isRecommend:false
                 }
@@ -373,6 +402,8 @@
             let code = await this.$axios.$post(this.config.apiUrl + '/codes')
             this.industryOpts = Convert.convertJson(code.data.industryOpts, 'select')
             this.carWashTypeOpts = Convert.convertJson(code.data.carWashTypeOpts, 'select')
+            this.carWashTypeTag = Convert.convertJson(code.data.carWashTypeTag)
+            this.carWashTimeTag = Convert.convertJson(code.data.carWashTimeTag)
         },
         beforeDestroy() {
             this.$nuxt.$off('open-carWash-form')
@@ -528,7 +559,7 @@
                     }
                 }
                 this.$axios.$post(this.config.apiUrl + '/carWashes', this.sendData).then(async res => {
-                    this.callNotification('계정을 생성하였습니다.')
+                    this.callNotification('세차장을 생성하였습니다.')
                     this.$nuxt.$emit('fetch-carWash-list', res.data.uid)
                 }).finally(() => {
                     this.submitStatus = 'OK'
