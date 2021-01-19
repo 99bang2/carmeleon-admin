@@ -19,7 +19,7 @@
                 <ScCardBody style="padding-top:0px;">
                     <div class="uk-accordion-content">
                         <form class="uk-grid-small uk-grid" data-uk-grid>
-                            <div class="uk-width-1-1">
+                            <div class="uk-width-1-1 uk-margin-small-bottom">
                                 <ScInput v-model="sendData.title" :error-state="$v.sendData.title.$error"
                                          :validator="$v.sendData.title">
                                     <label>
@@ -34,11 +34,9 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="uk-width-1-1@s">
-                            </div>
                             <!--	bannerImage 이미지 1-->
-                            <div class="uk-width-1-2">
-                                <h5 class="uk-heading-bullet uk-margin-top">Banner Image</h5>
+                            <div class="uk-width-1-2 uk-margin-small-bottom">
+                                <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 10px; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>배너이미지</span></div>
                                 <div data-uk-form-custom="target: true">
                                     <input type="file" accept="image/*" ref="bannerImage"
                                            @change="onChangeBannerImageFile">
@@ -50,8 +48,8 @@
                                 </div>
                             </div>
                             <!--	mainImage	이미지 2-->
-                            <div class="uk-width-1-2">
-                                <h5 class="uk-heading-bullet uk-margin-top">Main Image</h5>
+                            <div class="uk-width-1-2 uk-margin-small-bottom">
+                                <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 10px; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>상세이미지</span></div>
                                 <div data-uk-form-custom="target: true">
                                     <input type="file" accept="image/*" ref="mainImage" @change="onChangeMainImageFile">
                                     <input class="uk-visible@s uk-input uk-form-width-medium" type="text"
@@ -61,34 +59,40 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="uk-width-1-1@s">
-                            </div>
-                            <div class="uk-width-1-1@s">
+                            <div class="uk-width-1-2 uk-margin-small-bottom">
+                                <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 0px; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>시작일</span></div>
                                 <div class="uk-grid-small uk-grid" data-uk-grid>
-                                    <ScInput v-model="eventDate" v-flatpickr="dpRange" placeholder="이벤트 기간"
-                                             mode="outline" :error-state="$v.sendData.startDate.$error"
-                                             :validator="$v.sendData.startDate">
-                                        <span slot="icon" class="uk-form-icon" data-uk-icon="calendar"></span>
-                                    </ScInput>
-                                    <ul class="sc-vue-errors">
-                                        <li v-if="!$v.sendData.startDate.required">
-                                            이벤트 기간을 입력하세요.
-                                        </li>
-                                    </ul>
+                                    <div class="uk-grid-small uk-grid" data-uk-grid>
+                                        <div v-flatpickr="{ wrap: true }" class="uk-position-relative">
+                                            <a class="uk-form-icon uk-form-icon-flip" href="javascript:void(0)" data-uk-icon="icon: calendar" data-toggle/>
+                                            <a v-show="sendData.startDate !== ''" class="uk-form-icon uk-form-icon-flip" href="javascript:void(0)" data-uk-icon="icon: close" data-clear />
+                                            <input class="uk-input sc-vue-input flatpickr-input" v-model="sendData.startDate" placeholder="시작일" data-input />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="uk-width-1-1@s">
+                            <div class="uk-width-1-2 uk-margin-small-bottom">
+                                <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 0px; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>종료일</span></div>
+                                <div class="uk-grid-small uk-grid" data-uk-grid>
+                                    <div v-flatpickr="{ wrap: true }" class="uk-position-relative">
+                                        <a class="uk-form-icon uk-form-icon-flip" href="javascript:void(0)" data-uk-icon="icon: calendar" data-toggle/>
+                                        <a v-show="sendData.endDate !== ''" class="uk-form-icon uk-form-icon-flip" href="javascript:void(0)" data-uk-icon="icon: close" data-clear />
+                                        <input class="uk-input sc-vue-input flatpickr-input" v-model="sendData.endDate" placeholder="종료일" data-input />
+                                    </div>
+                                </div>
                             </div>
-
                             <div class="uk-width-1-2">
-                                <Select2 v-model="sendData.eventType" :options="eventOpts"
-                                         :settings="{ 'width': '100%', 'placeholder': '이벤트 종류' }"
-                                         :error-state="$v.sendData.eventType.$error"/>
+                                <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 0px; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>이벤트종류</span></div>
+                                <Select2 div-style="padding:0" v-model="sendData.eventType" :options="eventTypeOpts" :settings="{ 'width': '100%', 'placeholder': '이벤트 종류' }" :error-state="$v.sendData.eventType.$error"/>
                                 <ul class="sc-vue-errors">
                                     <li v-if="!$v.sendData.eventType.required">
                                         이벤트 종류를 선택하세요.
                                     </li>
                                 </ul>
+                            </div>
+                            <div class="uk-width-1-2">
+                                <div class="uk-margin uk-heading-hero" style="text-align: left; margin-left:5px; margin-bottom: 0px; color:rgba(0, 0, 0, 0.54);font-size: 0.75rem;"><span>커스텀</span></div>
+                                <Select2 div-style="padding:0" v-model="sendData.eventCustomType" :options="eventCustomTypeOpts" :settings="{ 'width': '100%', 'placeholder': '커스텀' }"/>
                             </div>
                             <div class="uk-width-1-2@s">
                                 <input id="switch-css" v-model="sendData.isOpen" type="checkbox"
@@ -124,6 +128,7 @@
     import ScInput from '~/components/Input'
     import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate"
     import Select2 from "@/components/Select2";
+    import Convert from "@/plugins/convertJson"
 
     if (process.client) {
         require('~/plugins/flatpickr');
@@ -145,10 +150,8 @@
         },
         data() {
             return {
-                eventOpts: [
-                    {id: 0, text: '팝업적용'},
-                    {id: 1, text: '팝업미적용'}
-                ],
+                eventTypeOpts: [],
+                eventCustomTypeOpts: [],
                 editBannerImage:"",
                 editMainImage:"",
                 bannerImageData: "",
@@ -156,7 +159,6 @@
                 cardFormClosed: true,
                 submitStatus: null,
                 sendData: {},
-                eventDate: '',
                 defaultForm: {
                     uid: null,
                     title: '',
@@ -166,25 +168,10 @@
                     startDate: '',
                     endDate: '',
                     eventType: '',
+                    eventCustomType: 'none',
                     isOpen: false,
                 }
             }
-        },
-        computed: {
-            dpRange() {
-                return {
-                    mode: "range",
-                    plugins: [confirmDatePlugin]
-                }
-            },
-        },
-        watch: {
-            'eventDate': function (newVal) {
-                if (newVal.includes("~")) {
-                    this.sendData.startDate = newVal.split('~')[0].trim();
-                    this.sendData.endDate = newVal.split('~')[1].trim();
-                }
-            },
         },
         validations: {
             sendData: {
@@ -209,9 +196,10 @@
             })
         },
         async beforeMount() {
-            this.sendData = this.defaultForm
+            let code = await this.$axios.$post(this.config.apiUrl + '/codes')
+            this.eventTypeOpts = Convert.convertJson(code.data.eventType, 'select')
+            this.eventCustomTypeOpts = Convert.convertJson(code.data.eventCustomType, 'select')
         },
-
         beforeDestroy() {
             this.$nuxt.$off('open-event-form')
             this.$nuxt.$off('close-event-form')
@@ -257,12 +245,11 @@
                 this.mainImageData = ""
                 if (props) {
                     this.sendData = JSON.parse(JSON.stringify(props.data))
-                    this.eventDate = this.sendData.startDate.substr(0, 10) + " ~ " + this.sendData.endDate.substr(0, 10)
-
+                    this.sendData.startDate = this.$moment(this.sendData.startDate).format('YYYY-MM-DD')
+                    this.sendData.endDate = this.$moment(this.sendData.endDate).format('YYYY-MM-DD')
                     this.bannerImageData = this.sendData.bannerImage
                     this.mainImageData = this.sendData.mainImage
                 } else {
-                    this.eventDate = ""
                     this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
                 }
                 this.cardFormClosed = true

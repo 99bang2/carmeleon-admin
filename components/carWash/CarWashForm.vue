@@ -86,14 +86,14 @@
                                         <Select2
                                                 v-model="sendData.carWashType"
                                                 :options="carWashTypeOpts"
-                                                :settings="{ 'width': '100%', 'placeholder': '세차유형' }"
-                                                :error-state="$v.sendData.carWashType.$error"
-                                        />
-                                        <ul class="sc-vue-errors">
-                                            <li v-if="!$v.sendData.carWashType.required">
-                                                세차유형을 선택하세요.
-                                            </li>
-                                        </ul>
+                                                :settings="{ 'width': '100%', 'placeholder': '세차유형' }"/>
+<!--                                                :error-state="$v.sendData.carWashType.$error"-->
+
+<!--                                        <ul class="sc-vue-errors">-->
+<!--                                            <li v-if="!$v.sendData.carWashType.required">-->
+<!--                                                세차유형을 선택하세요.-->
+<!--                                            </li>-->
+<!--                                        </ul>-->
                                     </div>
                                     <!-- 평일운영시간-->
                                     <div class="uk-width-1-1 uk-flex uk-flex-between">
@@ -136,9 +136,6 @@
                                         <ul class="sc-vue-errors">
                                             <li v-if="!$v.sendData.carWashChargeInfo.required">
                                                 세차요금정보를 입력하세요
-                                            </li>
-                                            <li v-if="!$v.sendData.carWashChargeInfo.integer">
-                                                올바른 형식이 아닙니다.
                                             </li>
                                         </ul>
                                     </div>

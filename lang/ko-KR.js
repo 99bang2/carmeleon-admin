@@ -16,6 +16,8 @@ export default {
 	'Tutorials':'튜토리얼 관리',
 	'Questions':'문의사항 관리',
 	'Settlements':'정산 관리',
+	'Popups':'팝업 관리',
+	'PointOrder':'포인트상품 주문',
     'Statistics':'통계',
     'ParkingSiteStatistic': '주차장 통계'
 }
