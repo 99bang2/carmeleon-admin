@@ -40,23 +40,22 @@
                                 </div>
                             </div>
                             <div id="barChart"></div>
-
                             <div class="uk-overflow-auto">
                                 <table class="uk-table uk-table-divider uk-table-striped uk-table-hover">
                                     <thead>
                                     <tr>
-                                        <th class="uk-table-shrink" v-for="item in this.dayArray" v-bind:key="item">{{ item }}</th>
+                                        <th v-for="(item,index) in dayArray" v-bind:key="'d'+index">{{ item }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <th class="uk-table-shrink" v-for="item in this.totalArray" v-bind:key="item">{{ item }}</th>
+                                        <th v-for="(item,index) in totalArray" v-bind:key="'t'+index">{{ item }}</th>
                                     </tr>
                                     <tr>
-                                        <th class="uk-table-shrink" v-for="item in this.totalArray1" v-bind:key="item">{{ item }}</th>
+                                        <th v-for="(item,index) in totalArray1" v-bind:key="'t1'+index">{{ item }}</th>
                                     </tr>
                                     <tr>
-                                        <th class="uk-table-shrink" v-for="item in this.totalArray2" v-bind:key="item">{{ item }}</th>
+                                        <th v-for="(item,index) in totalArray2" v-bind:key="'t2'+index">{{ item }}</th>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -94,24 +93,7 @@ export default {
             searchYear: '',
             yearOpts: [],
             searchMonth: '',
-            monthOpts: [],
-            // bb: {
-            //     barChart: {
-            //         data: {
-            //             columns: [],
-            //             type: "bar"
-            //         },
-            //         // axis: {
-            //         //     x: {
-            //         //         tick: {
-            //         //             format: function(index) {
-            //         //                 return this.dayArray[index]
-            //         //             },
-            //         //         }
-            //         //     }
-            //         // },
-            //     },
-            // }
+            monthOpts: []
         }),
         watch: {
             'searchParkingSite': function() {
@@ -150,14 +132,15 @@ export default {
                     response.data.forEach(function (value){
                         dayArray.push(value.selected_date)
                         totalArray.push(value.complete_count?value.complete_count:0)
-                        totalArray1.push(10)
-                        totalArray2.push(value.complete_count?value.complete_count+10:10)
+                        totalArray1.push(value.non_complete_count?value.non_complete_count:0)
+                        totalArray2.push(value.complete_count+value.non_complete_count?value.complete_count+value.non_complete_count:0)
                     })
                     this.dayArray = dayArray
                     this.dayArray.unshift('날짜')
                     this.totalArray = totalArray
                     this.totalArray1 = totalArray1
                     this.totalArray2 = totalArray2
+                    console.log(this.totalArray)
                     bb.generate({
                         data: {
                             columns: [
@@ -181,13 +164,17 @@ export default {
                 })
             },
             async loadSite(){
-                let params = {}
-                if(this.$auth.user.grade > 0){
-                    params.accountUid = this.$auth.user.uid
+                let params = {
+                    params:{
+                        accountUid:null
+                    }
                 }
-                await this.$axios.$get(this.config.apiUrl + '/parkings', params).then(response => {
+                if(this.$auth.user.grade > 0){
+                    params.params.accountUid = this.$auth.user.uid
+                }
+                await this.$axios.$get(this.config.apiUrl + '/parkingLists', params).then(response => {
                     if(response.data){
-                        this.siteOpts = response.data.rows.map(function (obj) {
+                        this.siteOpts = response.data.map(function (obj) {
                             return {
                                 id: obj.uid,
                                 text: obj.name

@@ -117,7 +117,7 @@
                                     <tr>
                                         <th class="jb-th-1"></th>
                                         <th style="background-color: rgba(102,187,106,0.5); font-weight: bold">환불 요청</th>
-                                        <th style="background-color: rgba(244,143,177,0.5); font-weight: bold">환불 완료</th>
+                                        <th style="background-color: rgba(230,122,177,0.5); font-weight: bold">환불 완료</th>
                                         <th style="background-color: rgba(244,143,177,0.5); font-weight: bold">환불 거절</th>
                                         <th style="background-color: rgba(130,177,255,0.5); font-weight: bold">종합</th>
                                     </tr>
@@ -354,14 +354,19 @@ export default {
                 })
             },
             async loadSite(){
-                let params = {}
-                if(this.$auth.user.grade > 0){
-                    params.accountUid = this.$auth.user.uid
+                let params = {
+                    params:{
+                        accountUid:null
+                    }
                 }
-                await this.$axios.$get(this.config.apiUrl + '/parkings', params).then(response => {
-                    //console.log(response)
+                if(this.$auth.user.grade > 0){
+                    params.params.accountUid = this.$auth.user.uid
+                }
+                //console.log(params)
+                await this.$axios.$get(this.config.apiUrl + '/parkingLists', params).then(response => {
+                    console.log(response)
                     if(response.data){
-                        this.siteOpts = response.data.rows.map(function (obj) {
+                        this.siteOpts = response.data.map(function (obj) {
                             return {
                                 id: obj.uid,
                                 text: obj.name
