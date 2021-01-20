@@ -400,9 +400,9 @@ export default {
                     ['결제일시', '주차장명', '연락처', '이메일', '차량번호', '구매상품', '입차예정시간', '정산금액', '수수료', '결제상태'],
                 ]
                 await this.$axios.$get(this.config.apiUrl + '/payLogs', searchData).then(response => {
-                    response.data.rows.forEach((key) => {
+                    response.data.rows.forEach((key, index) => {
                         let status = ''
-                        switch (response.data.rows.status) {
+                        switch (response.data.rows[index].status) {
                             case 10 :
                                 status = '결제완료'
                                 break
