@@ -58,26 +58,6 @@
                             <!-- -->
 
                             <div style="height: 10px"></div>
-
-                            <!-- 결산 table -->
-                            <div>
-                                <table class="uk-table">
-                                    <thead>
-                                    <tr>
-                                        <th class="jb-th-1">주차권</th>
-                                        <th style="background-color: rgba(102,187,106,0.5); font-weight: bold">사용 완료</th>
-                                        <th style="background-color: rgba(244,143,177,0.5); font-weight: bold">미사용</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>건수</td>
-                                        <td>{{settleData.usedCount}}건</td>
-                                        <td>{{settleData.unusedCount}}건</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
                             <!-- -->
                             <!-- 결산 table -->
                             <div>
@@ -105,37 +85,6 @@
                                         <td>{{settleData.refundCompleteCount}}건</td>
                                         <td>{{settleData.totalCount}}건</td>
                                         <td>{{settleData.feeCount}}건</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- -->
-                            <!-- 환불 관련 Table -->
-                            <div>
-                                <table class="uk-table">
-                                    <thead>
-                                    <tr>
-                                        <th class="jb-th-1"></th>
-                                        <th style="background-color: rgba(102,187,106,0.5); font-weight: bold">환불 요청</th>
-                                        <th style="background-color: rgba(230,122,177,0.5); font-weight: bold">환불 완료</th>
-                                        <th style="background-color: rgba(244,143,177,0.5); font-weight: bold">환불 거절</th>
-                                        <th style="background-color: rgba(130,177,255,0.5); font-weight: bold">종합</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>금액</td>
-                                        <td>{{settleData.refundPrice}}원</td>
-                                        <td>{{settleData.refundCompletePrice}}원</td>
-                                        <td>{{settleData.refundRejectPrice}}원</td>
-                                        <td>{{settleData.refundPrice+settleData.refundCompletePrice+settleData.refundRejectPrice}}원</td>
-                                    </tr>
-                                    <tr>
-                                        <td>건수</td>
-                                        <td>{{settleData.refundCount}}건</td>
-                                        <td>{{settleData.refundCompleteCount}}건</td>
-                                        <td>{{settleData.refundRejectCount}}건</td>
-                                        <td>{{settleData.refundCount+settleData.refundCompleteCount+settleData.refundRejectCount}}건</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -226,7 +175,7 @@ export default {
                     usedCount: 0,
                     unusedCount: 0,
                     expiredCount: 0
-                }
+                },
             }
         },
         computed: {
@@ -235,7 +184,7 @@ export default {
                     {
                         headerName: '결제일시',
                         field: 'createdAt',
-                        width: 200,
+                        suppressSizeToFit: false,
                         valueFormatter: obj => {
                             return this.$moment(obj.value).format('YYYY-MM-DD HH:mm')
                         }
@@ -268,22 +217,22 @@ export default {
                     {
                         headerName: '입차예정시간',
                         field: 'reserveTime',
-                        width: 195
+                        width: 100
                     },
                     {
                         headerName: '정산금액',
                         field: 'totalPrice',
-                        width: 190
+                        width: 100
                     },
                     {
                         headerName: '수수료',
                         field: 'fee',
-                        width: 190
+                        width: 100
                     },
                     {
                         headerName: '결제상태',
                         field: 'status',
-                        width: 190,
+                        width: 100,
                         cellRenderer: (obj) => {
                             if (obj.data) {
                                 let badge = ''
@@ -433,21 +382,52 @@ export default {
                 this.fetchData()
                 this.loadData()
             },
-            exportData() {
+            async exportData() {
+                let searchData = {
+                    params : {
+                        accountUid: null,
+                        searchData: {
+                            searchParkingSite: this.searchParkingSite,
+                            searchDate: this.searchData.searchDate,
+                            searchKeyword: this.searchKeyword
+                        }
+                    }
+                }
+                if(this.$auth.user.grade > 0){
+                    searchData.params.accountUid = this.$auth.user.uid
+                }
                 let aoaData = [
-                    ['결제일시', '주차장명', '예약자번호', '차량번호', '구매상품', '입차예정시간', '정산금액', '결제상태'],
+                    ['결제일시', '주차장명', '연락처', '이메일', '차량번호', '구매상품', '입차예정시간', '정산금액', '수수료', '결제상태'],
                 ]
-                this.gridOptions.api.forEachNode((node) => {
-                    aoaData.push([
-                        node.data.createdAt,
-                        node.data.parkingSite.name,
-                        node.data.phoneNumber,
-                        node.data.carNumber,
-                        node.data.discountTicket.ticketTitle,
-                        node.data.reserveTime,
-                        node.data.totalPrice,
-                        node.data.status
-                    ])
+                await this.$axios.$get(this.config.apiUrl + '/payLogs', searchData).then(response => {
+                    response.data.rows.forEach((key) => {
+                        let status = ''
+                        switch (response.data.rows.status) {
+                            case 10 :
+                                status = '결제완료'
+                                break
+                            case -10 :
+                                status = '결제실패'
+                                break
+                            case -20 :
+                                status = '결제취소'
+                                break
+                            default :
+                                status = '결제대기중'
+                        }
+                        aoaData.push([
+                            key.createdAt,
+                            key.parkingSite.name,
+                            key.phoneNumber,
+                            key.email,
+                            key.carNumber,
+                            key.discountTicket.ticketTitle,
+                            key.reserveTime,
+                            key.totalPrice,
+                            key.fee,
+                            status
+                        ])
+                    });
                 })
                 let sheet = XLSX.utils.aoa_to_sheet(aoaData)
                 // 엑셀 column width 설정 /////////////////////////////////////////////////////////////////////////////////
@@ -469,8 +449,8 @@ export default {
                 sheet["!cols"] = worksheetCols;
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
                 let wb = XLSX.utils.book_new()
-                XLSX.utils.book_append_sheet(wb, sheet, `(할인) 차량별 통계 목록`)
-                XLSX.writeFile(wb, `주차 정산관리 목록.xlsx`)
+                XLSX.utils.book_append_sheet(wb, sheet, `주차 정산관리 목록`)
+                XLSX.writeFile(wb, `${this.searchData.searchDate} 주차 정산관리 목록.xlsx`)
             },
             computeValue() {
                 this.completeSum = null
