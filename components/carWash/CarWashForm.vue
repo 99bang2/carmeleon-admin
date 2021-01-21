@@ -54,33 +54,20 @@
                                         </ul>
                                     </div>
                                     <div class="uk-width-1-2">
-                                        <ScInput v-model="sendData.closedDay"
-                                                 :error-state="$v.sendData.closedDay.$error"
-                                                 :validator="$v.sendData.closedDay">
+                                        <ScInput v-model="sendData.closedDay">
                                             <label>
                                                 휴무일
                                             </label>
                                             <span slot="icon" class="uk-form-icon uk-form-icon-flip"
                                                   data-uk-icon="icon: calendar"/>
                                         </ScInput>
-                                        <ul class="sc-vue-errors">
-                                            <li v-if="!$v.sendData.closedDay.required">
-                                                휴무일을 입력하세요
-                                            </li>
-                                        </ul>
                                     </div>
                                     <div class="uk-width-1-2">
                                         <Select2
                                                 v-model="sendData.carWashIndustry"
                                                 :options="industryOpts"
                                                 :settings="{ 'width': '100%', 'placeholder': '사업장 업종명' }"
-                                                :error-state="$v.sendData.carWashIndustry.$error"
                                         />
-                                        <ul class="sc-vue-errors">
-                                            <li v-if="!$v.sendData.carWashIndustry.required">
-                                                사업장 업종명을 선택하세요.
-                                            </li>
-                                        </ul>
                                     </div>
                                     <div class="uk-width-1-2">
                                         <Select2
@@ -124,20 +111,13 @@
                                     </div>
                                     <!-- 세차 요금정보 , 세차장 전화번호-->
                                     <div class="uk-width-1-2">
-                                        <ScInput v-model="sendData.carWashChargeInfo"
-                                                 :error-state="$v.sendData.carWashChargeInfo.$error"
-                                                 :validator="$v.sendData.carWashChargeInfo">
+                                        <ScInput v-model="sendData.carWashChargeInfo">
                                             <label>
                                                 세차요금정보
                                             </label>
                                             <span slot="icon" class="uk-form-icon uk-form-icon-flip"
                                                   data-uk-icon="icon: tag"/>
                                         </ScInput>
-                                        <ul class="sc-vue-errors">
-                                            <li v-if="!$v.sendData.carWashChargeInfo.required">
-                                                세차요금정보를 입력하세요
-                                            </li>
-                                        </ul>
                                     </div>
                                     <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.phoneNumber"
@@ -360,22 +340,22 @@
         },
         validations: {
             sendData: {
-                closedDay: {
-                    required
-                },
+                // closedDay: {
+                //     required
+                // },
                 carWashName: {
                     required
                 },
-                carWashIndustry: {
-                    required
-                },
-                carWashType: {
-                    required
-                },
-                carWashChargeInfo: {
-                    required,
-                    integer
-                },
+                // carWashIndustry: {
+                //     required
+                // },
+                // carWashType: {
+                //     required
+                // },
+                // carWashChargeInfo: {
+                //     required,
+                //     integer
+                // },
                 phoneNumber: {
                     required,
                 },
