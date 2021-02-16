@@ -1,6 +1,6 @@
 {
 	"development": {
-		"apiUrl": "http://192.168.0.134:3030/api/admin"
+		"apiUrl": "http://localhost:3030/api/admin"
 	},
 	"production": {
 		"apiUrl": "https://api.carmeleon.co.kr/api/admin"

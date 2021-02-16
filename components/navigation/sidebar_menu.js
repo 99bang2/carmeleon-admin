@@ -123,6 +123,13 @@ export const menuEntries = [
     },
     {
         id: uniqueID(),
+        title: "Bookings",
+        icon: "mdi mdi-calendar-clock",
+        page: "/bookings",
+        grade: ['0']
+    },
+    {
+        id: uniqueID(),
         title: "Settlements",
         icon: "mdi mdi-file-chart",
         page: "/settlements",

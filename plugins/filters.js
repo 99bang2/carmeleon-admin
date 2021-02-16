@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import numeral from 'numeral';
 import 'numeral/locales/fr';
+import moment from "moment";
 
 Vue.filter("toUppercase", function (value, format) {
 	if(!value) {
@@ -13,6 +14,12 @@ Vue.filter("capitalize", function (value, format) {
 	if (!value && value !== 0) return;
 	return value.replace(/\b\w/g, l => l.toUpperCase());
 });
+Vue.filter('formatTimeHour', function (value) {
+	if (!value) {
+		return
+	}
+	return moment(value).format('YYYY/MM/DD HH:mm');
+})
 
 Vue.filter("formatNumber", function (value, format) {
 	/*if(!value) {
@@ -65,7 +72,12 @@ Vue.filter("formatCurrency", function (value, currency) {
 	}
 	return numeral(value);
 });
-
+Vue.filter('addCommaToNumber', function (value) {
+	if (isNaN(value) || !value) {
+		return 0
+	}
+	return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+})
 Vue.filter('initials', function (value) {
 	if(!value) {
 		return
@@ -86,5 +98,24 @@ Vue.filter('hashCCnumber', function (value) {
 		return
 	}
 	return value.replace(/[^0-9]+/g, '').replace(/[0-9](?=([0-9]{4}))/g, '*');
+});
+
+Vue.filter('formatClientStatus', function(value){
+	switch (value) {
+			case 'wait' :
+				return '예약대기'
+			case 'accept':
+				return '사용가능'
+			case 'refunding' :
+				return '환불대기중'
+			case 'refunded' :
+				return '환불완료'
+			case 'cancel' :
+				return '예약취소'
+			case 'expired':
+				return '기간만료'
+			case 'used':
+				return '사용완료'
+	}
 });
 
