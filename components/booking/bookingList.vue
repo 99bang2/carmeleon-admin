@@ -237,9 +237,11 @@ export default {
         this.$nuxt.$on('reset-booking-list', () => {
             vm.resetSelection()
         })
-        this.$nuxt.$on('fetch-booking-list', (uid) => {
+        this.$nuxt.$on('fetch-booking-list', (uid, data) => {
             this.resUid = uid
             vm.fetchData()
+
+
         })
         this.defaultColDef.sortable = false
     },
@@ -266,7 +268,6 @@ export default {
                             limit: params.endRow - params.startRow,
                             order: order
                         }
-                        console.log(parameters)
                         let searchData = {
                             params:{
                                 searchData: {

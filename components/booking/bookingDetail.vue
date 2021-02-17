@@ -57,7 +57,7 @@
                             <h6 class="uk-heading-bullet uk-margin-top">결제일</h6>
                             <div class="booking-block__content">{{defaultDetail.createdAt | formatTimeHour}}</div>
                         </div>
-                        <div class="booking-block uk-width-1-2">
+                        <div class="booking-block uk-width-1-2"  v-if="defaultDetail.clientStatus === 'refunding'">
                             <h6 class="uk-heading-bullet uk-margin-top">환불사유</h6>
                             <div class="booking-block__content">{{defaultDetail.cancelReason}}</div>
                         </div>
@@ -67,11 +67,11 @@
                         </div>
                         <div class="booking-block uk-width-1-2" v-if="defaultDetail.clientStatus === 'refunded'">
                             <h6 class="uk-heading-bullet uk-margin-top">환불완료시간</h6>
-                            <div class="booking-block__content">{{defaultDetail.cancelRequestTime | formatTimeHour}}</div>
+                            <div class="booking-block__content">{{defaultDetail.cancelCompleteTime | formatTimeHour}}</div>
                         </div>
                     </div>
                     <div class="uk-margin-top uk-text-center">
-                        <button class="sc-button sc-button-secondary" v-if="defaultDetail.clientStatus === 'cancel'||'used'||'expired' " @click="cancelPayment(defaultDetail)">결제취소</button>
+                        <button class="sc-button sc-button-secondary" v-if="defaultDetail.clientStatus === 'accept'||defaultDetail.clientStatus ==='wait'" @click="cancelPayment(defaultDetail)">결제취소</button>
                         <button v-if="defaultDetail.clientStatus === 'refunding'" class="sc-button sc-button-primary" @click="refundProcess(defaultDetail)">환불승인</button>
                         <button v-if="defaultDetail.clientStatus === 'refunding'" class="sc-button sc-button-danger" @click="refundReject(defaultDetail)">환불거절</button>
                     </div>
@@ -91,10 +91,13 @@ export default {
     },
     data() {
         return {
+            submitStatus:'',
             cardFormClosed: true,
             reason: null,
             sendData: {},
-            defaultDetail: {},
+            defaultDetail: {
+                clientStatus:''
+            },
         }
     },
     created() {
@@ -114,7 +117,6 @@ export default {
         async openDetail(props){
             if (props) {
                 this.defaultDetail = JSON.parse(JSON.stringify(props.data))
-                let data = this.defaultDetail
             }
             this.cardFormClosed = true
             setTimeout(() => {
@@ -133,13 +135,19 @@ export default {
                         uids: data.uid,
                         paymentsData: data.paymentsData,
                         cancelStatus: data.cancelStatus,
-                        cancelRequestTime: data.cancelRequestTime
+                        cancelRequestTime: data.cancelRequestTime,
+                        clientStatus: data.clientStatus
                     }).then(res => {
                         if (res.data.result){
                             this.callNotification(`정상적으로 취소되었습니다.`)
                             this.$nuxt.$emit('fetch-booking-list')
+                            this.defaultDetail.clientStatus = 'cancel'
                         }
-                    }).then(() => resolve())
+                    }).then(() => resolve()).finally(()=>{
+                        this.cardFormClosed = true
+                        setTimeout(() => {
+                            this.cardFormClosed = false
+                        }, 100)})
                 })
             })
         },
@@ -151,13 +159,19 @@ export default {
                         uids: data.uid,
                         paymentsData: data.paymentsData,
                         cancelStatus: data.cancelStatus,
-                        cancelRequestTime: data.cancelRequestTime
+                        cancelRequestTime: data.cancelRequestTime,
+                        clientStatus: data.clientStatus
                     }).then(res => {
                         if (res.data.result){
                             this.callNotification(`정상적으로 취소되었습니다.`)
                             this.$nuxt.$emit('fetch-booking-list')
+                            this.defaultDetail.clientStatus = 'refunded'
                         }
-                    }).then(() => resolve())
+                    }).then(() => resolve()).finally(()=>{
+                        this.cardFormClosed = true
+                        setTimeout(() => {
+                            this.cardFormClosed = false
+                        }, 100)})
                 })
             })
         },
@@ -175,7 +189,11 @@ export default {
                             this.callNotification(`정상적으로 거절되었습니다.`)
                             this.$nuxt.$emit('fetch-booking-list')
                         }
-                    }).then(() => resolve())
+                    }).then(() => resolve()).finally(()=>{
+                        this.cardFormClosed = true
+                        setTimeout(() => {
+                            this.cardFormClosed = false
+                        }, 100)})
                 })
             })
         }
