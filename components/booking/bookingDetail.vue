@@ -141,7 +141,7 @@ export default {
                         if (res.data.result){
                             this.callNotification(`정상적으로 취소되었습니다.`)
                             this.$nuxt.$emit('fetch-booking-list')
-                            this.defaultDetail.clientStatus = 'cancel'
+                            this.defaultDetail={...this.defaultDetail, ...res.data.data}
                         }
                     }).then(() => resolve()).finally(()=>{
                         this.cardFormClosed = true
@@ -165,7 +165,7 @@ export default {
                         if (res.data.result){
                             this.callNotification(`정상적으로 취소되었습니다.`)
                             this.$nuxt.$emit('fetch-booking-list')
-                            this.defaultDetail.clientStatus = 'refunded'
+                            this.defaultDetail={...this.defaultDetail, ...res.data.data}
                         }
                     }).then(() => resolve()).finally(()=>{
                         this.cardFormClosed = true
