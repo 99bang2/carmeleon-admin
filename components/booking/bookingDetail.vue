@@ -71,7 +71,7 @@
                         </div>
                     </div>
                     <div class="uk-margin-top uk-text-center">
-                        <button class="sc-button sc-button-secondary" v-if="defaultDetail.clientStatus === 'accept'||defaultDetail.clientStatus ==='wait'" @click="cancelPayment(defaultDetail)">결제취소</button>
+<!--                        <button class="sc-button sc-button-secondary" v-if="defaultDetail.clientStatus === 'accept'||defaultDetail.clientStatus ==='wait'" @click="cancelPayment(defaultDetail)">결제취소</button>-->
                         <button v-if="defaultDetail.clientStatus === 'refunding'" class="sc-button sc-button-primary" @click="refundProcess(defaultDetail)">환불승인</button>
                         <button v-if="defaultDetail.clientStatus === 'refunding'" class="sc-button sc-button-danger" @click="refundReject(defaultDetail)">환불거절</button>
                     </div>

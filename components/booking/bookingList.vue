@@ -139,14 +139,14 @@ export default {
                                     break
                                 case 'refunding' :
                                     badge = 'md-bg-red-300'
-                                    status = '환불대기중'
+                                    status = '환불접수'
                                     break
                                 case 'refunded' :
-                                    badge = 'md-bg-red-500'
+                                    badge = 'md-bg-blue-500'
                                     status = '환불완료'
                                     break
                                 case 'cancel' :
-                                    badge = 'md-bg-red-400'
+                                    badge = 'md-bg-red-500'
                                     status = '예약취소'
                                     break
                                 case 'expired':
@@ -157,6 +157,9 @@ export default {
                                     badge = 'md-bg-gray-500'
                                     status = '사용완료'
                                     break
+                                default:
+                                    badge = 'md-bg-gray-500'
+                                    status = '알수없음'
                             }
                             return `<span class="uk-badge ${badge}">${status}</span>`
                         }
