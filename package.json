@@ -14,6 +14,7 @@
 	"dependencies": {
 		"@babel/plugin-syntax-dynamic-import": "^7.8.3",
 		"@babel/plugin-transform-spread": "^7.8.3",
+        "@babel/preset-env": "7.12.16",
 		"@mdi/font": "^4.7.95",
 		"@nuxtjs/auth": "^4.8.5",
 		"@nuxtjs/axios": "^5.9.3",
@@ -50,7 +51,7 @@
 		"node-sass": "^4.13.0",
 		"node-waves": "^0.7.6",
 		"numeral": "^2.0.6",
-		"nuxt": "^2.11.0",
+		"nuxt": "2.15.0",
 		"nuxt-i18n": "^6.4.1",
 		"pretty-checkbox-vue": "^1.1.9",
 		"push.js": "^1.0.12",
