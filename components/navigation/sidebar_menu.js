@@ -105,6 +105,12 @@ export const menuEntries = [
                 title: "Questions",
                 icon: "mdi mdi-comment-question-outline",
                 page: "/operations/questions"
+            },
+            {
+                id: uniqueID(),
+                title: "Popups",
+                icon: "mdi mdi-checkbox-multiple-blank-outline",
+                page: "/operations/popups"
             }
             // {
             //     id: uniqueID(),
