@@ -378,7 +378,7 @@
             this.sendData = this.defaultForm
             let code = await this.$axios.$post(this.config.apiUrl + '/codes')
             this.industryOpts = Convert.convertJson(code.data.industryOpts, 'select')
-            this.carWashTypeOpts = Convert.convertJson(code.data.carWashTypeOpts, 'select')
+            this.carWashTypeOpts = Convert.convertJson(code.data.carWashTypeOpts, 'carWash')
             this.carWashTypeTag = Convert.convertJson(code.data.carWashTypeTag)
             this.carWashTimeTag = Convert.convertJson(code.data.carWashTimeTag)
         },
@@ -578,7 +578,6 @@
                         await this.$objectStorage.deleteObject(key)
                     }
                 }
-
                 this.$axios.$put(this.config.apiUrl + '/carWashes/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('수정하였습니다.')
                     this.$nuxt.$emit('fetch-carWash-list', res.data.uid)

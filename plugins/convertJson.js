@@ -7,6 +7,9 @@ Convert.convertJson = function (json, type) {
 		if (type === "select") {
 			data.id = obj[0]
 			data.text = obj[1]
+		}else if(type === "carWash"){
+			data.id = obj[1]
+			data.text= obj[1]
 		} else {
 			data.value = obj[0]
 			data.name = obj[1]
