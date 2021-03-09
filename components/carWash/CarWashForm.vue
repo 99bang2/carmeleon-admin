@@ -203,9 +203,9 @@
                                     </div>
                                     <div class="uk-width-1-2">
                                         <ul class="uk-list">
-                                            <h6>옵션태그</h6>
+                                            <h6>시간옵션태그</h6>
                                             <li v-for="tag in carWashTimeTag" :key="tag.id">
-                                                <PrettyCheck v-model="sendData.carWashTypeTag" :value="tag.value"
+                                                <PrettyCheck v-model="sendData.carWashTimeTag" :value="tag.value"
                                                              class="p-icon">
                                                     <i slot="extra" class="icon mdi mdi-check"></i>
                                                     {{tag.name}}
@@ -377,7 +377,7 @@
         async beforeMount() {
             this.sendData = this.defaultForm
             let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-            this.industryOpts = Convert.convertJson(code.data.industryOpts, 'select')
+            this.industryOpts = Convert.convertJson(code.data.industryOpts, 'carWash')
             this.carWashTypeOpts = Convert.convertJson(code.data.carWashTypeOpts, 'carWash')
             this.carWashTypeTag = Convert.convertJson(code.data.carWashTypeTag)
             this.carWashTimeTag = Convert.convertJson(code.data.carWashTimeTag)
