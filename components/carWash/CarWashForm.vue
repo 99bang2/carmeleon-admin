@@ -460,6 +460,8 @@
                 if (props) {
                     this.sendData = JSON.parse(JSON.stringify(props.data))
                     this.file_list = this.sendData.picture || []
+                    this.sendData.carWashTypeTag = this.sendData.carWashTypeTag || []
+                    this.sendData.carWashTimeTag = this.sendData.carWashTimeTag || []
                     if (this.sendData.picture !== null) {
                         for (let i = 0; i < this.sendData.picture.length; i++) {
                             let img = {}
