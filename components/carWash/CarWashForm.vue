@@ -301,6 +301,8 @@
                 deleteArray: [],
                 editArray: [],
                 searchAddr: [],
+                carWashTypeTag: [],
+                carWashTimeTag: [],
                 defaultForm: {
                     uid: '',
                     carWashName: '', //사업장명
