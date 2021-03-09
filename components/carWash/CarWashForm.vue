@@ -192,8 +192,8 @@
                                     <div class="uk-width-1-2">
                                         <ul class="uk-list">
                                             <h6>옵션태그</h6>
-                                            <li v-for="tag in carWashTypeTag" :key="tag.id">
-                                                <PrettyCheck v-model="sendData.carWashTypeTag" :value="tag.value"
+                                            <li v-for="tag in typeTag" :key="tag.id">
+                                                <PrettyCheck v-model="sendData.typeTag" :value="tag.value"
                                                              class="p-icon">
                                                     <i slot="extra" class="icon mdi mdi-check"></i>
                                                     {{tag.name}}
@@ -204,8 +204,8 @@
                                     <div class="uk-width-1-2">
                                         <ul class="uk-list">
                                             <h6>시간옵션태그</h6>
-                                            <li v-for="tag in carWashTimeTag" :key="tag.id">
-                                                <PrettyCheck v-model="sendData.carWashTimeTag" :value="tag.value"
+                                            <li v-for="tag in timeTag" :key="tag.id">
+                                                <PrettyCheck v-model="sendData.timeTag" :value="tag.value"
                                                              class="p-icon">
                                                     <i slot="extra" class="icon mdi mdi-check"></i>
                                                     {{tag.name}}
@@ -301,8 +301,6 @@
                 deleteArray: [],
                 editArray: [],
                 searchAddr: [],
-                carWashTypeTag: [],
-                carWashTimeTag: [],
                 defaultForm: {
                     uid: '',
                     carWashName: '', //사업장명
@@ -323,8 +321,8 @@
                     picture: [],
                     industryOpts: [],
                     carWashTypeOpts: [],
-                    carWashTypeTag: [],
-                    carWashTimeTag: [],
+                    typeTag: [],
+                    timeTag: [],
                     isRate: false,
                     isRecommend:false
                 }
@@ -381,8 +379,8 @@
             let code = await this.$axios.$post(this.config.apiUrl + '/codes')
             this.industryOpts = Convert.convertJson(code.data.industryOpts, 'carWash')
             this.carWashTypeOpts = Convert.convertJson(code.data.carWashTypeOpts, 'carWash')
-            this.carWashTypeTag = Convert.convertJson(code.data.carWashTypeTag)
-            this.carWashTimeTag = Convert.convertJson(code.data.carWashTimeTag)
+            this.typeTag = Convert.convertJson(code.data.carWashTypeTag)
+            this.timeTag = Convert.convertJson(code.data.carWashTimeTag)
         },
         beforeDestroy() {
             this.$nuxt.$off('open-carWash-form')
@@ -460,8 +458,8 @@
                 if (props) {
                     this.sendData = JSON.parse(JSON.stringify(props.data))
                     this.file_list = this.sendData.picture || []
-                    this.sendData.carWashTypeTag = this.sendData.carWashTypeTag || []
-                    this.sendData.carWashTimeTag = this.sendData.carWashTimeTag || []
+                    this.sendData.typeTag = this.sendData.typeTag || []
+                    this.sendData.timeTag = this.sendData.timeTag || []
                     if (this.sendData.picture !== null) {
                         for (let i = 0; i < this.sendData.picture.length; i++) {
                             let img = {}
