@@ -158,7 +158,7 @@ npm <template>
                         field: 'parkingLot',
                         width: 120,
                         cellRenderer: (obj) => {
-                            return obj.value + ' 대'
+                            return obj.value ? obj.value : 0 + ' 대'
                         }
                     },
                     {

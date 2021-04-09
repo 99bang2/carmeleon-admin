@@ -35,7 +35,7 @@
                         </div>
                         <div class="payLog-block uk-width-1-3">
                             <h5 class="uk-heading-bullet uk-margin-top">연락처</h5>
-                            <div class="payLog-block__content">{{defaultDetail.phoneNumber}}</div>
+                            <div class="payLog-block__content">{{defaultDetail.phoneNumber ? defaultDetail.phoneNumber : '-'}}</div>
                         </div>
                         <div class="payLog-block uk-width-1-3">
                             <h5 class="uk-heading-bullet uk-margin-top">예약시간</h5>
@@ -47,8 +47,10 @@
                         </div>
                         <div class="payLog-block uk-width-1-2">
                             <h5 class="uk-heading-bullet uk-margin-top">결제상태</h5>
-                            <div class="payLog-block__content">{{defaultDetail.statusName}} <button v-if="defaultDetail.status === 10 && defaultDetail.cancelStatus < 0" @click="cancelPayment(defaultDetail.uid)">결제 취소</button></div>
-
+                            <div class="payLog-block__content">
+                                {{defaultDetail.statusName}}
+                                <button v-if="defaultDetail.status === 10 && defaultDetail.cancelStatus < 0" @click="cancelPayment(defaultDetail.uid)">결제 취소</button>
+                            </div>
                         </div>
                         <div class="payLog-block uk-width-1-2">
                             <h5 class="uk-heading-bullet uk-margin-top">상품가격</h5>
@@ -82,12 +84,15 @@
                             <h5 class="uk-heading-bullet uk-margin-top">이용여부</h5>
                             <div class="payLog-block__content">{{defaultDetail.activeStatusName}}</div>
                         </div>
-                        <div v-if="defaultDetail.cancelStatus >= 0"  class="payLog-block uk-width-1-2">
+                        <div v-if="defaultDetail.cancelStatus >= 0" class="payLog-block uk-width-1-2">
                             <h5 class="uk-heading-bullet uk-margin-top">환불상태</h5>
-                            <div class="payLog-block__content">{{defaultDetail.cancelStatusName}} <button v-if="defaultDetail.cancelStatus === 0 && defaultDetail.status !== -20" @click="refundProcess(defaultDetail.uid)">승인</button> <button v-if="defaultDetail.cancelStatus === 0 && defaultDetail.status !== -20" @click="refundReject(defaultDetail.uid)">거절</button></div>
-
+                            <div class="payLog-block__content">
+                                {{defaultDetail.cancelStatusName}}
+                                <button v-if="defaultDetail.cancelStatus === 0 && defaultDetail.status !== -20" @click="refundProcess(defaultDetail.uid)">승인</button>
+                                <button v-if="defaultDetail.cancelStatus === 0 && defaultDetail.status !== -20" @click="refundReject(defaultDetail.uid)">거절</button>
+                            </div>
                         </div>
-                        <div v-if="defaultDetail.cancelStatus >= 0"  class="payLog-block uk-width-1-2">
+                        <div v-if="defaultDetail.cancelStatus >= 0" class="payLog-block uk-width-1-2">
                             <h5 class="uk-heading-bullet uk-margin-top">환불이유</h5>
                             <div class="payLog-block__content">{{defaultDetail.cancelReason}}</div>
                         </div>
@@ -235,7 +240,7 @@ export default {
         cancelPayment(uid) {
             UIkit.modal.prompt(`결제 취소 사유를 작성해주세요`, this.reason).then((cancelReason) => {
                 new Promise(resolve => {
-                    this.$axios.$post(this.config.apiUrl + '/refundApprove',{
+                    this.$axios.$post(this.config.apiUrl + '/refundApprove', {
                         reason: cancelReason,
                         uids: uid
                     }).then(res => {
@@ -250,9 +255,9 @@ export default {
         refundProcess(uid) {
             UIkit.modal.confirm(`승인 하시겠습니까?`, this.reason).then((cancelReason) => {
                 new Promise(resolve => {
-                    this.$axios.$post(this.config.apiUrl + '/refundApprove',{
-                        reason: this.defaultDetail.cancelReason,
-                        uids: uid
+                    this.$axios.$post(this.config.apiUrl + '/refundApprove', {
+                        reason  : this.defaultDetail.cancelReason,
+                        uids    : uid
                     }).then(res => {
                         if (res.data.result){
                             this.callNotification(`정상적으로 취소되었습니다.`)
@@ -265,9 +270,9 @@ export default {
         refundReject(uid) {
             UIkit.modal.confirm(`거절 하시겠습니까?`, this.reason).then((cancelReason) => {
                 new Promise(resolve => {
-                    this.$axios.$post(this.config.apiUrl + '/refundReject',{
-                        reason: this.defaultDetail.cancelReason,
-                        uids: uid
+                    this.$axios.$post(this.config.apiUrl + '/refundReject', {
+                        reason  : this.defaultDetail.cancelReason,
+                        uids    : uid
                     }).then(res => {
                         if (res.data.result){
                             this.callNotification(`정상적으로 거절되었습니다.`)

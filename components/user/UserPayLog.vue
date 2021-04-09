@@ -196,7 +196,7 @@
                         selectedUids.forEach(uid => {
                             promiseList.push(
                                 new Promise(resolve => {
-                                    this.$axios.$post(this.config.apiUrl + '/pg',{
+                                    this.$axios.$post(this.config.apiUrl + '/pg', {
                                         reason: cancelReason,
                                         uids: uid
                                     }).then(res => {

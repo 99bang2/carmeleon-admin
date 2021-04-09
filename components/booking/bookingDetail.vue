@@ -15,7 +15,7 @@
                         </ScCardActions>
                     </div>
                 </ScCardHeader>
-                <ScCardBody style="padding-top:0px;">
+                <ScCardBody style="padding-top:0;">
                     <div class="booking uk-grid">
                         <div class="booking-block uk-width-1-1">
                             <h6 class="uk-heading-bullet uk-margin-top">주문번호</h6>
@@ -57,7 +57,7 @@
                             <h6 class="uk-heading-bullet uk-margin-top">결제일</h6>
                             <div class="booking-block__content">{{defaultDetail.createdAt | formatTimeHour}}</div>
                         </div>
-                        <div class="booking-block uk-width-1-2"  v-if="defaultDetail.clientStatus === 'refunding'">
+                        <div class="booking-block uk-width-1-2" v-if="defaultDetail.clientStatus === 'refunding'">
                             <h6 class="uk-heading-bullet uk-margin-top">환불사유</h6>
                             <div class="booking-block__content">{{defaultDetail.cancelReason}}</div>
                         </div>
@@ -130,7 +130,7 @@ export default {
         cancelPayment(data) {
             UIkit.modal.prompt(`결제 취소 사유를 작성해주세요`, this.reason).then((cancelReason) => {
                 new Promise(resolve => {
-                    this.$axios.$post(this.config.apiUrl + '/bookingRefundApprove',{
+                    this.$axios.$post(this.config.apiUrl + '/bookingRefundApprove', {
                         reason: cancelReason,
                         uids: data.uid,
                         paymentsData: data.paymentsData,
@@ -154,7 +154,7 @@ export default {
         refundProcess(data) {
             UIkit.modal.confirm(`승인 하시겠습니까?`, this.reason).then(() => {
                 new Promise(resolve => {
-                    this.$axios.$post(this.config.apiUrl + '/bookingRefundApprove',{
+                    this.$axios.$post(this.config.apiUrl + '/bookingRefundApprove', {
                         reason: data.cancelReason,
                         uids: data.uid,
                         paymentsData: data.paymentsData,
@@ -178,7 +178,7 @@ export default {
         refundReject(data) {
             UIkit.modal.confirm(`거절 하시겠습니까?`, this.reason).then(() => {
                 new Promise(resolve => {
-                    this.$axios.$post(this.config.apiUrl + '/bookingRefundReject',{
+                    this.$axios.$post(this.config.apiUrl + '/bookingRefundReject', {
                         reason: this.defaultDetail.cancelReason,
                         uids: uid,
                         paymentsData: data.paymentsData,
