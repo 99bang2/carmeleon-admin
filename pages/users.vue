@@ -20,28 +20,28 @@
 </template>
 
 <script>
-    import UserList from "@/components/user/UserList"
-    import UserDetail from "@/components/user/UserDetail"
-    import UserCard from "@/components/user/UserCard"
-    import UserCar from "@/components/user/UserCar"
-    import UserPointLog from "@/components/user/UserPointLog"
-    import UserPayLog from "@/components/user/UserPayLog"
-    import UserFavorite from "@/components/user/UserFavorite"
-    import UserRating from "@/components/user/UserRating"
+import UserList     from "@/components/user/UserList"
+import UserDetail   from "@/components/user/UserDetail"
+import UserCard     from "@/components/user/UserCard"
+import UserCar      from "@/components/user/UserCar"
+import UserPointLog from "@/components/user/UserPointLog"
+import UserPayLog   from "@/components/user/UserPayLog"
+import UserFavorite from "@/components/user/UserFavorite"
+import UserRating   from "@/components/user/UserRating"
 
-    export default {
-        middleware: ['auth'],
-        components: {
-            UserList,
-            UserDetail,
-            UserCard,
-            UserCar,
-            UserPointLog,
-            UserPayLog,
-            UserFavorite,
-            UserRating
-        }
+export default {
+    middleware: ['auth'],
+    components: {
+        UserList,
+        UserDetail,
+        UserCard,
+        UserCar,
+        UserPointLog,
+        UserPayLog,
+        UserFavorite,
+        UserRating
     }
+}
 </script>
 
 <style scoped>

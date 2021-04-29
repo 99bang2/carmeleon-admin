@@ -23,7 +23,6 @@
                                  v-model="searchStatus"
                                  :options="statusOpts"
                                  :settings="{ 'width': '100%', 'placeholder': '상태' }"
-                                 disabled
                         />
                     </div>
                     <div class="uk-width-1-5@s">
@@ -85,9 +84,8 @@ export default {
             searchData: {
                 searchDate: `${this.$moment(new Date()).add(-7, 'days').format('YYYY-MM-DD')} ~ ${this.$moment(new Date()).format('YYYY-MM-DD')}`
             },
-            searchStatus: '',
+            searchStatus: 'all',
             searchKeyword: '',
-            searchParkingSite: '',
             statusOpt: [],
             resUid: 0
         }
@@ -98,7 +96,7 @@ export default {
                 {
                     headerName: '주문번호',
                     field: 'payOid',
-                    suppressSizeToFit: false,
+                    suppressSizeToFit: true,
                 },
                 {
                     headerName: '차량번호',
@@ -108,7 +106,14 @@ export default {
                 {
                     headerName: '연락처',
                     field: 'phoneNumber',
-                    width: 120
+                    width: 120,
+                    cellRenderer: (obj) => {
+                        if (obj && obj.value) {
+                            return obj.value
+                        } else {
+                            return '-'
+                        }
+                    }
                 },
                 {
                     headerName: '예약시간',
@@ -117,14 +122,13 @@ export default {
                 },
                 {
                     headerName: '결제수단',
-                    field: 'cardType',
-                    width: 80,
+                    field: 'payType',
+                    width: 100,
                     cellRenderer: (obj) => {
                         if(obj){
                             switch (obj.value){
                                 case "card": return "카드"
-                                case "inApp": return "인앱"
-                                case "cash": return "현금"
+                                case "coopPayment": return "모바일상품권"
                             }
                             return "카드"
                         }
@@ -207,7 +211,7 @@ export default {
         statusOpts() {
             return [
                 {
-                    id: " ",
+                    id: "all",
                     text: "전체"
                 },
                 {
@@ -283,8 +287,7 @@ export default {
                                 searchData: {
                                     searchDate: context.searchData.searchDate,
                                     searchKeyword: context.searchKeyword,
-                                    searchStatus: context.searchStatus,
-                                    searchParkingSite: ''
+                                    searchStatus: context.searchStatus
                                 },
                                 offset: parameters.offset,
                                 limit: parameters.limit,

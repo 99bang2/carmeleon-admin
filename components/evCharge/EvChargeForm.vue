@@ -421,6 +421,7 @@
                         let url = new URL(this.sendData.picture[index])
                         let key = url.pathname.replace('/carmeleon/', '')
                         await this.$objectStorage.deleteObject(key)
+                        await this.$objectStorage.deleteOriginal(key, 'evCharge')
                     }
                 }
                 this.$axios.$delete(this.config.apiUrl + '/evChargeStation/' + this.sendData.uid, this.sendData).then(async res => {
@@ -505,6 +506,7 @@
                         let url = new URL(this.deleteArray[index])
                         let key = url.pathname.replace('/carmeleon/', '')
                         await this.$objectStorage.deleteObject(key)
+                        await this.$objectStorage.deleteOriginal(key, 'evCharge')
                     }
                 }
 

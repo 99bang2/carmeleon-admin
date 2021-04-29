@@ -3,7 +3,7 @@
 	"title": "Base Admin",
 	"version": "0.1.0",
 	"description": "Base Service Admin",
-	"author": "Rocketlaunch",
+	"author": "Mobilx",
 	"private": true,
 	"scripts": {
 		"dev": "nuxt",
@@ -14,7 +14,7 @@
 	"dependencies": {
 		"@babel/plugin-syntax-dynamic-import": "^7.8.3",
 		"@babel/plugin-transform-spread": "^7.8.3",
-        "@babel/preset-env": "7.12.16",
+		"@babel/preset-env": "7.12.16",
 		"@mdi/font": "^4.7.95",
 		"@nuxtjs/auth": "^4.8.5",
 		"@nuxtjs/axios": "^5.9.3",

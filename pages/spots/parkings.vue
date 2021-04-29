@@ -13,16 +13,16 @@
     </div>
 </template>
 <script>
-    import ParkingList from "@/components/parking/ParkingList"
-    import ParkingForm from "@/components/parking/ParkingForm"
+import ParkingList from "@/components/parking/ParkingList"
+import ParkingForm from "@/components/parking/ParkingForm"
 
-    export default {
-        middleware: ['auth'],
-        components: {
-            ParkingList,
-            ParkingForm
-        }
+export default {
+    middleware: ['auth'],
+    components: {
+        ParkingList,
+        ParkingForm
     }
+}
 </script>
 
 <style scoped>

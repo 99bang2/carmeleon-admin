@@ -14,16 +14,16 @@
 </template>
 
 <script>
-    import CarWashList from "@/components/carWash/CarWashList"
-    import CarWashForm from "@/components/carWash/CarWashForm"
+import CarWashList from "@/components/carWash/CarWashList"
+import CarWashForm from "@/components/carWash/CarWashForm"
 
-    export default {
-        middleware: ['auth'],
-        components: {
-            CarWashList,
-            CarWashForm
-        }
+export default {
+    middleware: ['auth'],
+    components: {
+        CarWashList,
+        CarWashForm
     }
+}
 </script>
 
 <style scoped>

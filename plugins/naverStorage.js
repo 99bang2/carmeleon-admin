@@ -1,18 +1,15 @@
 import Vue from 'vue'
 
-const storage_url = 'https://kr.object.ncloudstorage.com'
-const region = 'kr-standard'
-const access_key = 'oButzYTuNwaIrxsTmx0W'
-const secret_key = '5vxKOkyvMHmboApyCzAmHLYYQnjr6JzjdNHFweyn'
-const bucket_name = 'carmeleon'
-const root_album_name = 'admin'
+const storage_url       = 'https://kr.object.ncloudstorage.com'
+const region            = 'kr-standard'
+const access_key        = 'oButzYTuNwaIrxsTmx0W'
+const secret_key        = '5vxKOkyvMHmboApyCzAmHLYYQnjr6JzjdNHFweyn'
+const bucket_name       = 'carmeleon'
+const root_album_name   = 'admin'
 
+const AWS       = require('aws-sdk')
+const endpoint  = new AWS.Endpoint(storage_url)
 
-const moment = require('moment')
-
-
-const AWS = require('aws-sdk')
-const endpoint = new AWS.Endpoint(storage_url)
 const S3 = new AWS.S3({
     endpoint,
     region,
@@ -22,13 +19,11 @@ const S3 = new AWS.S3({
     }
 })
 
-
 function getExtensionFileName(filename) {
     let _fileLen = filename.length;
     let _lastDot = filename.lastIndexOf('.');
     return filename.substring(_lastDot, _fileLen).toLowerCase();
 }
-
 
 const objectStorageApi = {
     async uploadFile(spotType, file, prefix) {
@@ -46,8 +41,6 @@ const objectStorageApi = {
             let pms = await S3.putObject(param).promise()
             return storage_url + '/' + bucket_name + pms.$response.request.httpRequest.path
         } catch (err) {
-            console.log('upload file error')
-            console.log(err)
             return false
         }
 
@@ -61,11 +54,22 @@ const objectStorageApi = {
         try {
             return await S3.deleteObject(param).promise()
         } catch (err) {
-            console.log('delete object error')
-            console.log(err)
             return false
         }
     },
+    async deleteOriginal(key, prefix) {
+        let split = key.split('/')
+        let filename = split.pop().replace('_watermarked.', '.')
+        let param = {
+            Bucket: bucket_name,
+            Key: 'admin/' + prefix + '/' + filename
+        }
+        try {
+            return await S3.deleteObject(param).promise()
+        } catch (err) {
+            return false
+        }
+    }
 }
 
 const objectStoragePlugin = {

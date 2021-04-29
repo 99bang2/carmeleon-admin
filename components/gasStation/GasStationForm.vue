@@ -7,7 +7,7 @@
                         <div class="uk-flex-1">
                             <ScCardTitle>
                                 <i class="mdi" :class="{ 'mdi-details' : sendData.uid, 'mdi-plus': !sendData.uid }"/>
-                                {{ sendData.uid ? '상세': '등록' }}
+                                {{ sendData.uid ? '상세' : '등록' }}
                             </ScCardTitle>
                         </div>
                         <ScCardAction v-if="mode !== 'mypage'">
@@ -134,22 +134,22 @@
                                     <div class="uk-width-1-1" style="display: flex; justify-content: space-around; padding: 10px 0;">
                                         <div>
                                             <PrettyCheck v-model="sendData.isCarWash" class="p-switch">
-                                                {{sendData.isCarWash?"세차장 있음":"세차장 없음"}}
+                                                {{ sendData.isCarWash ? "세차장 있음" : "세차장 없음" }}
                                             </PrettyCheck>
                                         </div>
                                         <div>
                                             <PrettyCheck v-model="sendData.isConvenience" class="p-switch">
-                                                {{sendData.isConvenience?"편의점 있음":"편의점 없음"}}
+                                                {{ sendData.isConvenience ? "편의점 있음" : "편의점 없음" }}
                                             </PrettyCheck>
                                         </div>
                                         <div>
                                             <PrettyCheck v-model="sendData.isKpetro" class="p-switch">
-                                                {{sendData.isKpetro?"품질인증":"&nbsp;미인증&nbsp;"}}
+                                                {{ sendData.isKpetro ? "품질인증" : "&nbsp;미인증&nbsp;" }}
                                             </PrettyCheck>
                                         </div>
                                         <div>
                                             <PrettyCheck v-model="sendData.isSelf" class="p-switch">
-                                                {{sendData.isSelf?"셀프":"&nbsp;셀프아님&nbsp;"}}
+                                                {{ sendData.isSelf ? "셀프" : "&nbsp;셀프아님&nbsp;" }}
                                             </PrettyCheck>
                                         </div>
                                     </div>
@@ -249,7 +249,7 @@
                             <div class="uk-margin-top uk-text-center">
                                 <button class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
                                         @click="submitForm">
-                                    {{ sendData.uid ? '수정': '생성' }}
+                                    {{ sendData.uid ? '수정' : '생성' }}
                                 </button>
                                 <button v-if="sendData.uid" class="sc-button sc-button-primary"
                                         :disabled="submitStatus === 'PENDING'"
@@ -269,373 +269,374 @@
 </template>
 
 <script>
-    import ScCard from "@/components/card/components/Card";
-    import ScInput from "@/components/Input";
-    import ScCardAction from "@/components/card/components/CardActions"
-    import VueUploadMultipleImage from 'vue-upload-multiple-image';
-    import {validationMixin} from 'vuelidate'
-    import {required} from 'vuelidate/lib/validators'
-    import RatingList from "@/components/common/RatingList"
-    import Select2 from "@/components/Select2";
-    import PrettyCheck from 'pretty-checkbox-vue/check';
-    import Convert from "@/plugins/convertJson";
+import ScCard from "@/components/card/components/Card"
+import ScInput from "@/components/Input"
+import ScCardAction from "@/components/card/components/CardActions"
+import VueUploadMultipleImage from 'vue-upload-multiple-image'
+import {validationMixin} from 'vuelidate'
+import {required} from 'vuelidate/lib/validators'
+import RatingList from "@/components/common/RatingList"
+import Select2 from "@/components/Select2"
+import PrettyCheck from 'pretty-checkbox-vue/check'
+import Convert from "@/plugins/convertJson"
 
-    export default {
-        components: {
-            Select2,
-            ScInput,
-            ScCard,
-            VueUploadMultipleImage,
-            ScCardAction,
-            RatingList,
-            PrettyCheck
-        },
-        mixins: [
-            validationMixin,
-        ],
-        props: {
-            mode: {
-                type: String,
-                default: 'list'
+export default {
+    components: {
+        Select2,
+        ScInput,
+        ScCard,
+        VueUploadMultipleImage,
+        ScCardAction,
+        RatingList,
+        PrettyCheck
+    },
+    mixins: [
+        validationMixin,
+    ],
+    props: {
+        mode: {
+            type: String,
+            default: 'list'
+        }
+    },
+    data() {
+        return {
+            cardFormClosed: true,
+            submitStatus: null,
+            sendData: {},
+            tempImage: [],
+            file_list: [],
+            deleteArray: [],
+            editArray: [],
+            searchAddr: [],
+            tagDetect: [
+                {tagBoolean: "isCarWash", tagName: "carWash"},
+                {tagBoolean: "isConvenience", tagName: "cvs"},
+                {tagBoolean: "isKpetro", tagName: "kpetro"},
+                {tagBoolean: "isSelf", tagName: "self"}
+            ],
+            defaultForm: {
+                uid: '',
+                gasStationName: '', //주유소명
+                gasStationUid: '', //주유소 Uid
+                brandCode: '', //브랜드코드명
+                gasStationType: '',
+                address: '', //주소
+                sido: '',
+                sigungu: '',
+                tel: '', //전화번호
+                lat: null, //위도
+                lon: null, //경도
+                isCarWash: false, //"세차장 , carWash"
+                isConvenience: false, // "편의점 , cvs"
+                isKpetro: false, // "품질인증, kpetro"
+                isSelf: false, // "셀프주유소 , self"
+                picture: [],
+                Gasoline: null,
+                Diesel: null,
+                PremiumGasoline: null,
+                lpg: null,
+                brandCodeOpts: [],
+                gasStationTypeOpts: [],
+                tag: [],
+                isRate: false,
+                isRecommend: false
             }
-        },
-        data() {
-            return {
-                cardFormClosed: true,
-                submitStatus: null,
-                sendData: {},
-                tempImage: [],
-                file_list:[],
-                deleteArray: [],
-                editArray: [],
-                searchAddr: [],
-                tagDetect:[
-                    {tagBoolean : "isCarWash", tagName: "carWash"},
-                    {tagBoolean : "isConvenience", tagName: "cvs"},
-                    {tagBoolean : "isKpetro", tagName: "kpetro"},
-                    {tagBoolean : "isSelf", tagName: "self"}
-                    ],
-                defaultForm: {
-                    uid: '',
-                    gasStationName: '', //주유소명
-                    gasStationUid: '', //주유소 Uid
-                    brandCode: '', //브랜드코드명
-                    gasStationType: '',
-                    address: '', //주소
-                    sido: '',
-                    sigungu: '',
-                    tel: '', //전화번호
-                    lat: null, //위도
-                    lon: null, //경도
-                    isCarWash: false, //"세차장 , carWash"
-                    isConvenience: false, // "편의점 , cvs"
-                    isKpetro: false, // "품질인증, kpetro"
-                    isSelf: false, // "셀프주유소 , self"
-                    picture: [],
-                    Gasoline: null,
-                    Diesel: null,
-                    PremiumGasoline: null,
-                    lpg:null,
-                    brandCodeOpts: [],
-                    gasStationTypeOpts: [],
-                    tag:[],
-                    isRate: false,
-                    isRecommend:false
-                }
+        }
+    },
+    validations: {
+        sendData: {
+            gasStationName: {
+                required
+            },
+            gasStationUid: {
+                required
+            },
+            tel: {
+                required
+            },
+            brandCode: {
+                required
+            },
+            gasStationType: {
+                required
+            },
+            address: {
+                required
+            },
+            lat: {
+                required
+            },
+            lon: {
+                required
             }
-        },
-        validations: {
-            sendData: {
-                gasStationName: {
-                    required
-                },
-                gasStationUid: {
-                    required
-                },
-                tel: {
-                    required
-                },
-                brandCode: {
-                    required
-                },
-                gasStationType: {
-                    required
-                },
-                address: {
-                    required
-                },
-                lat: {
-                    required
-                },
-                lon: {
-                    required
-                }
-            }
-        },
-        created() {
-            let vm = this
-            this.$nuxt.$on('open-gasStation-form', (data) => {
-                vm.settingForm(data)
+        }
+    },
+    created() {
+        let vm = this
+        this.$nuxt.$on('open-gasStation-form', (data) => {
+            vm.settingForm(data)
+        })
+        this.$nuxt.$on('close-gasStation-form', () => {
+            vm.closeForm()
+        })
+    },
+    async beforeMount() {
+        this.sendData = this.defaultForm
+        let code = await this.$axios.$post(this.config.apiUrl + '/codes')
+        this.brandCodeOpts = Convert.convertJson(code.data.brandCodeOpts, 'select')
+        this.gasStationTypeOpts = Convert.convertJson(code.data.gasStationTypeOpts, 'select')
+    },
+    beforeDestroy() {
+        this.$nuxt.$off('open-gasStation-form')
+        this.$nuxt.$off('close-gasStation-form')
+    },
+    methods: {
+        selectAddr(searchItem) {
+            this.$axios.$post(this.config.apiUrl + '/searchLocal', {address: searchItem.address}).then(async res => {
+                this.callNotification("검색을 완료하였습니다.")
+                this.sendData.address = res.data.addresses[0].jibunAddress
+                this.sendData.lat = res.data.addresses[0].y
+                this.sendData.lon = res.data.addresses[0].x
+                let tmpAddr = res.data.addresses[0].jibunAddress.split(" ")
+                this.sendData.sido = tmpAddr[0]
+                tmpAddr[0] === '세종특별자치시' ? this.sendData.sigungu = tmpAddr[0] : this.sendData.sigungu = tmpAddr[1]
+                this.searchAddr = []
+            }).finally(() => {
+                this.submitStatus = 'OK'
             })
-            this.$nuxt.$on('close-gasStation-form', () => {
-                vm.closeForm()
-            })
         },
-        async beforeMount() {
-            this.sendData = this.defaultForm
-            let code = await this.$axios.$post(this.config.apiUrl + '/codes')
-            this.brandCodeOpts = Convert.convertJson(code.data.brandCodeOpts, 'select')
-            this.gasStationTypeOpts = Convert.convertJson(code.data.gasStationTypeOpts, 'select')
-        },
-        beforeDestroy() {
-            this.$nuxt.$off('open-gasStation-form')
-            this.$nuxt.$off('close-gasStation-form')
-        },
-        methods: {
-            selectAddr(searchItem) {
-                this.$axios.$post(this.config.apiUrl + '/searchLocal', {address: searchItem.address}).then(async res => {
-                    this.callNotification("검색을 완료하였습니다.")
-                    this.sendData.address = res.data.addresses[0].jibunAddress
-                    this.sendData.lat = res.data.addresses[0].y
-                    this.sendData.lon = res.data.addresses[0].x
-                    let tmpAddr = res.data.addresses[0].jibunAddress.split(" ")
-                    this.sendData.sido = tmpAddr[0]
-                    tmpAddr[0] === '세종특별자치시' ? this.sendData.sigungu = tmpAddr[0] : this.sendData.sigungu = tmpAddr[1]
-                    this.searchAddr = []
+        searchPlace(searchString) {
+            if (!searchString) {
+                this.callAlertError("주소가 입력되지 않았습니다.")
+            } else {
+                this.$axios.$post(this.config.apiUrl + '/searchList', {
+                    keyword: searchString,
+                    count: 5
+                }).then(async res => {
+                    this.callNotification('목록을 가져왔습니다.')
+                    this.searchAddr = res.data.items
                 }).finally(() => {
                     this.submitStatus = 'OK'
                 })
-            },
-            searchPlace(searchString) {
-                if (!searchString) {
-                    this.callAlertError("주소가 입력되지 않았습니다.")
-                } else {
-                    this.$axios.$post(this.config.apiUrl + '/searchList', {
-                        keyword: searchString,
-                        count: 5
-                    }).then(async res => {
-                        this.callNotification('목록을 가져왔습니다.')
-                        this.searchAddr = res.data.items
-                    }).finally(() => {
-                        this.submitStatus = 'OK'
-                    })
+            }
+        },
+        openNewForm(siteUid, type) {
+            this.$nuxt.$emit('open-rate-list', siteUid, type)
+        },
+        uploadImageSuccess(formData, index, fileList) {
+            for (let item of formData.entries()) {
+                this.file_list.push(item[1])
+            }
+        },
+        beforeRemove(index, done, fileList) {
+            if (confirm("remove image")) {
+                done()
+                if (typeof this.file_list[index] === 'string') {
+                    this.deleteArray.push(this.file_list[index])
                 }
-            },
-            openNewForm(siteUid, type) {
-                this.$nuxt.$emit('open-rate-list', siteUid, type)
-            },
-            uploadImageSuccess(formData, index, fileList) {
-                for(let item of formData.entries()) {
-                    this.file_list.push(item[1]);
-                }
-            },
-            beforeRemove(index, done, fileList) {
-                if (confirm("remove image")) {
-                    done()
-                    if(typeof this.file_list[index] === 'string'){
-                        this.deleteArray.push(this.file_list[index])
-                    }
-                    this.file_list.splice(index, 1)
-                } else {
-                }
-            },
-            editImage(formData, index, fileList) {
-                if(typeof this.file_list[index] === 'string'){
-                    this.editArray[index] = this.file_list[index]
-                }
-                for(let item of formData.entries()) {
-                    this.file_list[index] = item[1];
-                }
-            },
-            markIsPrimary(index, fileList) {
-                let temp = this.sendData.picture[0]
-                this.sendData.picture[0] = this.sendData.picture[index]
-                this.sendData.picture[index] = temp
-            },
+                this.file_list.splice(index, 1)
+            } else {
+            }
+        },
+        editImage(formData, index, fileList) {
+            if (typeof this.file_list[index] === 'string') {
+                this.editArray[index] = this.file_list[index]
+            }
+            for (let item of formData.entries()) {
+                this.file_list[index] = item[1]
+            }
+        },
+        markIsPrimary(index, fileList) {
+            let temp = this.sendData.picture[0]
+            this.sendData.picture[0] = this.sendData.picture[index]
+            this.sendData.picture[index] = temp
+        },
 
-            settingForm(props) {
-                this.$v.$reset()
-                this.tempImage = []
-                this.file_list = []
-                this.editArray = []
-                this.deleteArray = []
-                if (props) {
-                    this.sendData = JSON.parse(JSON.stringify(props.data))
-                    this.tagDetect.map(t => {
-                        if(this.sendData.tag.includes(t.tagName)){
-                            this.sendData[t.tagBoolean] = true
-                        }
-                    })
-                    this.file_list = this.sendData.picture || []
-                    if (this.sendData.picture !== null) {
-                        for (let i = 0; i < this.sendData.picture.length; i++) {
-                            let img = {}
-                            if (i === 0) {
-                                img.default = 1
-                                img.highlight = 1
-                            } else {
-                                img.default = 0
-                                img.highlight = 0
-                            }
-                            img.path = this.sendData.picture[i]
-                            this.tempImage[i] = img
-                        }
-                    } else {
-                        this.sendData.picture = []
-                    }
-                } else {
-                    this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
-                }
-                this.cardFormClosed = true
-                setTimeout(() => {
-                    this.cardFormClosed = false
-                }, 100)
-            },
-            closeForm() {
-                this.cardFormClosed = true
-                this.$nuxt.$emit('reset-gasStation-list')
-            },
-            async deleteForm() {
-                if (this.sendData.picture.length > 0) {
-                    for (let index in this.sendData.picture) {
-                        let url = new URL(this.sendData.picture[index])
-                        let key = url.pathname.replace('/carmeleon/', '')
-                        await this.$objectStorage.deleteObject(key)
-                    }
-                }
-                this.$axios.$delete(this.config.apiUrl + '/gasStations/' + this.sendData.uid, this.sendData).then(async res => {
-                    this.callNotification('삭제하였습니다.')
-                    this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)
-                }).finally(() => {
-                    this.deleteStatus = 'OK'
-                    this.cardFormClosed = true
-                })
-            },
-            submitForm(e) {
-                e.preventDefault()
-                this.$v.$touch()
-                if (this.$v.$invalid) {
-                    this.submitStatus = 'ERROR'
-                } else {
-                    this.submitStatus = 'PENDING'
-                    if (this.sendData.uid) {
-                        this.putForm()
-                    } else {
-                        this.postForm()
-                    }
-                }
-            },
-            async postForm() {
+        settingForm(props) {
+            this.$v.$reset()
+            this.tempImage = []
+            this.file_list = []
+            this.editArray = []
+            this.deleteArray = []
+            if (props) {
+                this.sendData = JSON.parse(JSON.stringify(props.data))
                 this.tagDetect.map(t => {
-                    if(this.sendData[t.tagBoolean]){
+                    if (this.sendData.tag.includes(t.tagName)) {
+                        this.sendData[t.tagBoolean] = true
+                    }
+                })
+                this.file_list = this.sendData.picture || []
+                if (this.sendData.picture !== null) {
+                    for (let i = 0; i < this.sendData.picture.length; i++) {
+                        let img = {}
+                        if (i === 0) {
+                            img.default = 1
+                            img.highlight = 1
+                        } else {
+                            img.default = 0
+                            img.highlight = 0
+                        }
+                        img.path = this.sendData.picture[i]
+                        this.tempImage[i] = img
+                    }
+                } else {
+                    this.sendData.picture = []
+                }
+            } else {
+                this.sendData = JSON.parse(JSON.stringify(this.defaultForm))
+            }
+            this.cardFormClosed = true
+            setTimeout(() => {
+                this.cardFormClosed = false
+            }, 100)
+        },
+        closeForm() {
+            this.cardFormClosed = true
+            this.$nuxt.$emit('reset-gasStation-list')
+        },
+        async deleteForm() {
+            if (this.sendData.picture.length > 0) {
+                for (let index in this.sendData.picture) {
+                    let url = new URL(this.sendData.picture[index])
+                    let key = url.pathname.replace('/carmeleon/', '')
+                    await this.$objectStorage.deleteObject(key)
+                    await this.$objectStorage.deleteOriginal(key, 'gasStation')
+                }
+            }
+            this.$axios.$delete(this.config.apiUrl + '/gasStations/' + this.sendData.uid, this.sendData).then(async res => {
+                this.callNotification('삭제하였습니다.')
+                this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)
+            }).finally(() => {
+                this.deleteStatus = 'OK'
+                this.cardFormClosed = true
+            })
+        },
+        submitForm(e) {
+            e.preventDefault()
+            this.$v.$touch()
+            if (this.$v.$invalid) {
+                this.submitStatus = 'ERROR'
+            } else {
+                this.submitStatus = 'PENDING'
+                if (this.sendData.uid) {
+                    this.putForm()
+                } else {
+                    this.postForm()
+                }
+            }
+        },
+        async postForm() {
+            this.tagDetect.map(t => {
+                if (this.sendData[t.tagBoolean]) {
+                    this.sendData.tag.push(t.tagName)
+                }
+            })
+            if (this.file_list.length > 0) {
+                for (let i = 0; i < this.file_list.length; i++) {
+                    if (this.file_list[i] !== undefined) {
+                        if (this.isFileImage(this.file_list[i])) {
+                            let prefix = this.uuidV4()
+                            let url = await this.$objectStorage.uploadFile('gasStation', this.file_list[i], prefix)
+
+                            if (url) {
+                                this.sendData.picture.push(url)
+                            } else {
+                                //todo: file upload error
+                            }
+                        } else {
+                            //todo: not image file error
+                        }
+                    }
+                }
+            }
+            this.$axios.$post(this.config.apiUrl + '/gasStations', this.sendData).then(async res => {
+                this.callNotification('계정을 생성하였습니다.')
+                this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)
+            }).finally(() => {
+                this.submitStatus = 'OK'
+            })
+        },
+        async putForm() {
+            this.tagDetect.map(t => {
+                if (this.sendData[t.tagBoolean]) {
+                    if (!this.sendData.tag.includes(t.tagName)) {
                         this.sendData.tag.push(t.tagName)
                     }
-                })
-                if(this.file_list.length > 0){
-                    for(let i =0 ; i< this.file_list.length; i++){
-                        if(this.file_list[i] !== undefined){
-                            if (this.isFileImage(this.file_list[i])) {
-                                let prefix = this.uuidV4()
-                                let url = await this.$objectStorage.uploadFile('gasStation', this.file_list[i], prefix)
-
-                                if (url) {
-                                    this.sendData.picture.push(url)
-                                } else {
-                                    //todo: file upload error
-                                }
+                } else {
+                    if (this.sendData.tag.includes(t.tagName)) {
+                        this.sendData.tag.splice(this.sendData.tag.indexOf(t.tagName), 1)
+                    }
+                }
+            })
+            if (this.file_list.length > 0) {
+                this.sendData.picture = []
+                for (let i = 0; i < this.file_list.length; i++) {
+                    if (this.file_list[i] !== undefined) {
+                        if (typeof this.file_list[i] !== 'string' && this.isFileImage(this.file_list[i])) {
+                            let prefix
+                            if (typeof this.editArray[i] !== 'undefined') {
+                                let url = new URL(this.editArray[i])
+                                let modify_string = url.pathname.replace('/carmeleon/admin/gasStation/', '')
+                                let _lastDot = modify_string.lastIndexOf('.')
+                                prefix = modify_string.substring(0, _lastDot)
                             } else {
-                                //todo: not image file error
+                                prefix = this.uuidV4()
                             }
-                        }
-                    }
-                }
-                this.$axios.$post(this.config.apiUrl + '/gasStations', this.sendData).then(async res => {
-                    this.callNotification('계정을 생성하였습니다.')
-                    this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)
-                }).finally(() => {
-                    this.submitStatus = 'OK'
-                })
-            },
-            async putForm() {
-                this.tagDetect.map(t => {
-                    if(this.sendData[t.tagBoolean]){
-                        if(!this.sendData.tag.includes(t.tagName)){
-                            this.sendData.tag.push(t.tagName)
-                        }
-                    }else {
-                        if(this.sendData.tag.includes(t.tagName)) {
-                            this.sendData.tag.splice(this.sendData.tag.indexOf(t.tagName), 1)
-                        }
-                    }
-                })
-                if(this.file_list.length > 0){
-                    this.sendData.picture = []
-                    for(let i =0 ; i< this.file_list.length; i++){
-                        if(this.file_list[i] !== undefined){
-                            if (typeof this.file_list[i] !== 'string' && this.isFileImage(this.file_list[i])) {
-                                let prefix
-                                if(typeof this.editArray[i] !== 'undefined'){
-                                    let url = new URL(this.editArray[i])
-                                    let modify_string = url.pathname.replace('/carmeleon/admin/gasStation/', '')
-                                    let _lastDot = modify_string.lastIndexOf('.');
-                                    prefix = modify_string.substring(0, _lastDot)
-                                }else{
-                                    prefix= this.uuidV4()
-                                }
-                                let url = await this.$objectStorage.uploadFile('gasStation', this.file_list[i], prefix)
-                                if (url) {
-                                    this.sendData.picture.push(url)
-                                } else {
-                                    //todo: file upload error
-                                }
+                            let url = await this.$objectStorage.uploadFile('gasStation', this.file_list[i], prefix)
+                            if (url) {
+                                this.sendData.picture.push(url)
                             } else {
-                                //todo: not image file error
-                                this.sendData.picture.push(this.file_list[i])
+                                //todo: file upload error
                             }
+                        } else {
+                            this.sendData.picture.push(this.file_list[i])
                         }
                     }
                 }
+            }
 
-                if (this.deleteArray.length > 0) {
-                    for (let index in this.deleteArray) {
-                        let url = new URL(this.deleteArray[index])
-                        let key = url.pathname.replace('/carmeleon/', '')
-                        await this.$objectStorage.deleteObject(key)
-                    }
+            if (this.deleteArray.length > 0) {
+                for (let index in this.deleteArray) {
+                    let url = new URL(this.deleteArray[index])
+                    let key = url.pathname.replace('/carmeleon/', '')
+                    await this.$objectStorage.deleteObject(key)
+                    await this.$objectStorage.deleteOriginal(key, 'gasStation')
                 }
+            }
 
-                this.$axios.$put(this.config.apiUrl + '/gasStations/' + this.sendData.uid, this.sendData).then(async res => {
-                    this.callNotification('수정하였습니다.')
-                    this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)
-                }).finally(() => {
-                    this.submitStatus = 'OK'
-                })
-            },
-        }
+            this.$axios.$put(this.config.apiUrl + '/gasStations/' + this.sendData.uid, this.sendData).then(async res => {
+                this.callNotification('수정하였습니다.')
+                this.$nuxt.$emit('fetch-gasStation-list', res.data.uid)
+            }).finally(() => {
+                this.submitStatus = 'OK'
+            })
+        },
     }
+}
 </script>
 
 <style lang="scss">
-    @import 'assets/scss/vue/_pretty_checkboxes';
+@import 'assets/scss/vue/_pretty_checkboxes';
 
-    .selectAddr {
-        float: right !important;
-    }
+.selectAddr {
+    float: right !important;
+}
 
-    .selectIcon {
-        display: none;
-    }
+.selectIcon {
+    display: none;
+}
 
-    .selectAddr:hover {
-        cursor: pointer;
-        background-color: #4db6ac;
-    }
+.selectAddr:hover {
+    cursor: pointer;
+    background-color: #4db6ac;
+}
 
-    .selectAddr:hover > .selectIcon {
-        display: block;
-    }
+.selectAddr:hover > .selectIcon {
+    display: block;
+}
 
-    .sc-vue-errors li {
-        font-size: 12px;
-    }
+.sc-vue-errors li {
+    font-size: 12px;
+}
 </style>
