@@ -27,8 +27,8 @@
                                 <div class="uk-width-1-5@s">
                                     <select v-model="searchParkingSite" class="uk-select">
                                         <option value="">전체</option>
-                                        <option v-for="siteOpts in siteOpts" :key="siteOpts.id" :value="siteOpts.id">
-                                            {{ siteOpts.text }}
+                                        <option v-for="siteOpt in siteOpts" :key="siteOpt.id" :value="siteOpt.id">
+                                            {{ siteOpt.text }}
                                         </option>
                                     </select>
                                 </div>
@@ -152,7 +152,7 @@ export default {
                 },
                 siteOpts: [],
                 searchKeyword: '',
-                searchParkingSite: '',
+                searchParkingSite: "",
                 settleData: {
                     price: 0,
                     sellingPrice: 0,
@@ -295,7 +295,6 @@ export default {
                 if(this.$auth.user.grade > 0){
                     searchData.params.accountUid = this.$auth.user.uid
                 }
-                //await this.$axios.$get(this.config.apiUrl + '/allPayLogs', searchData).then(response => {
                 await this.$axios.$get(this.config.apiUrl + '/allPayLogs', searchData).then(response => {
                     if(response.data){
                         this.settleData = response.data
@@ -311,9 +310,7 @@ export default {
                 if(this.$auth.user.grade > 0){
                     params.params.accountUid = this.$auth.user.uid
                 }
-                //console.log(params)
                 await this.$axios.$get(this.config.apiUrl + '/parkingLists', params).then(response => {
-                    console.log(response)
                     if(response.data){
                         this.siteOpts = response.data.map(function (obj) {
                             return {
@@ -341,6 +338,7 @@ export default {
                             }
                             let searchData = {
                                 params:{
+                                    accountUid: null,
                                     searchData: {
                                         searchKeyword: context.searchKeyword,
                                         searchParkingSite: context.searchParkingSite,
@@ -352,7 +350,7 @@ export default {
                                 }
                             }
                             if(this.$auth.user.grade > 0){
-                                params.accountUid = this.$auth.user.uid
+                              searchData.params.accountUid = this.$auth.user.uid
                             }
                             await context.$axios.$get(this.config.apiUrl + '/paylogs', searchData).then(response => {
                                 let rowsThisPage = response.data.rows
