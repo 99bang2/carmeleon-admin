@@ -74,9 +74,9 @@
                                     <tbody>
                                     <tr>
                                         <td>금액</td>
-                                        <td>{{ settleData.totalPrice - settleData.refundCompletePrice }}원</td>
+                                        <td>{{ settleData.price - settleData.refundCompletePrice }}원</td>
                                         <td>{{ settleData.refundCompletePrice }}원</td>
-                                        <td>{{ settleData.totalPrice }}원</td>
+                                        <td>{{ settleData.price }}원</td>
                                         <td>{{ settleData.fee }}원</td>
                                     </tr>
                                     <tr>
@@ -220,7 +220,7 @@ export default {
                 },
                 {
                     headerName: '정산금액',
-                    field: 'totalPrice',
+                    field: 'price',
                     width: 100
                 },
                 {
@@ -422,7 +422,7 @@ export default {
                         key.carNumber,
                         key.discountTicket.ticketTitle,
                         key.reserveTime,
-                        key.totalPrice,
+                        key.price,
                         key.fee,
                         status
                     ])
