@@ -94,11 +94,6 @@ export default {
         columnDefs() {
             return [
                 {
-                    headerName: '주문번호',
-                    field: 'payOid',
-                    suppressSizeToFit: true,
-                },
-                {
                     headerName: '차량번호',
                     field: 'carNumber',
                     width:100
@@ -201,7 +196,7 @@ export default {
                 {
                     headerName: '생성일',
                     field: 'createdAt',
-                    width: 150,
+                    width: 250,
                     valueFormatter: obj => {
                         return this.$moment(obj.value).format('YYYY-MM-DD HH:mm')
                     }

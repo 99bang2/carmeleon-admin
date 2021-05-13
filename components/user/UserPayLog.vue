@@ -192,23 +192,27 @@
                 if (selectedCnt) {
                     let tmpCnt = 0;
                     UIkit.modal.prompt(`결제 취소 사유를 작성해주세요`, this.reason).then((cancelReason) => {
+                      if (cancelReason === null) {
+                        console.log('cancel')
+                      } else {
                         let promiseList = []
                         selectedUids.forEach(uid => {
-                            promiseList.push(
-                                new Promise(resolve => {
-                                    this.$axios.$post(this.config.apiUrl + '/pg', {
-                                        reason: cancelReason,
-                                        uids: uid
-                                    }).then(res => {
-                                        if (res.data.result) tmpCnt++
-                                    }).then(() => resolve())
-                                })
-                            )
+                          promiseList.push(
+                              new Promise(resolve => {
+                                this.$axios.$post(this.config.apiUrl + '/pg', {
+                                  reason: cancelReason,
+                                  uids: uid
+                                }).then(res => {
+                                  if (res.data.result) tmpCnt++
+                                }).then(() => resolve())
+                              })
+                          )
                         })
                         Promise.all(promiseList).then(() => {
-                            this.callNotification(`${selectedCnt}중 ${tmpCnt}건의 결제가 취소되었습니다.`)
-                            this.fetchData(this.userUid)
+                          this.callNotification(`${selectedCnt}중 ${tmpCnt}건의 결제가 취소되었습니다.`)
+                          this.fetchData(this.userUid)
                         })
+                      }
                     })
                 } else {
                     this.callAlertError('결제를 취소할 항목을 선택해주세요')
