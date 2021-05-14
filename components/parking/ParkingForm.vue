@@ -699,15 +699,11 @@ export default {
                 this.sendData.picture = []
                 for (let i = 0; i < this.file_list.length; i++) {
                     if (this.file_list[i] !== undefined) {
-
                         if (typeof this.file_list[i] !== 'string' && this.isFileImage(this.file_list[i])) {
                             let prefix = this.uuidV4()
                             let url = await this.$objectStorage.uploadFile('parking', this.file_list[i], prefix)
-
                             if (url) {
                                 this.sendData.picture.push(url)
-                            } else {
-                                //todo: file upload error
                             }
                         } else {
                             this.sendData.picture.push(this.file_list[i])

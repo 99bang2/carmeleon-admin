@@ -574,20 +574,10 @@ export default {
                 for (let i = 0; i < this.file_list.length; i++) {
                     if (this.file_list[i] !== undefined) {
                         if (typeof this.file_list[i] !== 'string' && this.isFileImage(this.file_list[i])) {
-                            let prefix
-                            if (typeof this.editArray[i] !== 'undefined') {
-                                let url = new URL(this.editArray[i])
-                                let modify_string = url.pathname.replace('/carmeleon/admin/gasStation/', '')
-                                let _lastDot = modify_string.lastIndexOf('.')
-                                prefix = modify_string.substring(0, _lastDot)
-                            } else {
-                                prefix = this.uuidV4()
-                            }
+                            let prefix = this.uuidV4()
                             let url = await this.$objectStorage.uploadFile('gasStation', this.file_list[i], prefix)
                             if (url) {
-                                this.sendData.picture.push(url)
-                            } else {
-                                //todo: file upload error
+                              this.sendData.picture.push(url)
                             }
                         } else {
                             this.sendData.picture.push(this.file_list[i])
