@@ -110,6 +110,11 @@
                         }
                     },
                     {
+                        headerName: 'UID',
+                        field: 'uid',
+                        width: 100,
+                    },
+                    {
                         headerName: '세차장명',
                         field: 'carWashName',
                         width: 170,

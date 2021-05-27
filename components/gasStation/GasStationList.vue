@@ -134,6 +134,11 @@
                         }
                     },
                     {
+                        headerName: 'UID',
+                        field: 'uid',
+                        width: 100,
+                    },
+                    {
                         headerName: '주유소명',
                         field: 'gasStationName',
                         width: 180,

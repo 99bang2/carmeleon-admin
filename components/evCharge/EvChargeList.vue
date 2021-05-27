@@ -126,6 +126,11 @@
                         }
                     },
                     {
+                        headerName: 'UID',
+                        field: 'uid',
+                        width: 100,
+                    },
+                    {
                         headerName: '전기차충전소명',
                         field: 'statNm',
                         width: 250,
