@@ -8,6 +8,8 @@ export default {
     'PayLogs': '주차장 이용내역 관리',
 	'Bookings':'세차장 이용내역 관리',
 	'Operations':'운영 관리',
+	'Versions':'버전 관리',
+    'Keys':'키 관리',
 	'Accounts': '계정 관리',
 	'Events':'이벤트',
 	'Notices':'공지사항',

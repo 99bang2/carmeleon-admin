@@ -111,6 +111,18 @@ export const menuEntries = [
                 title: "Popups",
                 icon: "mdi mdi-checkbox-multiple-blank-outline",
                 page: "/operations/popups"
+            },
+            {
+                id: uniqueID(),
+                title: "Versions",
+                icon: "mdi mdi-android",
+                page: "/operations/versions"
+            },
+            {
+                id: uniqueID(),
+                title: "Keys",
+                icon: "mdi mdi-key",
+                page: "/operations/keys"
             }
             // {
             //     id: uniqueID(),

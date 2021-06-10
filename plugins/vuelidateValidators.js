@@ -30,5 +30,16 @@ customValidators.integerFormatCheck = () => helpers.regex(
 	'integerFormatCheck',
 	/[0-9]/i
 )
+customValidators.versionFormatCheck = () => helpers.regex(
+    'versionFormatCheck',
+    /^\d{1,2}[.]\d{1,2}[.]\d{1,2}$/
+)
+
+customValidators.versionMinMaxCheck = (min, max) => helpers.withParams(
+    {type: 'versionMinMaxCheck', min: min, max: max},
+    (value) => !helpers.req(value) || (min <= value.length && value.length <= max)
+)
+
+
 
 export default customValidators
