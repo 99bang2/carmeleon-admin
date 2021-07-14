@@ -159,10 +159,10 @@
                     }
                     , {
                         headerName: '품질인증여부',
-                        field: 'isKpetro',
+                        field: 'tagName',
                         width: 150,
                         cellRenderer: (obj) => {
-                            return obj.value ? '<span>인증</span>' : '<span>미인증</span>'
+                            return obj.value && obj.value.includes('품질인증주유소') ? '<span>인증</span>' : '<span>미인증</span>'
                         }
                     }, {
                         headerName: '전화번호',

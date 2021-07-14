@@ -27,6 +27,7 @@
                                     <option value="">푸시알림 구분</option>
                                     <option value="1">단일</option>
                                     <option value="2">전체</option>
+                                    <option value="3">그룹</option>
                                 </select>
                             </div>
                         </div>
@@ -113,6 +114,9 @@
                                     break;
                                 case 2:
                                     typeName = "전체"
+                                    break;
+                                case 3:
+                                    typeName = "그룹"
                                     break;
                             }
                             return typeName

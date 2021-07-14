@@ -49,9 +49,14 @@
                 </div>
                 <div class="uk-width-1-2 uk-margin-small-bottom">
                     <div class="uk-grid-small uk-grid" data-uk-grid>
-                        <ScInput v-model="ticketDate" v-flatpickr="dpRange" placeholder="판매 기간">
+                        <ScInput v-model="ticketDate" v-flatpickr="dpRange" placeholder="판매 기간" :error-state="$v.ticketDate.$error">
                             <span slot="icon" class="uk-form-icon" data-uk-icon="calendar"></span>
                         </ScInput>
+                        <ul class="sc-vue-errors">
+                            <li v-if="!$v.ticketDate.required">
+                                판매 기간을 선택하세요.
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <div class="uk-width-1-3 uk-margin-small-bottom">
@@ -326,7 +331,10 @@
                 fee: {
                     required,
                     integer
-                },
+                }
+            },
+            ticketDate : {
+                required
             }
         },
         computed: {

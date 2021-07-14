@@ -42,7 +42,7 @@
                                     <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
                                         전기차충전소 정보
                                     </h5>
-                                    <div class="uk-width-1-3">
+                                    <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.statNm" :error-state="$v.sendData.statNm.$error"
                                                  :validator="$v.sendData.statNm">
                                             <label>
@@ -57,7 +57,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="uk-width-1-3">
+                                    <div class="uk-width-1-2">
                                         <ScInput v-model="sendData.statId" :error-state="$v.sendData.statId.$error"
                                                  :validator="$v.sendData.statId" :read-only="sendData.uid > 0">
                                             <label>
@@ -103,15 +103,24 @@
                                         </ScInput>
                                     </div>
                                     <div class="uk-width-1-2">
-                                        <ScInput v-model="sendData.powerType"
-                                                 :validator="$v.sendData.powerType">
+                                        <ScInput v-model="sendData.busiCall">
                                             <label>
-                                                충전량 유형
+                                                연락처
                                             </label>
                                             <span slot="icon" class="uk-form-icon uk-form-icon-flip"
-                                                  data-uk-icon="icon: bolt"/>
+                                                  data-uk-icon="icon: receiver"/>
                                         </ScInput>
                                     </div>
+<!--                                    <div class="uk-width-1-2">-->
+<!--                                        <ScInput v-model="sendData.powerType"-->
+<!--                                                 :validator="$v.sendData.powerType">-->
+<!--                                            <label>-->
+<!--                                                충전량 유형-->
+<!--                                            </label>-->
+<!--                                            <span slot="icon" class="uk-form-icon uk-form-icon-flip"-->
+<!--                                                  data-uk-icon="icon: bolt"/>-->
+<!--                                        </ScInput>-->
+<!--                                    </div>-->
                                     <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
                                         주소 입력
                                     </h5>
@@ -119,15 +128,15 @@
                                          style="justify-content: space-around; align-items: center">
                                         <div class="uk-width-5-6">
                                             <ScInput v-model="sendData.addr" class="uk-flex-1"
-                                                     :error-state="$v.sendData.addr.$error"
-                                                     :validator="$v.sendData.addr">
+                                                     :error-state="$v.sendData.lat.$error"
+                                                     :validator="$v.sendData.lat">
                                                 <label>
                                                     주소
                                                 </label>
                                             </ScInput>
                                             <ul class="sc-vue-errors">
-                                                <li v-if="!$v.sendData.addr.required">
-                                                    주소를 입력하세요.
+                                                <li v-if="!$v.sendData.lat.required">
+                                                    주소를 검색 후 선택하세요.
                                                 </li>
                                             </ul>
                                         </div>
@@ -274,7 +283,7 @@
                     busiId: '', 		// 기관아이디
                     busiNm: '',		// 운영기관명
                     busiCall: '', //연락처
-                    powerType: '', // 충전량
+                    // powerType: '', // 충전량
                     picture: [],
                     evChargers: [],
                     isRate: false,
@@ -290,7 +299,10 @@
                 statId: {
                     required
                 },
-                addr: {
+                lat: {
+                    required
+                },
+                lon: {
                     required
                 }
             }
@@ -424,7 +436,7 @@
                         await this.$objectStorage.deleteOriginal(key, 'evCharge')
                     }
                 }
-                this.$axios.$delete(this.config.apiUrl + '/evChargeStation/' + this.sendData.uid, this.sendData).then(async res => {
+                this.$axios.$delete(this.config.apiUrl + '/evChargeStations/' + this.sendData.uid, this.sendData).then(async res => {
                     this.callNotification('삭제하였습니다.')
                     this.$nuxt.$emit('fetch-evCharge-list', res.data.uid)
                 }).finally(() => {

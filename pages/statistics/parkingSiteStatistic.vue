@@ -154,7 +154,7 @@ export default {
                             x: {
                                 tick: {
                                     format: function(index) {
-                                        return dayArray[index]
+                                        return dayArray[index + 1]
                                     },
                                 }
                             }

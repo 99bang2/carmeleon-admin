@@ -38,7 +38,7 @@
                                 <ScTextarea
                                         v-model="sendData.body"
                                         :cols="30"
-                                        :rows="9"
+                                        :rows="5"
                                         :autosize="true"
                                         mode="outline"
                                         :error-state="$v.sendData.body.$error"
@@ -54,20 +54,48 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="uk-width-1-1@s">
-                                <ScInput v-model="sendData.sendDate" v-flatpickr="dpTimePicker" placeholder="시간을 입력해주세요" mode="outline"></ScInput>
-                                <div style="padding-left: 10px; color:red; font-size: 12px">(시간을 입력하지 않을 경우 현재 시간으로 등록됩니다.)</div>
+                            <div class="uk-width-1-2@s">
+                                <ScInput v-model="sendData.sendDate" v-flatpickr="dpTimePicker" placeholder="시간을 입력해주세요" mode="outline" style="margin-top:12px;"></ScInput>
+                                <div style="color:#e53935; font-size: 12px; margin-top: 8px">(시간을 입력하지 않을 경우 현재 시간으로 등록됩니다.)</div>
+                            </div>
+                            <div class="uk-width-1-2@s">
+                                <Select2
+                                        v-model="sendData.pushType"
+                                        v-on:change="userUidForm"
+                                        :options="pushTypeOpts"
+                                        :settings="{'width': '100%', 'placeholder':'푸쉬알림 구분'}"
+                                        :error-state="$v.sendData.pushType.$error"
+                                />
+                                <ul class="sc-vue-errors">
+                                    <li v-if="!$v.sendData.pushType.required">
+                                        푸쉬알림 구분을 선택하세요.
+                                    </li>
+                                </ul>
+                            </div>
+                            <div v-if="sendData.pushType == '1' || sendData.pushType == '3'" class="uk-width-1-1@s">
+                                <Select2
+                                        v-model="sendData.userUid"
+                                        :options="userOpts"
+                                        :settings="{'width': '100%', 'placeholder':'사용자 선택'}"
+                                        :error-state="$v.sendData.userUid.$error"
+                                        :multiple="sendData.pushType== '3'"
+                                />
+                                <ul class="sc-vue-errors">
+                                    <li v-if="!$v.sendData.userUid.required">
+                                        사용자를 선택하세요.
+                                    </li>
+                                </ul>
                             </div>
                         </form>
                     </div>
                     <div class="uk-margin-top uk-text-center">
+                        <button v-if="!sendData.status" class="sc-button sc-button-primary"
+                                :disabled="submitStatus === 'PENDING'" @click="submitForm">
+                            {{ sendData.uid ? '수정' : '등록' }}
+                        </button>
                         <button v-if="sendData.uid" class="sc-button sc-button-primary"
                                 :disabled="submitStatus === 'PENDING'" @click="deleteForm">
                             삭제
-                        </button>
-                        <button v-else class="sc-button sc-button-primary" :disabled="submitStatus === 'PENDING'"
-                                @click="submitForm">
-                            등록
                         </button>
                     </div>
                 </ScCardBody>
@@ -81,12 +109,15 @@
     import {required} from 'vuelidate/lib/validators'
     import ScInput from '~/components/Input'
     import ScTextarea from '~/components/Textarea'
+    import Select2 from '~/components/Select2'
     import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
+    import Convert from '@/plugins/convertJson'
 
     export default {
         components: {
             ScInput,
             ScTextarea,
+            Select2
         },
         mixins: [
             validationMixin,
@@ -110,19 +141,45 @@
                     body: '',
                     sendDate:'',
                     status: 0,
-                    pushType: 2,
+                    pushType: '',
+                    userUid: null
                 },
-                pushOpts: []
+                pushTypeOpts: [],
+                userOpts:[]
             }
         },
-        validations: {
-            sendData: {
-                title: {
-                    required
-                },
-                body: {
-                    required
-                },
+        validations() {
+            if(this.sendData.pushType == '2') {
+                return {
+                    sendData: {
+                        title: {
+                            required
+                        },
+                        body: {
+                            required
+                        },
+                        pushType: {
+                            required
+                        }
+                    }
+                }
+            } else {
+                return {
+                    sendData: {
+                        title: {
+                            required
+                        },
+                        body: {
+                            required
+                        },
+                        pushType: {
+                            required
+                        },
+                        userUid: {
+                            required
+                        }
+                    }
+                }
             }
         },
         computed:{
@@ -154,8 +211,22 @@
         },
         async beforeMount() {
             this.sendData = this.defaultForm
+            let code = await this.$axios.$post(this.config.apiUrl + '/codes')
+            let users = await this.$axios.$get(this.config.apiUrl + '/users')
+            let user = users.data.map(user => {
+                return {
+                    id: user.uid,
+                    text: user.name + ", " + user.email
+                }
+            })
+
+            this.userOpts = user
+            this.pushTypeOpts = Convert.convertJson(code.data.push, 'select')
         },
         methods: {
+            userUidForm() {
+                this.sendData.userUid = null
+            },
             settingForm(props) {
                 this.$v.$reset()
                 if (props) {

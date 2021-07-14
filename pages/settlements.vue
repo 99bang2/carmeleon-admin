@@ -343,11 +343,11 @@ export default {
                                 searchData: {
                                     searchKeyword: context.searchKeyword,
                                     searchParkingSite: context.searchParkingSite,
-                                    searchDate: context.searchData.searchDate,
-                                    offset: parameters.offset,
-                                    limit: parameters.limit,
-                                    order: parameters.order
-                                }
+                                    searchDate: context.searchData.searchDate
+                                },
+                                offset: parameters.offset,
+                                limit: parameters.limit,
+                                order: parameters.order
                             }
                         }
                         if (this.$auth.user.grade > 0) {

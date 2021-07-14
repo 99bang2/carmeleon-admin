@@ -154,15 +154,15 @@
                                          style="justify-content: space-around; align-items: center">
                                         <div class="uk-width-5-6">
                                             <ScInput v-model="sendData.address" class="uk-flex-1"
-                                                     :error-state="$v.sendData.address.$error"
-                                                     :validator="$v.sendData.address">
+                                                     :error-state="$v.sendData.lat.$error"
+                                                     :validator="$v.sendData.lat">
                                                 <label>
                                                     주소
                                                 </label>
                                             </ScInput>
                                             <ul class="sc-vue-errors">
-                                                <li v-if="!$v.sendData.address.required">
-                                                    주소를 입력하세요.
+                                                <li v-if="!$v.sendData.lat.required">
+                                                    주소를 검색 후 선택하세요.
                                                 </li>
                                             </ul>
                                         </div>
@@ -353,7 +353,10 @@ export default {
             phoneNumber: {
                 required,
             },
-            address: {
+            lat: {
+                required
+            },
+            lon: {
                 required
             }
 

@@ -92,19 +92,26 @@ export default {
             },
         }
     },
-    validations: {
-        sendData: {
-            key: {
-                required,
-                async isUnique(value) {
-                    if (value === '') return true
-                    let res = await this.$axios.$get(this.config.apiUrl + `/keys/unique/${value}`)
-                    return Boolean(res.data)
+    validations() {
+        return {
+            sendData: {
+                key: {
+                    required,
+                    async isUnique(value) {
+                        if (value === '') return true
+                        let params = {
+                            params: {
+                                uid: this.sendData.uid
+                            }
+                        }
+                        let res = await this.$axios.$get(this.config.apiUrl + `/keys/unique/${value}`, params)
+                        return Boolean(res.data)
+                    }
+                },
+                value: {
+                    required
                 }
-            },
-            value: {
-                required
-            },
+            }
         }
     },
     created() {
