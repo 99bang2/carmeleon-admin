@@ -25,9 +25,8 @@
                             <div class="uk-width-1-3@s">
                                 <select v-model="searchType" class="uk-select">
                                     <option value="">푸시알림 구분</option>
-                                    <option value="1">단일</option>
+                                    <option value="1">개별 선택</option>
                                     <option value="2">전체</option>
-                                    <option value="3">그룹</option>
                                 </select>
                             </div>
                         </div>
@@ -105,18 +104,15 @@
                     {
                         headerName: '분류',
                         field: 'pushType',
-                        width: 80,
+                        width: 100,
                         cellRenderer: (obj) => {
                             let typeName = ""
                             switch (obj.value) {
                                 case 1:
-                                    typeName = "단일"
+                                    typeName = "개별 선택"
                                     break;
                                 case 2:
                                     typeName = "전체"
-                                    break;
-                                case 3:
-                                    typeName = "그룹"
                                     break;
                             }
                             return typeName

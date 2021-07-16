@@ -41,10 +41,15 @@
                                 </div>
                                 <div data-uk-form-custom="target: true">
                                     <input type="file" accept="image/*" ref="bannerImage" @change="onChangeBannerImageFile">
-                                    <input class="uk-visible@s uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
+                                    <input class="uk-visible@s uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled :class="[{'sc-input-wrapper-danger': !$v.bannerImageData.required}]">
                                     <div class="uk-width-1-1 image-preview" v-if="bannerImageData">
                                         <img class="preview" :src="bannerImageData" alt="banner" />
                                     </div>
+                                    <ul class="sc-vue-errors">
+                                        <li v-if="!$v.bannerImageData.required">
+                                            이미지를 업로드하세요.
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                             <!--	mainImage	이미지 2-->
@@ -54,10 +59,15 @@
                                 </div>
                                 <div data-uk-form-custom="target: true">
                                     <input type="file" accept="image/*" ref="mainImage" @change="onChangeMainImageFile">
-                                    <input class="uk-visible@s uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
+                                    <input class="uk-visible@s uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled :class="[{'sc-input-wrapper-danger': !$v.mainImageData.required}]">
                                     <div class="uk-width-1-1 image-preview" v-if="mainImageData">
                                         <img class="preview" :src="mainImageData" alt="main">
                                     </div>
+                                    <ul class="sc-vue-errors">
+                                        <li v-if="!$v.mainImageData.required">
+                                            이미지를 업로드하세요.
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="uk-width-1-2 uk-margin-small-bottom">
@@ -172,6 +182,12 @@ export default {
         }
     },
     validations: {
+        bannerImageData: {
+            required
+        },
+        mainImageData: {
+            required
+        },
         sendData: {
             title: {
                 required
@@ -313,6 +329,7 @@ export default {
                 this.$nuxt.$emit('fetch-event-list')
             }).finally(() => {
                 this.submitStatus = 'OK'
+                this.cardFormClosed = true
             })
         },
         async putForm() {

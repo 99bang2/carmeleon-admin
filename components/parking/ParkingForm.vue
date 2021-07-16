@@ -659,7 +659,6 @@ export default {
             this.sendData.accountUid = this.sendData.siteType
             if (this.$v.$invalid) {
                 this.submitStatus = 'ERROR'
-                console.log("@@@@@@@@@@@@@@@@")
             } else {
                 this.submitStatus = 'PENDING'
                 if (this.sendData.uid) {

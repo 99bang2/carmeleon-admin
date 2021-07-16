@@ -111,16 +111,6 @@
                                                   data-uk-icon="icon: receiver"/>
                                         </ScInput>
                                     </div>
-<!--                                    <div class="uk-width-1-2">-->
-<!--                                        <ScInput v-model="sendData.powerType"-->
-<!--                                                 :validator="$v.sendData.powerType">-->
-<!--                                            <label>-->
-<!--                                                충전량 유형-->
-<!--                                            </label>-->
-<!--                                            <span slot="icon" class="uk-form-icon uk-form-icon-flip"-->
-<!--                                                  data-uk-icon="icon: bolt"/>-->
-<!--                                        </ScInput>-->
-<!--                                    </div>-->
                                     <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
                                         주소 입력
                                     </h5>
@@ -283,7 +273,6 @@
                     busiId: '', 		// 기관아이디
                     busiNm: '',		// 운영기관명
                     busiCall: '', //연락처
-                    // powerType: '', // 충전량
                     picture: [],
                     evChargers: [],
                     isRate: false,

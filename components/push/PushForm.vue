@@ -72,13 +72,13 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div v-if="sendData.pushType == '1' || sendData.pushType == '3'" class="uk-width-1-1@s">
+                            <div v-if="sendData.pushType == '1'" class="uk-width-1-1@s">
                                 <Select2
                                         v-model="sendData.userUid"
                                         :options="userOpts"
                                         :settings="{'width': '100%', 'placeholder':'사용자 선택'}"
                                         :error-state="$v.sendData.userUid.$error"
-                                        :multiple="sendData.pushType== '3'"
+                                        multiple
                                 />
                                 <ul class="sc-vue-errors">
                                     <li v-if="!$v.sendData.userUid.required">
@@ -216,7 +216,7 @@
             let user = users.data.map(user => {
                 return {
                     id: user.uid,
-                    text: user.name + ", " + user.email
+                    text: user.snsType + " / " + user.name + " / " + user.email
                 }
             })
 

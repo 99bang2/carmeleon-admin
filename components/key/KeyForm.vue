@@ -21,7 +21,7 @@
                         <form class="uk-grid-small uk-grid" data-uk-grid>
                             <div class="uk-width-1-1">
                                 <ScInput v-model="sendData.key" :error-state="$v.sendData.key.$error"
-                                         :validator="$v.sendData.key">
+                                         :validator="$v.sendData.key" :read-only="!!sendData.uid">
                                     <label>
                                         키
                                     </label>
@@ -31,6 +31,9 @@
                                 <ul class="sc-vue-errors">
                                     <li v-if="!$v.sendData.key.required">
                                         키를 입력하세요.
+                                    </li>
+                                    <li v-if="!$v.sendData.key.isUnique">
+                                        이미 사용중인 키입니다.
                                     </li>
                                 </ul>
                             </div>
@@ -92,25 +95,19 @@ export default {
             },
         }
     },
-    validations() {
-        return {
-            sendData: {
-                key: {
-                    required,
-                    async isUnique(value) {
-                        if (value === '') return true
-                        let params = {
-                            params: {
-                                uid: this.sendData.uid
-                            }
-                        }
-                        let res = await this.$axios.$get(this.config.apiUrl + `/keys/unique/${value}`, params)
-                        return Boolean(res.data)
-                    }
-                },
-                value: {
-                    required
+    validations: {
+        sendData: {
+            key: {
+                required,
+                async isUnique(value) {
+                    if (value === '') return true
+                    if (this.sendData.uid) return true
+                    let res = await this.$axios.$get(this.config.apiUrl + `/keys/unique/${value}`)
+                    return Boolean(res.data)
                 }
+            },
+            value: {
+                required
             }
         }
     },
@@ -160,6 +157,7 @@ export default {
         submitForm(e) {
             e.preventDefault()
             this.$v.$touch()
+
             if (this.$v.$invalid) {
                 this.submitStatus = 'ERROR'
             } else {
