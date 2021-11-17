@@ -656,7 +656,7 @@ export default {
         submitForm(e) {
             e.preventDefault()
             this.$v.$touch()
-            this.sendData.accountUid = this.sendData.siteType === 0 ? 2 : null
+            this.sendData.accountUid = this.sendData.siteType
             if (this.$v.$invalid) {
                 this.submitStatus = 'ERROR'
             } else {

@@ -319,7 +319,6 @@ npm <template>
                                 searchData.params.accountUid = this.$auth.user.uid
                             }
                             await context.$axios.$get(this.config.apiUrl + '/parkings', searchData).then(response => {
-                                console.log(response.data.rows)
                                 let rowsThisPage = response.data.rows
                                 lastRow = response.data.count
                                 params.successCallback(rowsThisPage, lastRow)
