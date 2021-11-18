@@ -124,12 +124,13 @@ npm <template>
                     },
                     {
                         headerName: 'UID',
-                        field: 'uid'
+                        field: 'uid',
+                        width: 80
                     },
                     {
-                        headerName: '주차장 유형',
+                        headerName: '유형',
                         field: 'siteType',
-                        width: 150,
+                        width: 80,
                         cellRenderer: (obj) => {
                             if (obj.data) {
                                 let badge = ''
@@ -160,15 +161,15 @@ npm <template>
                     {
                         headerName: '최대 가용대수',
                         field: 'parkingLot',
-                        width: 120,
+                        width: 110,
                         cellRenderer: (obj) => {
-                            return obj.value ? obj.value : 0 + ' 대'
+                            return obj.value ? obj.value + '대' : 0 + ' 대'
                         }
                     },
                     {
                         headerName: '운영상태',
                         field: 'isActive',
-                        width: 120,
+                        width: 80,
                         cellRenderer: (obj) => {
                             return obj.value ? '<span>운영중</span>' : '<span>미운영</span>'
                         }
@@ -176,7 +177,7 @@ npm <template>
                     {
                         headerName: '기준가격',
                         field: 'price',
-                        width: 120,
+                        width: 80,
                         cellRenderer: (obj) => {
                             return obj.value + ' 원'
                         }
@@ -184,7 +185,7 @@ npm <template>
                     {
                         headerName: '평점',
                         field: 'rate',
-                        width: 120,
+                        width: 80,
                         filter: 'agNumberColumnFilter',
                         cellRenderer: (obj) => {
                             if (obj.value) {
@@ -213,7 +214,7 @@ npm <template>
                     {
                         headerName: '등록일시',
                         field: 'createdAt',
-                        width: 160,
+                        width: 150,
                         valueFormatter: obj => {
                             return this.$moment(obj.value).format('YYYY-MM-DD HH:mm')
                         }
