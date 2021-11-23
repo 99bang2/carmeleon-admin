@@ -136,6 +136,15 @@
                                             <span data-uk-icon="icon: search"></span>
                                         </a>
                                     </div>
+                                    <h5 class="uk-heading-bullet uk-margin-top uk-width-1-1">
+                                        주차장 등록
+                                    </h5>
+                                    <div class="uk-width-1-1@s">
+                                        <select class="uk-select" v-model="sendData.parkingUid" :disabled="parkingSiteList.length === 0">
+                                            <option value=null default disabled selected hidden>주차장 선택</option>
+                                            <option :key="parkingSite.uid" :value="parkingSite.uid" v-for="parkingSite of parkingSiteList">{{parkingSite.name}}</option>
+                                        </select>
+                                    </div>
                                     <div v-if="searchAddr" class="uk-width-1-1" style="margin: 15px; padding: 0px;">
                                         <ul class="uk-list uk-list-divider uk-list-collapse">
                                             <li class="selectAddr" v-for="(item,index) in searchAddr" v-bind:key=index
@@ -226,9 +235,6 @@
     import {validationMixin} from 'vuelidate'
     import {required} from 'vuelidate/lib/validators'
     import RatingList from "@/components/common/RatingList"
-    import Select2 from "@/components/Select2";
-    import Convert from "@/plugins/convertJson";
-    import moment from "@/plugins/moment"
 
     if (process.client) {
         require('~/plugins/inputmask');
@@ -240,6 +246,7 @@
             VueUploadMultipleImage,
             ScCardAction,
             RatingList,
+            // Select2
         },
         mixins: [
             validationMixin,
@@ -260,6 +267,7 @@
                 deleteArray: [],
                 editArray: [],
                 searchAddr: [],
+                parkingSiteList: [],
                 defaultForm: {
                     uid: '',
                     statNm: '', //사업장명
@@ -276,7 +284,8 @@
                     picture: [],
                     evChargers: [],
                     isRate: false,
-                    isRecommend:false
+                    isRecommend:false,
+                    parkingUid: '',
                 }
             }
         },
@@ -343,7 +352,6 @@
                 }
             },
             openListForm() {
-                //let code = this.$axios.$post(this.config.apiUrl + '/codes')
             },
             openNewForm(siteUid, type) {
                 this.$nuxt.$emit('open-rate-list', siteUid, type)
@@ -379,15 +387,18 @@
             },
             //multi image upload////////////////////////////////////////////////
 
-            settingForm(props) {
+            async settingForm(props) {
                 this.$v.$reset()
                 this.tempImage = []
                 this.file_list = []
                 this.editArray = []
                 this.deleteArray = []
+                this.parkingSiteList = []
                 if (props) {
                     this.sendData = JSON.parse(JSON.stringify(props.data))
                     this.file_list = this.sendData.picture || []
+                    let response = await this.$axios.$get(this.config.apiUrl + '/parkingToEv', {params:{lat: props.data.lat, lon:props.data.lon}})
+                    this.parkingSiteList = response.data
                     if (this.sendData.picture !== null) {
                         for (let i = 0; i < this.sendData.picture.length; i++) {
                             let img = {}

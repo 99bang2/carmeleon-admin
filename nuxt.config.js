@@ -15,6 +15,9 @@ module.exports = {
 	/*
 	** Headers of the page
 	*/
+    server: {
+        port: 5000
+    },
 	head: {
 		htmlAttrs: {
 			lang: 'ko'

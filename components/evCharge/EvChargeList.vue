@@ -16,38 +16,21 @@
             </ScCardHeader>
             <ScCardBody>
                 <div class="uk-grid-small uk-grid uk-margin" data-uk-grid>
-                    <div class="uk-width-3-5@s">
+                    <div class="uk-width-4-5@s">
                         <div class="uk-grid-small uk-grid" data-uk-grid>
                             <a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
                                style="height:40px;" @click.prevent="refreshFilter">
                                 <i class="mdi mdi-refresh"></i>
                             </a>
                             <div class="uk-width-1-4@s">
-                                <select v-model="searchChargeType" class="uk-select">
-                                    <option value="">충전기타입</option>
-                                    <option value="01">DC 차데모</option>
-                                    <option value="02">AC 완속</option>
-                                    <option value="03">DC 차데모+AC 3상</option>
-                                    <option value="04">DC 콤보</option>
-                                    <option value="05">DC 차데모+DC 콤보</option>
-                                    <option value="06">DC 차데모+AC 3상+DC 콤보</option>
-                                    <option value="07">AC3상</option>
-                                </select>
-                            </div>
-                            <div class="uk-width-1-4@s">
-                                <select v-model="searchStat" class="uk-select">
-                                    <option value="">충전기상태</option>
-                                    <option value=1>통신이상</option>
-                                    <option value=2>충전대기</option>
-                                    <option value=3>충전중</option>
-                                    <option value=4>운영중지</option>
-                                    <option value=5>점검중</option>
-                                    <option value=9>상태미확인</option>
-                                </select>
+                                <input id="switch-css-recommend" v-model="searchIsParking" type="checkbox"
+                                       class="sc-switch-input">
+                                <label for="switch-css-recommend" class="sc-switch-label" style="margin-top: 5px; margin-left: 10px;">
+                                    <span class="sc-switch-toggle-on">전체</span>
+                                    <span class="sc-switch-toggle-off">주차장정보 미포함</span>
+                                </label>
                             </div>
                         </div>
-                    </div>
-                    <div class="uk-width-1-5@s">
                     </div>
                     <div class="uk-width-1-5@s">
                         <ScInput v-model="searchKeyword" placeholder="충전소명 검색">
@@ -102,9 +85,8 @@
                     rowHeight: 45,
                     getRowStyle: this.getRowStyle
                 },
-                searchChargeType: '',
-                searchStat: '',
                 searchKeyword: '',
+                searchIsParking: true,
                 resUid: 0
             }
         },
@@ -137,7 +119,7 @@
                     }, {
                         headerName: '위치정보',
                         field: 'addr',
-                        width: 550
+                        suppressSizeToFit: false,
                     }, {
                         headerName: '등록일시',
                         field: 'createdAt',
@@ -150,13 +132,10 @@
             }
         },
         watch: {
-            'searchChargeType': function (newValue) {
-                this.fetchData()
-            },
-            'searchStat': function (newValue) {
-                this.fetchData()
-            },
             'searchKeyword': function (newValue) {
+                this.fetchData()
+            },
+            'searchIsParking': function(newValue) {
                 this.fetchData()
             },
         },
@@ -194,16 +173,17 @@
                                 limit: params.endRow - params.startRow,
                                 order: order
                             }
-                            await context.$axios.$get(this.config.apiUrl + '/evChargeStations', {
+
+                            let searchData = {
                                 params: {
-                                    searchChargeType: context.searchChargeType,
-                                    searchStat: context.searchStat,
                                     searchKeyword: context.searchKeyword,
+                                    searchIsParking: context.searchIsParking ? 1 : 0,
                                     offset: parameters.offset,
                                     limit: parameters.limit,
-                                    order: parameters.order,
+                                    order: parameters.order
                                 }
-                            }).then(response => {
+                            }
+                            await context.$axios.$get(this.config.apiUrl + '/evChargeStations',searchData ).then(response => {
                                 let rowsThisPage = response.data.rows
                                 lastRow = response.data.count
                                 params.successCallback(rowsThisPage, lastRow)
@@ -222,15 +202,14 @@
                     }
                     params.api.setDatasource(dataSource)
                 }
-                updateData(this)
+                await updateData(this)
                 let pageSize = params.api.gridOptionsWrapper.gridOptions.paginationPageSize
                 let rowHeight = params.api.gridOptionsWrapper.gridOptions.rowHeight
                 params.api.rowRenderer.rowContainers.body.eWrapper.style.minHeight = pageSize * rowHeight + 'px'
             },
             refreshFilter() {
-                this.searchChargeType = ""
-                this.searchStat = ""
                 this.searchKeyword = ""
+                this.searchIsParking = true
                 this.fetchData()
             },
             openNewForm() {

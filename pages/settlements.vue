@@ -294,7 +294,6 @@ export default {
             if (this.$auth.user.grade > 0) {
                 searchData.params.accountUid = this.$auth.user.uid
             }
-            //await this.$axios.$get(this.config.apiUrl + '/allPayLogs', searchData).then(response => {
             await this.$axios.$get(this.config.apiUrl + '/allPayLogs', searchData).then(response => {
                 if (response.data) {
                     this.settleData = response.data
