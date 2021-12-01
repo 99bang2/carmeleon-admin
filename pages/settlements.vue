@@ -128,7 +128,7 @@ import {agGridMixin} from "@/plugins/ag-grid.mixin"
 import ScInput from '~/components/Input'
 import SearchMenu from "~/components/common/SearchMenu"
 import XLSX from 'xlsx'
-
+import moment from 'moment'
 export default {
     components: {SearchMenu, ScInput},
     mixins: [
@@ -311,7 +311,6 @@ export default {
             }
             //console.log(params)
             await this.$axios.$get(this.config.apiUrl + '/parkingLists', params).then(response => {
-                console.log(response)
                 if (response.data) {
                     this.siteOpts = response.data.map(function (obj) {
                         return {
@@ -413,8 +412,9 @@ export default {
                         default :
                             status = '결제대기중'
                     }
+                    let time = moment(key.createdAt).format('YYYY-MM-DD HH:mm')
                     aoaData.push([
-                        key.createdAt,
+                        time,
                         key.parkingSite.name,
                         key.phoneNumber,
                         key.email,

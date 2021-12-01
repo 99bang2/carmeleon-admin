@@ -26,8 +26,9 @@ npm <template>
                                 <select v-model="searchSiteType" class="uk-select">
                                     <option value="">주차장 유형</option>
                                     <option value="0">하이파킹</option>
-                                    <option value="1">제휴</option>
+                                    <option value="1">하이시티파킹</option>
                                     <option value="2">일반</option>
+                                    <option value="3">하이그린파킹</option>
                                 </select>
                             </div>
                             <div class="uk-width-1-4@s">
@@ -130,7 +131,7 @@ npm <template>
                     {
                         headerName: '유형',
                         field: 'siteType',
-                        width: 80,
+                        width: 100,
                         cellRenderer: (obj) => {
                             if (obj.data) {
                                 let badge = ''
@@ -142,12 +143,15 @@ npm <template>
                                         break
                                     case 1 :
                                         badge = 'md-bg-blue-500'
-                                        typeName = '제휴'
+                                        typeName = '하이시티파킹'
                                         break
                                     case 2 :
                                         badge = 'md-bg-gray-500'
                                         typeName = '일반'
                                         break
+                                    case 3 :
+                                        badge = 'md-bg-light-green-500'
+                                        typeName = '하이그린파킹'
                                 }
                                 return `<span class="uk-badge ${badge}">${typeName}</span>`
                             }
