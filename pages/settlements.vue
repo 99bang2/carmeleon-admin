@@ -14,13 +14,13 @@
                         </ScCardHeader>
                         <ScCardBody>
                             <!-- 검색필터 -->
-                            <div class="sc-padding-medium sc-round sc-border md-bg-grey-100 uk-grid-small uk-grid"
-                                 data-uk-grid>
+                            <div class="sc-padding-medium uk-margin sc-round sc-border md-bg-grey-100 uk-grid-small"
+                                 style="display: flex; justify-content: space-between; align-items: center">
                                 <a href="javascript:void(0)" class="sc-button sc-button-icon sc-button-outline"
                                    style="height:40px;" @click.prevent="refreshFilter">
                                     <i class="mdi mdi-refresh"></i>
                                 </a>
-                                <div class="uk-width-2-5">
+                                <div>
                                     <SearchMenu :search-data="searchData" :search-keyword="true"
                                                 @search="search"></SearchMenu>
                                 </div>
@@ -32,7 +32,14 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="uk-width-1-6@s"></div>
+                                <div class="uk-width-1-5@s">
+                                    <select v-model="searchParkingType" class="uk-select">
+                                        <option value="">전체</option>
+                                        <option v-for="opt in siteTypes" :key="opt.id" :value="opt.id">
+                                            {{ opt.text }}
+                                        </option>
+                                    </select>
+                                </div>
                                 <div class="uk-width-1-5@s">
                                     <ScInput v-model="searchKeyword" placeholder="검색">
                                         <span slot="icon" class="uk-form-icon" data-uk-icon="search"/>
@@ -40,8 +47,6 @@
                                 </div>
                             </div>
                             <!-- -->
-
-                            <div style="height: 30px"></div>
 
                             <!-- 검색기간 및 엑셀 버튼 버튼으로 바꾸기!!!! -->
                             <div style="display: flex; justify-content: space-between;">
@@ -68,7 +73,8 @@
                                         <th style="background-color: rgba(102,187,106,0.5); font-weight: bold">완료</th>
                                         <th style="background-color: rgba(244,143,177,0.5); font-weight: bold">취소</th>
                                         <th style="background-color: rgba(130,177,255,0.5); font-weight: bold">종합</th>
-                                        <th style="background-color: rgba(130,177,126,0.5); font-weight: bold">정산 수수료</th>
+                                        <th style="background-color: rgba(130,177,126,0.5); font-weight: bold">정산 수수료
+                                        </th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -129,6 +135,8 @@ import ScInput from '~/components/Input'
 import SearchMenu from "~/components/common/SearchMenu"
 import XLSX from 'xlsx'
 import moment from 'moment'
+import Convert from "../plugins/convertJson";
+
 export default {
     components: {SearchMenu, ScInput},
     mixins: [
@@ -150,8 +158,10 @@ export default {
                 getRowStyle: this.getRowStyle
             },
             siteOpts: [],
+            siteTypes: [],
             searchKeyword: '',
             searchParkingSite: '',
+            searchParkingType: '',
             settleData: {
                 price: 0,
                 sellingPrice: 0,
@@ -269,10 +279,14 @@ export default {
             this.fetchData()
             this.loadData()
         },
+        'searchParkingType': function () {
+            this.fetchData()
+            this.loadData()
+        },
         'searchDate': function () {
             this.fetchData()
             this.loadData()
-        }
+        },
     },
     async mounted() {
         await this.loadData()
@@ -286,8 +300,9 @@ export default {
                     accountUid: null,
                     searchData: {
                         searchParkingSite: this.searchParkingSite,
+                        searchParkingType: this.searchParkingType,
                         searchDate: this.searchData.searchDate,
-                        searchKeyword: this.searchKeyword
+                        searchKeyword: this.searchKeyword,
                     }
                 }
             }
@@ -309,6 +324,9 @@ export default {
             if (this.$auth.user.grade > 0) {
                 params.params.accountUid = this.$auth.user.uid
             }
+            //siteTypes[] 받아오는 부분
+            let code = await this.$axios.$post(this.config.apiUrl + '/codes')
+            this.siteTypes = Convert.convertJson(code.data.site, 'select')
             //console.log(params)
             await this.$axios.$get(this.config.apiUrl + '/parkingLists', params).then(response => {
                 if (response.data) {
@@ -341,6 +359,7 @@ export default {
                                 searchData: {
                                     searchKeyword: context.searchKeyword,
                                     searchParkingSite: context.searchParkingSite,
+                                    searchParkingType: context.searchParkingType,
                                     searchDate: context.searchData.searchDate
                                 },
                                 offset: parameters.offset,
@@ -371,6 +390,7 @@ export default {
         refreshFilter() {
             this.searchKeyword = ""
             this.searchParkingSite = ""
+            this.searchParkingType = ""
             this.searchData.searchDate = this.$moment(new Date()).add(-7, 'days').format('YYYY-MM-DD') + ' ~ ' + this.$moment(new Date()).format('YYYY-MM-DD')
             this.fetchData()
             this.loadData()
@@ -385,6 +405,7 @@ export default {
                     accountUid: null,
                     searchData: {
                         searchParkingSite: this.searchParkingSite,
+                        searchParkingType: this.searchParkingType,
                         searchDate: this.searchData.searchDate,
                         searchKeyword: this.searchKeyword
                     }
