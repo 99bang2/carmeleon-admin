@@ -25,10 +25,11 @@
               <h5 class="uk-heading-bullet uk-margin-top">주차장명</h5>
               <div class="payLog-block__content">{{ defaultDetail.parkingSite.name }}</div>
             </div>
-            <div class="payLog-block uk-width-1-2">
+            <div class="payLog-block uk-width-1-2" v-if="defaultDetail.discountTicket">
               <h5 class="uk-heading-bullet uk-margin-top">할인권</h5>
-              <div class="payLog-block__content">{{ defaultDetail.discountTicket.ticketTitle }}</div>
+              <div class="payLog-block__content">{{defaultDetail.discountTicket.ticketTitle}}</div>
             </div>
+              <div class="payLog-block uk-width-1-2" v-else></div>
             <div class="payLog-block uk-width-1-3">
               <h5 class="uk-heading-bullet uk-margin-top">차량번호</h5>
               <div class="payLog-block__content">{{ defaultDetail.carNumber }}</div>

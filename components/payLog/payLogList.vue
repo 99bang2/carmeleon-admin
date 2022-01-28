@@ -124,6 +124,7 @@ export default {
                             switch (obj.value){
                                 case "card": return "카드"
                                 case "coopPayment": return "모바일상품권"
+                                case "autoPass": return "자동결제"
                             }
                             return "카드"
                         }
