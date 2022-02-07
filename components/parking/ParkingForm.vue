@@ -214,9 +214,9 @@
                                     </div>
                                     <!--	휴대전화     -->
                                     <div class="uk-width-1-2">
-                                        <ScInput v-model="sendData.phone">
+                                        <ScInput v-model="sendData.autoPassCode">
                                             <label>
-                                                휴대전화
+                                                HOST CODE(자동결제)
                                             </label>
                                             <span slot="icon" class="uk-form-icon uk-form-icon-flip"
                                                   data-uk-icon="icon: phone"/>
@@ -449,7 +449,8 @@ export default {
                 isBuy: true,
                 isRate: false,
                 isRecommend: false,
-                valetType: 0
+                valetType: 0,
+                autoPassCode: '',
             }
         }
     },
