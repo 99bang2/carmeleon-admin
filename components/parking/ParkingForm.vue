@@ -450,7 +450,7 @@ export default {
                 isRate: false,
                 isRecommend: false,
                 valetType: 0,
-                autoPassCode: '',
+                autoPassCode: null,
             }
         }
     },
