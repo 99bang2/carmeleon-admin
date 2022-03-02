@@ -419,6 +419,9 @@ export default {
             ]
             await this.$axios.$get(this.config.apiUrl + '/payLogs', searchData).then(response => {
                 response.data.rows.forEach((key, index) => {
+                    let ticketTitle = key.discountTicket.ticketTitle || '자동결제'
+                    let reserveTime = key.reserveTime || '--:--'
+                    let fee = key.fee || 0
                     let status = ''
                     switch (response.data.rows[index].status) {
                         case 10 :
@@ -440,10 +443,10 @@ export default {
                         key.phoneNumber,
                         key.email,
                         key.carNumber,
-                        key.discountTicket.ticketTitle,
-                        key.reserveTime,
+                        ticketTitle,
+                        reserveTime,
                         key.price,
-                        key.fee,
+                        fee,
                         status
                     ])
                 })
