@@ -4,7 +4,8 @@ RUN mkdir -p /app
 WORKDIR /app
 ADD ./ /app
 
-RUN npm i -g npm
+RUN npm cache clean --force
+RUN npm i -g npm@6.13.4
 RUN npm install
 RUN npm run build
 
